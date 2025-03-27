@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AccountsController,ParentMenuController,MenusController,RolesController,PermissionsController,AccessRoleController};
+use App\Http\Controllers\{AccountsController, PegawaiController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -19,4 +19,9 @@ Route::group(['prefix' => 'account'], function () {
 	Route::GET('/profile',[AccountsController::class,'profile'])->middleware('auth')->name('profile');
 	Route::GET('/setting',[AccountsController::class,'setting'])->middleware('auth')->name('setting');
 	Route::POST('/passwordAction',[AccountsController::class,'passwordAction'])->middleware('auth')->name('passwordAction');
+});
+
+Route::group(['prefix'=> 'admin'], function(){
+	Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
+	Route::GET('/kelola_pegawai', [PegawaiController::class, 'Kelola_pegawai'])->name('kelola_pegawai');
 });

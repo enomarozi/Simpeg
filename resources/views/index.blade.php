@@ -114,15 +114,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu1" role="button" aria-expanded="false" aria-controls="submenu1"> Menu 1
+                <a class="nav-link dropdown-toggle bi bi-people" data-bs-toggle="collapse" href="#submenu1" role="button" aria-expanded="false" aria-controls="submenu1"> Pegawai
                 </a>
                 <div class="collapse" id="submenu1">
                     <ul class="nav flex-column ms-3">
                         <li class="nav-item mb-2">
-                            <a class="nav-link" href="#">Submenu 1-1</a>
+                            <a class="nav-link" href="{{ route('data_pegawai') }}">Data Pegawai</a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a class="nav-link" href="#">Submenu 1-2</a>
+                            <a class="nav-link" href="{{ route('kelola_pegawai') }}">Kelola Pegawai</a>
                         </li>
                     </ul>
                 </div>

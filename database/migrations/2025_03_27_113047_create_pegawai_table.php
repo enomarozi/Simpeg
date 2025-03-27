@@ -25,16 +25,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_status_kepegawaian');
             $table->unsignedBigInteger('id_fakultas');
             $table->unsignedBigInteger('id_kepangkatan');
-            $table->unsignedBigInteger('id_jabatan');
-            $table->unsignedBigInteger('id_pendidikan');
             $table->timestamps();
 
             $table->foreign('id_agama')->references('id')->on('agama')->onDelete('cascade');
-            $table->foreign('id_status_kepegawaian')->references('id')->on('status_kepegawaian')->onDelete('cascade');
             $table->foreign('id_fakultas')->references('id')->on('fakultas')->onDelete('cascade');
-            $table->foreign('id_kepangkatan')->references('id')->on('kepangkatan')->onDelete('cascade');
-            $table->foreign('id_jabatan')->references('id')->on('jabatan')->onDelete('cascade');
-            $table->foreign('id_pendidikan')->references('id')->on('pendidikan')->onDelete('cascade');
         });
     }
 

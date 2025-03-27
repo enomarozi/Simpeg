@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama_departemen', 100);
             $table->unsignedBigInteger('id_fakultas');
-
             $table->foreign('id_fakultas')->references('id')->on('fakultas')->onDelete('cascade');
         });
     }
