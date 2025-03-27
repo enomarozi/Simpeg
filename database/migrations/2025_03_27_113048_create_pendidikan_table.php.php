@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_pegawai');
             $table->string('jenjang', 10);
-            $table->date('tahun_lulus');
+            $table->date('lulus');
 
             $table->foreign('id_pegawai')->references('id')->on('pegawai')->onDelete('cascade');
         });
