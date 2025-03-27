@@ -15,10 +15,8 @@ use DB;
 class AccountsController extends Controller
 {
     public function index(){
-        $user = count(User::all());
-        $role = count(Roles::all());
         $title = "Dashboard";
-        return view('dashboard/dashboard',compact('user','role','title'));
+        return view('dashboard/dashboard',compact('title'));
     }
     public function login(){
         return view('accounts/login');
@@ -133,48 +131,6 @@ class AccountsController extends Controller
         }
         return redirect()->back()->withErrors(['error' => 'Password change failed. Please try again.']);
         
-    }
-    public function user(){
-        $title = "Manage | User";
-        return view('configuration/user',compact('title'));
-    }
-    public function crudUser(Request $request){
-        $validasi = $request->validate([
-            'name'=>'required|min:3|max:40',
-            'username'=>'required|min:3|max:30',
-            'email'=>'required|min:5|max:60',
-            'password'=>'required|min:8',
-            'confirmpassword'=>'required|min:8|same:password',
-        ]);
-        $username = $request->input('username');
-        $exists = User::where('username', $username)->exists();
-        if ($exists) {
-            return redirect()->back()->withErrors(['error' => 'Username has already been taken.']);
-        } else {
-            $user = new User();
-            $user->name = $request->name;
-            $user->username = $request->username;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
-            return redirect()->back()->withSuccess('User Created successfully.');
-        }
-    }
-    public function statusUser($username,$status){
-        $user = auth()->user();
-        if($username === "administrator"){
-            return redirect()->back()->withErrors(['error'=>'Administrator status cannot be changed.']);
-            exit();
-        }
-        $change = DB::table('users')
-                ->where('username', $username)
-                ->update(['is_active' => $status]);
-        return redirect()->back()->withSuccess('Username '.$username.' status updated.');
-        
-    }
-    public function getUser(){
-        $users = User::all();
-        return response()->json($users);
     }
     public function logout(){
         Auth::logout();

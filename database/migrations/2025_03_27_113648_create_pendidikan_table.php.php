@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('role_permissions', function (Blueprint $table) {
+        Schema::create('pendidikan', function (Blueprint $table) {
             $table->id();
-            $table->string('userId');
-            $table->text('permission');
-            $table->timestamps();
+            $table->unsignedBigInteger('id_pegawai');
+            $table->string('jenjang', 10);
+            $table->date('tahun_lulus');
+
+            $table->foreign('id_pegawai')->references('id')->on('pegawai')->onDelete('cascade');
         });
     }
 
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('pendidikan');
     }
 };

@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('status_kepegawaian', function(Blueprint $table){
             $table->id();
-            $table->string('parent_code')->unique();
-            $table->string('content');
-            $table->string('route_name');
-            $table->string('ordered');
-            $table->string('icon');
-            $table->timestamps();
+            $table->string('nama_status', 50);
         });
     }
 
@@ -27,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('status_kepegawaian');
     }
 };
