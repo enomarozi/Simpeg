@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pendidikan', function (Blueprint $table) {
+        Schema::create('kategori_kepegawaian', function(Blueprint $table){
             $table->id();
-            $table->unsignedBigInteger('id_pegawai');
-            $table->string('jenjang', 10);
-            $table->date('lulus');
-
-            $table->foreign('id_pegawai')->references('id')->on('pegawai')->onDelete('cascade');
+            $table->string('nama_kategori_kepegawaian', 50);
         });
     }
 
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pendidikan');
+        Schema::dropIfExists('kategori_kepegawaian');
     }
 };

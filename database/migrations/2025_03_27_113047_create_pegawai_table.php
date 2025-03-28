@@ -22,11 +22,12 @@ return new class extends Migration
             $table->string('tempat_lahir',100);
             $table->date('tanggal_lahir');
             $table->unsignedBigInteger('id_agama');
-            $table->unsignedBigInteger('id_status_kepegawaian');
+            $table->unsignedBigInteger('id_kategori_kepegawaian');
             $table->unsignedBigInteger('id_fakultas');
             $table->unsignedBigInteger('id_kepangkatan');
             $table->timestamps();
 
+            $table->foreign('id_kepangkatan')->references('id')->on('kepangkatan')->onDelete('cascade');
             $table->foreign('id_agama')->references('id')->on('agama')->onDelete('cascade');
             $table->foreign('id_fakultas')->references('id')->on('fakultas')->onDelete('cascade');
         });
