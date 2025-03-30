@@ -25,7 +25,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => '1974-10-28',
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
-                'id_departemen' => 1,
+                'id_departemen' => 58,
                 'id_kepangkatan' => 1,
             ],
             [
@@ -39,7 +39,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => '1995-10-25',
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 2,
-                'id_departemen' => 1,
+                'id_departemen' => 61,
                 'id_kepangkatan' => 2,
             ],
             [
@@ -53,7 +53,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => '1988-04-16',
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
-                'id_departemen' => 1,
+                'id_departemen' => 59,
                 'id_kepangkatan' => 2,
             ],
             [
@@ -67,7 +67,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => '1991-07-05',
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
-                'id_departemen' => 1,
+                'id_departemen' => 57,
                 'id_kepangkatan' => 2,
             ],
             [
@@ -81,7 +81,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => '1975-08-20',
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
-                'id_departemen' => 1,
+                'id_departemen' => 62,
                 'id_kepangkatan' => 3,
             ],
             [
@@ -95,7 +95,7 @@ class PegawaiSeeder extends Seeder
                 'tanggal_lahir' => '1993-03-27',
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
-                'id_departemen' => 1,
+                'id_departemen' => 58,
                 'id_kepangkatan' => 2,
             ]
         ]);

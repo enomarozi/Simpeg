@@ -8,7 +8,8 @@
             <th>Nama</th>
             <th>Fakultas</th>
             <th>Departemen</th>
-            <th>Status Kepegawaian</th>
+            <th>Golongan</th>
+            <th>Pangkat</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -40,18 +41,25 @@
             namaCell.textContent = menu.nama;
             row.appendChild(namaCell);
 
-            const permissionsCell = document.createElement('td');
-            permissionsCell.textContent = menu.permissions;
-            row.appendChild(permissionsCell);
+            const fakultasCell = document.createElement('td');
+            fakultasCell.textContent = menu.nama_fakultas;
+            row.appendChild(fakultasCell);
 
-            const descriptionCell = document.createElement('td');
-            descriptionCell.textContent = menu.description;
-            row.appendChild(descriptionCell);
+            const departemenCell = document.createElement('td');
+            departemenCell.textContent = menu.nama_departemen;
+            row.appendChild(departemenCell);
+
+            const golonganCell = document.createElement('td');
+            golonganCell.textContent = menu.golongan;
+            row.appendChild(golonganCell);
+
+            const pangkatCell = document.createElement('td');
+            pangkatCell.textContent = menu.pangkat;
+            row.appendChild(pangkatCell);
 
             const actionCell = document.createElement('td');
             actionCell.innerHTML = `
-                <button onClick='modalEdit(${menu.id},"${menu.name}","${menu.description}")' class="btn btn-xs btn-success">Edit</button>
-                <button onClick='modalEdit(${menu.id},"${menu.name}","${menu.description}")' class="btn btn-xs btn-success">Edit</button>
+                <button onClick='modalEdit(${menu.id},"${menu.nip}","${menu.nama}")' class="btn btn-xs btn-info">Detail</button>
                 <button onClick='modalDelete(${menu.id})' class="btn btn-xs btn-danger">Delete</button>
             `;
             
