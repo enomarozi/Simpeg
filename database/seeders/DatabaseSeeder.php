@@ -11,6 +11,7 @@ use Database\Seeders\JenisPegawaiSeeder;
 use Database\Seeders\KategoriPegawaiSeeder;
 use Database\Seeders\KepangkatanSeeder;
 use Database\Seeders\PendidikanSeeder;
+use Database\Seeders\PegawaiSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -33,5 +34,6 @@ class DatabaseSeeder extends Seeder
         $this->call(KategoriPegawaiSeeder::class);
         $this->call(KepangkatanSeeder::class);
         $this->call(PendidikanSeeder::class);
+        $this->call(PegawaiSeeder::class);
     }
 }

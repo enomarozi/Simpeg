@@ -18,22 +18,27 @@
 
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {
-    fetch('#')
+    fetch('json_pegawai')
     .then(response => response.json())
     .then(data => {
         const tbody = document.getElementById('menus-tbody');
         tbody.innerHTML = '';
         let autoIncrementId = 1;
         data.forEach(menu => {
+            console.log(menu)
             const row = document.createElement('tr');
             const noCell = document.createElement('td');
             noCell.textContent += autoIncrementId;
             row.appendChild(noCell);
             autoIncrementId++;
 
-            const nameCell = document.createElement('td');
-            nameCell.textContent = menu.name;
-            row.appendChild(nameCell);
+            const nipCell = document.createElement('td');
+            nipCell.textContent = menu.nip;
+            row.appendChild(nipCell);
+
+            const namaCell = document.createElement('td');
+            namaCell.textContent = menu.nama;
+            row.appendChild(namaCell);
 
             const permissionsCell = document.createElement('td');
             permissionsCell.textContent = menu.permissions;
@@ -44,13 +49,12 @@
             row.appendChild(descriptionCell);
 
             const actionCell = document.createElement('td');
-            if(menu.name != "administrator"){
-                actionCell.innerHTML = `
-                    <button onClick='modalEdit(${menu.id},"${menu.name}","${menu.description}")' class="btn btn-xs btn-success">Edit</button>
-                    <button onClick='modalEdit(${menu.id},"${menu.name}","${menu.description}")' class="btn btn-xs btn-success">Edit</button>
-                    <button onClick='modalDelete(${menu.id})' class="btn btn-xs btn-danger">Delete</button>
-                `;
-            }
+            actionCell.innerHTML = `
+                <button onClick='modalEdit(${menu.id},"${menu.name}","${menu.description}")' class="btn btn-xs btn-success">Edit</button>
+                <button onClick='modalEdit(${menu.id},"${menu.name}","${menu.description}")' class="btn btn-xs btn-success">Edit</button>
+                <button onClick='modalDelete(${menu.id})' class="btn btn-xs btn-danger">Delete</button>
+            `;
+            
             row.appendChild(actionCell);
             tbody.appendChild(row);
         });

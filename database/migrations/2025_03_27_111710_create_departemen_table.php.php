@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_departemen', 100);
             $table->unsignedBigInteger('id_fakultas');
+
             $table->foreign('id_fakultas')->references('id')->on('fakultas')->onDelete('cascade');
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departemen');
+        Schema::dropIfExists('fakultas');
     }
 };

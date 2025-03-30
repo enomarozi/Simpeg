@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id();
-            $table->string('nip_baru',20)->unique();
+            $table->string('nip',20)->unique();
             $table->string('nama',100);
             $table->string('gelar_depan',50)->nullable();
             $table->string('gelar_belakang',50)->nullable();
@@ -23,13 +23,15 @@ return new class extends Migration
             $table->date('tanggal_lahir');
             $table->unsignedBigInteger('id_agama');
             $table->unsignedBigInteger('id_kategori_kepegawaian');
-            $table->unsignedBigInteger('id_fakultas');
+            $table->unsignedBigInteger('id_departemen');
             $table->unsignedBigInteger('id_kepangkatan');
             $table->timestamps();
 
-            $table->foreign('id_kepangkatan')->references('id')->on('kepangkatan')->onDelete('cascade');
             $table->foreign('id_agama')->references('id')->on('agama')->onDelete('cascade');
-            $table->foreign('id_fakultas')->references('id')->on('fakultas')->onDelete('cascade');
+            $table->foreign('id_departemen')->references('id')->on('departemen')->onDelete('cascade');
+            $table->foreign('id_kepangkatan')->references('id')->on('kepangkatan')->onDelete('cascade');
+            
+            
         });
     }
 
