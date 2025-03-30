@@ -23,6 +23,7 @@ Route::group(['prefix' => 'account'], function () {
 
 Route::group(['prefix'=> 'admin'], function(){
 	Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
+	Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
 	Route::GET('/kelola_pegawai', [PegawaiController::class, 'Kelola_pegawai'])->name('kelola_pegawai');
 	Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
 });

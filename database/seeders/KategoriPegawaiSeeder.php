@@ -18,6 +18,9 @@ class KategoriPegawaiSeeder extends Seeder
                 'nama_kategori_kepegawaian'=>'PNS'
             ],
             [   
+                'nama_kategori_kepegawaian'=>'CPNS'
+            ],
+            [   
                 'nama_kategori_kepegawaian'=>'PT'
             ],
             [

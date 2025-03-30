@@ -8,6 +8,7 @@
             <th>Nama</th>
             <th>Fakultas</th>
             <th>Departemen</th>
+            <th>Status Kepegawaian</th>
             <th>Golongan</th>
             <th>Pangkat</th>
             <th>Action</th>
@@ -26,7 +27,6 @@
         tbody.innerHTML = '';
         let autoIncrementId = 1;
         data.forEach(menu => {
-            console.log(menu)
             const row = document.createElement('tr');
             const noCell = document.createElement('td');
             noCell.textContent += autoIncrementId;
@@ -49,6 +49,10 @@
             departemenCell.textContent = menu.nama_departemen;
             row.appendChild(departemenCell);
 
+            const kategoriKepegawaianCell = document.createElement('td');
+            kategoriKepegawaianCell.textContent = menu.nama_kategori_kepegawaian;
+            row.appendChild(kategoriKepegawaianCell);
+
             const golonganCell = document.createElement('td');
             golonganCell.textContent = menu.golongan;
             row.appendChild(golonganCell);
@@ -59,8 +63,9 @@
 
             const actionCell = document.createElement('td');
             actionCell.innerHTML = `
-                <button onClick='modalEdit(${menu.id},"${menu.nip}","${menu.nama}")' class="btn btn-xs btn-info">Detail</button>
-                <button onClick='modalDelete(${menu.id})' class="btn btn-xs btn-danger">Delete</button>
+                <a href="detail/${menu.id}" class="btn btn-xs btn-info">Detail</a>
+                <a href="delete/${menu.id}" class="btn btn-xs btn-danger">Delete</a>
+
             `;
             
             row.appendChild(actionCell);
