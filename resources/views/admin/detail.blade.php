@@ -2,14 +2,15 @@
 @section('content')
 <div class="container-fluid mt-5">
     <div class="row justify-content-center">
-        <!-- Left: Profile Image -->
         <div class="col-lg-3 col-md-4 col-sm-6 text-center mb-4">
-            <img src="{{ asset('assets/images/profile.jpg') }}" alt="Profile Picture" class="img-fluid mb-3">
+            <!-- Increase image size by setting a fixed height -->
+            <div class="profile-image" style="height: 300px; overflow: hidden;">
+                <img src="{{ asset('assets/images/profile.jpg') }}" alt="Profile Picture" class="img-fluid mb-3" style="height: 100%; object-fit: cover;">
+            </div>
         </div>
 
-        <!-- Right: Profile Details -->
         <div class="col-lg-6 col-md-8 col-sm-10">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm" style="min-height: 450px;">
                 <div class="card-body">
                     <h5 class="card-title text-center mb-5">Detail Pegawai</h5>
                     <div class="row mb-3">
@@ -61,4 +62,5 @@
         </div>
     </div>
 </div>
+
 @endsection
