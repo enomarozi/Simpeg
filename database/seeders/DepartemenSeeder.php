@@ -235,6 +235,14 @@ class DepartemenSeeder extends Seeder
                 'id_fakultas' => 10
             ],
             [
+                'nama_departemen' => 'Mesin',            
+                'id_fakultas' => 10
+            ],
+            [
+                'nama_departemen' => 'Lingkungan',            
+                'id_fakultas' => 10
+            ],
+            [
                 'nama_departemen' => 'Arsitektur',            
                 'id_fakultas' => 10
             ],

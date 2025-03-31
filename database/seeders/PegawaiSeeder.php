@@ -15,6 +15,20 @@ class PegawaiSeeder extends Seeder
     {
         DB::table('pegawai')->insert([
             [
+                'nip' => '197405161999031001',
+                'nama' => 'HENDERY DAHLAN',
+                'gelar_depan' => '',
+                'gelar_belakang' => 'M.Sc., Ph.D.',
+                'status' => 'AKTIF',
+                'jenis_kelamin' => 'L',
+                'tempat_lahir' => 'Salat Panjang',
+                'tanggal_lahir' => '1974-05-16',
+                'id_agama' => 1,
+                'id_kategori_kepegawaian' => 1,
+                'id_departemen' => 54,
+                'id_kepangkatan' => 12,
+            ],
+            [
                 'nip' => '197410282008011006',
                 'nama' => 'ABDUL KHALIQ',
                 'gelar_depan' => '',
@@ -26,7 +40,7 @@ class PegawaiSeeder extends Seeder
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
                 'id_departemen' => 58,
-                'id_kepangkatan' => 1,
+                'id_kepangkatan' => 12,
             ],
             [
                 'nip' => '199510252024061001',
@@ -40,7 +54,7 @@ class PegawaiSeeder extends Seeder
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 2,
                 'id_departemen' => 61,
-                'id_kepangkatan' => 2,
+                'id_kepangkatan' => 11,
             ],
             [
                 'nip' => '198804162019032013',
@@ -54,7 +68,7 @@ class PegawaiSeeder extends Seeder
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
                 'id_departemen' => 59,
-                'id_kepangkatan' => 2,
+                'id_kepangkatan' => 11,
             ],
             [
                 'nip' => '199107052019031015',
@@ -68,7 +82,7 @@ class PegawaiSeeder extends Seeder
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
                 'id_departemen' => 57,
-                'id_kepangkatan' => 2,
+                'id_kepangkatan' => 11,
             ],
             [
                 'nip' => '197508202001121001',
@@ -82,7 +96,7 @@ class PegawaiSeeder extends Seeder
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
                 'id_departemen' => 62,
-                'id_kepangkatan' => 3,
+                'id_kepangkatan' => 13,
             ],
             [
                 'nip' => '199303272006042001',
@@ -96,7 +110,7 @@ class PegawaiSeeder extends Seeder
                 'id_agama' => 1,
                 'id_kategori_kepegawaian' => 1,
                 'id_departemen' => 58,
-                'id_kepangkatan' => 2,
+                'id_kepangkatan' => 12,
             ]
         ]);
     }
