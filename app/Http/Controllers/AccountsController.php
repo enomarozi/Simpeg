@@ -100,16 +100,7 @@ class AccountsController extends Controller
     public function profile(){
         $title = "Profile";
         $user = Auth::user();
-        $fullname = DB::table('users')
-                ->select('users.name')
-                ->leftJoin('access_roles', 'access_roles.user', '=', 'users.name')
-                ->where('users.username', $user->username)
-                ->get();
-        $role = DB::table('access_roles')
-                ->where('user', 'administrator')
-                ->pluck('role')
-                ->first();
-        return view('accounts/profile',compact('user','fullname','role','title'));
+        return view('accounts/profile',compact('user','title'));
     }
     public function setting(){
         $title = "Setting";

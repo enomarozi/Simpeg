@@ -19,7 +19,8 @@ class PegawaiController extends Controller
             ->join('fakultas', 'departemen.id_fakultas', '=', 'fakultas.id')
             ->join('kepangkatan', 'kepangkatan.id', '=', 'pegawai.id_kepangkatan')
             ->join('kategori_kepegawaian', 'pegawai.id_kategori_kepegawaian','=','kategori_kepegawaian.id')
-            ->select('pegawai.id', 'pegawai.nip', 'pegawai.nama', 'pegawai.jenis_kelamin', 'pegawai.tempat_lahir', 'pegawai.tanggal_lahir', 'agama.nama as agama', 'pegawai.status', 'fakultas.nama_fakultas', 'kategori_kepegawaian.nama_kategori_kepegawaian', 'departemen.nama_departemen', 'kepangkatan.golongan', 'kepangkatan.pangkat')
+            ->join('jenis_kepegawaian', 'pegawai.id_jenis_kepegawaian','=','jenis_kepegawaian.id')
+            ->select('pegawai.id', 'pegawai.nip', 'pegawai.nama', 'pegawai.gelar_depan', 'pegawai.gelar_belakang', 'pegawai.jenis_kelamin', 'pegawai.tempat_lahir', 'pegawai.tanggal_lahir', 'agama.nama as agama', 'pegawai.status', 'fakultas.nama_fakultas', 'jenis_kepegawaian.nama_jenis_kepegawaian','kategori_kepegawaian.nama_kategori_kepegawaian', 'departemen.nama_departemen', 'kepangkatan.golongan', 'kepangkatan.pangkat')
             ->where('pegawai.id', $id)
             ->first();
         $title = "Detail ".$pegawai->nama;

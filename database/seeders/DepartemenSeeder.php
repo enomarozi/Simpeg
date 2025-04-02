@@ -271,6 +271,10 @@ class DepartemenSeeder extends Seeder
                 'id_fakultas' => 11
             ],
             [
+                'nama_departemen' => 'Akuntansi Diploma III',            
+                'id_fakultas' => 11
+            ],
+            [
                 'nama_departemen' => 'Sistem Informasi',            
                 'id_fakultas' => 12
             ],

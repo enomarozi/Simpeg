@@ -15,13 +15,10 @@ class JenisPegawaiSeeder extends Seeder
     {
         DB::table('jenis_kepegawaian')->insert([
             [   
-                'nama_jenis_kepegawaian'=>'Tendik',
-            ],
-            [   
                 'nama_jenis_kepegawaian'=>'Dosen',
             ],
             [   
-                'nama_jenis_kepegawaian'=>'Lainnya',
+                'nama_jenis_kepegawaian'=>'Tendik',
             ],
         ]);
     }

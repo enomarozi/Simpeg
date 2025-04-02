@@ -1,5 +1,6 @@
 @extends('index')
 @section('content')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 <table id="menus-table" class="display table table-striped table-bordered">
     <thead>
         <tr>
@@ -10,7 +11,7 @@
             <th>Departemen</th>
             <th>Status Kepegawaian</th>
             <th>Golongan</th>
-            <th>Pangkat</th>
+            <!-- <th>Pangkat</th> -->
             <th>Action</th>
         </tr>
     </thead>
@@ -57,14 +58,18 @@
             golonganCell.textContent = menu.golongan;
             row.appendChild(golonganCell);
 
-            const pangkatCell = document.createElement('td');
-            pangkatCell.textContent = menu.pangkat;
-            row.appendChild(pangkatCell);
+            // const pangkatCell = document.createElement('td');
+            // pangkatCell.textContent = menu.pangkat;
+            // row.appendChild(pangkatCell);
 
             const actionCell = document.createElement('td');
             actionCell.innerHTML = `
-                <a href="detail/${menu.id}" class="btn btn-xs btn-info">Detail</a>
-                <a href="delete/${menu.id}" class="btn btn-xs btn-danger">Delete</a>
+                <a href="detail/${menu.id}" class="btn btn-xs btn-info" data-toggle="tooltip" title="Detail">
+                    <i class="fas fa-info-circle"></i> <!-- Ikon Detail -->
+                </a>
+                <a href="delete/${menu.id}" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete">
+                    <i class="fas fa-trash-alt"></i> <!-- Ikon Delete -->
+                </a>
 
             `;
             
