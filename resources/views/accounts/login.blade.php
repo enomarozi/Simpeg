@@ -22,6 +22,11 @@
 		margin-top: 20px;
         background: transparent;
 	}
+    .status_message{
+        width: 25%;
+        margin-left: 37.5%;
+        margin-right: 37.5%;
+    }
 </style>
 <body>
 <div class="container d-flex justify-content-center align-items-center flex-column" style="height: 80vh;">
@@ -46,15 +51,15 @@
     </div>
     <div class="w-100 mt-5">
         @if ($errors->has('error'))
-            <div class="text-danger small text-center">
+            <div class="card p-3 text-danger small text-center status_message">
                 {{ $errors->first('error') }}
             </div>
         @elseif (session('success'))
-            <div class="text-success small text-center">
+            <div class="card p-3 text-success small text-center">
                 {{ session('success') }}
             </div>
         @else
-            <div class="text-danger small text-center invisible">
+            <div class="card p-3 text-danger small text-center invisible">
                 Placeholder for error or success message
             </div>
         @endif

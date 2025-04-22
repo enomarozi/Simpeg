@@ -128,15 +128,21 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> Menu 2
+                <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> SKP
                 </a>
                 <div class="collapse" id="submenu2">
                     <ul class="nav flex-column ms-3">
                         <li class="nav-item mb-2">
-                            <a class="nav-link" href="#">Submenu 2-1</a>
+                            <a class="nav-link" href="#">Target SKP</a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a class="nav-link" href="#">Submenu 2-2</a>
+                            <a class="nav-link" href="#">Realisasi SKP</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#">Penilaian Kinerja</a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a class="nav-link" href="#">Riwayat SKP</a>
                         </li>
                     </ul>
                 </div>
