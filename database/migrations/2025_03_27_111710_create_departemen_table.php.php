@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('departemen', function(Blueprint $table){
             $table->id();
             $table->string('nama_departemen', 100);
-            $table->unsignedBigInteger('id_fakultas');
-
-            $table->foreign('id_fakultas')->references('id')->on('fakultas')->onDelete('cascade');
+            $table->foreignId('fakultas_id')->constrained('fakultas')->onDelete('restrict');
         });
     }
 
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fakultas');
+        Schema::dropIfExists('departemen');
     }
 };

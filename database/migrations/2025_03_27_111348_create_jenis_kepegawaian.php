@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('jenis_kepegawaian', function (Blueprint $table) {
             $table->id();
             $table->string('nama_jenis_kepegawaian',30);
-            //$table->unsignedBigInteger('id_kategori_kepegawaian');
-            //$table->foreign('id_kategori_kepegawaian')->references('id')->on('kategori_kepegawaian')->onDelete('cascade');
         });
     }
 

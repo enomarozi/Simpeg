@@ -21,15 +21,15 @@ return new class extends Migration
             $table->enum('jenis_kelamin',['L','P']);
             $table->string('tempat_lahir',100);
             $table->date('tanggal_lahir');
-            $table->unsignedBigInteger('id_agama');
-            $table->unsignedBigInteger('id_jenis_kepegawaian');
-            $table->unsignedBigInteger('id_kategori_kepegawaian');
-            $table->unsignedBigInteger('id_departemen');
-            $table->unsignedBigInteger('id_kepangkatan');
-            $table->timestamps();
+            
 
-            $table->foreign('id_departemen')->references('id')->on('departemen')->onDelete('cascade');
-            $table->foreign('id_kepangkatan')->references('id')->on('kepangkatan')->onDelete('cascade');
+            $table->foreignId('agama_id')->constrained('agama')->onDelete('restrict');
+            $table->foreignId('jenis_kepegawaian_id')->constrained('jenis_kepegawaian')->onDelete('restrict');
+            $table->foreignId('kategori_kepegawaian_id')->constrained('kategori_kepegawaian')->onDelete('restrict');
+            $table->foreignId('departemen_id')->constrained('departemen')->onDelete('restrict');
+            $table->foreignId('kepangkatan_id')->constrained('kepangkatan')->onDelete('restrict');
+
+            $table->timestamps();
             
             
         });
