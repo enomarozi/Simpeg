@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departemen', function(Blueprint $table){
+        Schema::create('pegawai_golongan_darah', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_departemen', 100);
-            $table->foreignId('fakultas_id')->constrained('fakultas')->onDelete('restrict');
+            $table->enum('golongan_darah', ['A', 'B', 'AB', 'O']);
         });
     }
 
@@ -23,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departemen');
+        Schema::dropIfExists('pegawai_golongan_darah');
     }
 };

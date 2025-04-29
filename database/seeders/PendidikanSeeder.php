@@ -14,7 +14,7 @@ class PendidikanSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pendidikan')->insert([
+        DB::table('pegawai_pendidikan')->insert([
             ['jenjang' => 'SD'],
             ['jenjang' => 'SMP'],
             ['jenjang' => 'SMA'],

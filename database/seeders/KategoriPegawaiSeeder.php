@@ -13,7 +13,7 @@ class KategoriPegawaiSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('kategori_kepegawaian')->insert([
+        DB::table('pegawai_kategori_kepegawaian')->insert([
             [   
                 'nama_kategori_kepegawaian'=>'PNS'
             ],

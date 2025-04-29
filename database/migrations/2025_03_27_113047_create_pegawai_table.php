@@ -23,12 +23,13 @@ return new class extends Migration
             $table->date('tanggal_lahir');
             
 
-            $table->foreignId('agama_id')->constrained('agama')->onDelete('restrict');
-            $table->foreignId('jenis_kepegawaian_id')->constrained('jenis_kepegawaian')->onDelete('restrict');
-            $table->foreignId('kategori_kepegawaian_id')->constrained('kategori_kepegawaian')->onDelete('restrict');
-            $table->foreignId('departemen_id')->constrained('departemen')->onDelete('restrict');
-            $table->foreignId('kepangkatan_id')->constrained('kepangkatan')->onDelete('restrict');
-
+            $table->foreignId('agama_id')->constrained('pegawai_agama')->onDelete('restrict');
+            $table->foreignId('jenis_kepegawaian_id')->constrained('pegawai_jenis_kepegawaian')->onDelete('restrict');
+            $table->foreignId('kategori_kepegawaian_id')->constrained('pegawai_kategori_kepegawaian')->onDelete('restrict');
+            $table->foreignId('departemen_id')->constrained('pegawai_departemen')->onDelete('restrict');
+            $table->foreignId('kepangkatan_id')->constrained('pegawai_kepangkatan')->onDelete('restrict');
+            $table->foreignId('golongan_darah_id')->nullable()->constrained('pegawai_golongan_darah')->onDelete('restrict');
+            $table->foreignId('perkawinan_id')->nullable()->constrained('pegawai_perkawinan')->onDelete('restrict');
             $table->timestamps();
             
             

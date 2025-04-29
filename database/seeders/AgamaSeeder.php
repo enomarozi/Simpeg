@@ -13,7 +13,7 @@ class AgamaSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('agama')->insert([
+        DB::table('pegawai_agama')->insert([
             ['nama'=>'Islam'],
             ['nama'=>'Kristen Protestan'],
             ['nama'=>'Kristen Katolik'],

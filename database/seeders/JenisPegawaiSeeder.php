@@ -13,7 +13,7 @@ class JenisPegawaiSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('jenis_kepegawaian')->insert([
+        DB::table('pegawai_jenis_kepegawaian')->insert([
             [   
                 'nama_jenis_kepegawaian'=>'Dosen',
             ],

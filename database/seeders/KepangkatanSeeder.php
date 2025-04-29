@@ -9,7 +9,7 @@ class KepangkatanSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('kepangkatan')->insert([
+        DB::table('pegawai_kepangkatan')->insert([
             ['pangkat' => 'Pengatur Muda', 'golongan' => 'I/a'],
             ['pangkat' => 'Pengatur Muda Tingkat I', 'golongan' => 'I/b'],
             ['pangkat' => 'Pengatur', 'golongan' => 'I/c'],

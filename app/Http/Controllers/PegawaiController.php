@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pegawai;
+use App\Models\{Pegawai, Agama};
 use DB;
 
 class PegawaiController extends Controller
@@ -24,7 +24,8 @@ class PegawaiController extends Controller
             ->where('pegawai.id', $id)
             ->first();
         $title = "Detail ".$pegawai->nama;
-        return view('admin/detail',compact('title','pegawai'));
+        $agama = Agama::all();
+        return view('admin/detail',compact('title','pegawai','agama'));
     }
 
     public function Json_pegawai(){
