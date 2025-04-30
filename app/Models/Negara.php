@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Agama extends Model
+class Negara extends Model
 {
-    protected $table = 'pegawai_agama';
+    protected $table = 'pegawai_Negara';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'nama',
+        'negara',
     ];
 }

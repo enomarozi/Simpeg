@@ -40,14 +40,6 @@
                         <div class="col-md-8">{{ \Carbon\Carbon::parse($pegawai->tanggal_lahir)->translatedFormat('d-M-Y') }}</div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col-md-4 fw-bold">Agama:</div>
-                        <div class="col-md-8">{{ $pegawai->agama }}</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4 fw-bold">Jenis Kelamin:</div>
-                        <div class="col-md-8">{{ $pegawai->jenis_kelamin }}</div>
-                    </div>
-                    <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Status Kepegawaian:</div>
                         <div class="col-md-8">{{ $pegawai->nama_kategori_kepegawaian }} {{ $pegawai->nama_jenis_kepegawaian }}</div>
                     </div>
@@ -136,20 +128,39 @@
                         <select class="form-select">
                           <option hidden>-- Pilih Perkawinan --</option>
                             @foreach($perkawinan as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                <option value="{{ $item->id }}">{{ $item->status }}</option>
                             @endforeach
                         </select>
                       </div>
                       <div class="mb-3">
-                        <label class="form-label">Status WNI</label>
-                        <select class="form-select">
-                          <option>Indonesia</option>
+                        <label class="form-label">Status Kewarganegaraan</label>
+                        <select id='status_kewarganegaraan'class="form-select" onchange="KewarganegaraanSelect()">
+                          <option hidden>-- Pilih Kewarganegaraan --</option>
+                          @foreach($kewarganegaraan as $item)
+                                <option value="{{ $item->id }}">{{ $item->kewarganegaraan }}</option>
+                          @endforeach
                         </select>
                       </div>
-                      <div class="mb-3">
-                        <label class="form-label">Batas Usia Pensiun</label>
-                        <input type="text" class="form-control">
+                      <div class="mb-3" id="negara" style="display:none;">
+                        <label class="form-label">Kewarganegaraan</label>
+                        <select class="form-select">
+                          @foreach($negara as $item)
+                                <option value="{{ $item->id }}">{{ $item->negara }}</option>
+                          @endforeach
+                        </select>
                       </div>
+                      <script type="text/javascript">
+                        function KewarganegaraanSelect(){
+                          const status = document.getElementById('status_kewarganegaraan').value;
+                          const negara = document.getElementById('negara')
+                          if(status == 2){
+                            negara.style.display = "block";
+                          }else{
+                            negara.style.display = "none";
+                          }
+
+                        }
+                      </script>
                     </div>
                   </div>
 
@@ -202,7 +213,10 @@
                       <div class="mb-3">
                         <label class="form-label">Golongan Darah</label>
                         <select class="form-select">
-                          <option>O</option>
+                          <option hidden>-- Pilih Golongan Darah --</option>
+                            @foreach($golonganDarah as $item)
+                                <option value="{{ $item->id }}">{{ $item->golongan_darah }}</option>
+                            @endforeach
                         </select>
                       </div>
                       <div class="mb-3">

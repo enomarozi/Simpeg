@@ -4,20 +4,14 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Database\Seeders\AgamaSeeder;
-use Database\Seeders\DepartemenSeeder;
-use Database\Seeders\FakultasSeeder;
-use Database\Seeders\JenisPegawaiSeeder;
-use Database\Seeders\KategoriPegawaiSeeder;
-use Database\Seeders\KepangkatanSeeder;
-use Database\Seeders\PendidikanSeeder;
-use Database\Seeders\PegawaiSeeder;
-
+use Database\Seeders\{
+                    AgamaSeeder, DepartemenSeeder, FakultasSeeder,
+                    JenisPegawaiSeeder, KategoriPegawaiSeeder, KepangkatanSeeder,
+                    PendidikanSeeder, PegawaiSeeder, StatusPerkawinanSeeder,
+                    GolonganDarahSeeder, NegaraSeeder, KewargaNegaraanSeeder,
+                    };
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         User::factory()->create([
@@ -26,7 +20,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'marozieno0@gmail.com',
             'password'=> '12345678',
         ]);
-
         $this->call(AgamaSeeder::class);
         $this->call(FakultasSeeder::class);
         $this->call(DepartemenSeeder::class);
@@ -35,5 +28,9 @@ class DatabaseSeeder extends Seeder
         $this->call(KepangkatanSeeder::class);
         $this->call(PendidikanSeeder::class);
         $this->call(PegawaiSeeder::class);
+        $this->call(StatusPerkawinanSeeder::class);
+        $this->call(GolonganDarahSeeder::class);
+        $this->call(NegaraSeeder::class);
+        $this->call(KewargaNegaraanSeeder::class);
     }
 }
