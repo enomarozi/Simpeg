@@ -51,14 +51,6 @@
                         <div class="col-md-4 fw-bold">Departemen:</div>
                         <div class="col-md-8">{{ $pegawai->nama_departemen }}</div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4 fw-bold">Pangkat:</div>
-                        <div class="col-md-8">{{ $pegawai->pangkat }}</div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4 fw-bold">Golongan:</div>
-                        <div class="col-md-8">{{ $pegawai->golongan }}/a</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -175,15 +167,21 @@
                         <textarea class="form-control"></textarea>
                       </div>
                       <div class="mb-3">
-                        <label class="form-label">Kabupaten</label>
-                        <select class="form-select">
-                          <option>Kab. Dharmas Raya</option>
+                        <label class="form-label">Provinsi</label>
+                        <select class="form-select" id='provinsiSelect'>
+                          <option hidden>-- Pilih Provinsi --</option>
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label">Kota/Kabupaten</label>
+                        <select class="form-select" id='kotaSelect'>
+                          <option hidden>-- Pilih Kota/Kab --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kecamatan</label>
-                        <select class="form-select">
-                          <option>Kec. Koto Salak</option>
+                        <select class="form-select" id='kecamatanSelect'>
+                          <option hidden>-- Pilih Kecamatan --</option>
                         </select>
                       </div>
                       <div class="mb-3">
@@ -200,6 +198,64 @@
                       </div>
                     </div>
                   </div>
+                  <script>
+                    fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+                      .then(response=>response.json())
+                      .then(provinces=>{
+                        const selectElement = document.getElementById('provinsiSelect');
+                        provinces.forEach(provinsi=>{
+                          const option = document.createElement('option');
+                          option.value = provinsi.id;
+                          option.textContent = provinsi.name;
+                          selectElement.appendChild(option);
+                        });
+                      })
+                      .catch(error => console.error("Failed Provinces", error));
+
+                      document.getElementById('provinsiSelect').addEventListener('change', function(){
+                        const provinsiId = this.value;
+                        const kotaSelect = document.getElementById('kotaSelect');
+                        const kecamatanSelect = document.getElementById('kecamatanSelect');
+                        kotaSelect.innerHTML = '<option selected disabled>-- Pilih Kota/Kab --</option>';
+                        kecamatanSelect.innerHTML = '<option selected disabled>-- Pilih Kecamatan --</option>';
+                        if(provinsiId){
+                          fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinsiId}.json`)
+                            .then(response=>response.json())
+                            .then(regencies=>{
+                              const kotaSelect = document.getElementById('kotaSelect');
+                              regencies.forEach(regency=>{
+                                const option = document.createElement('option');
+                                option.value = regency.id;
+                                option.textContent = regency.name;
+                                kotaSelect.appendChild(option);
+                              });
+                            })
+                            .catch(error=>console.error('Failed Kota/Kab',error))
+                        }
+                      });
+
+                      document.getElementById('kotaSelect').addEventListener('change', function(){
+                        const kotaId = this.value;
+
+                        const kecamatanSelect = document.getElementById('kecamatanSelect');
+                        kecamatanSelect.innerHTML = '<option selected disabled>-- Pilih Kecamatan --</option>';
+                        if(kotaId){
+                          fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaId}.json`)
+                          .then(response => response.json())
+                          .then(districts => {
+                            districts.forEach(district=>{
+                              const option = document.createElement('option');
+                              option.value = district.id;
+                              option.textContent = district.name;
+                              kecamatanSelect.appendChild(option);
+                            });
+                          })
+                          .catch(error=>console.error("Failed Kecamatan", error))
+
+                        }
+
+                      });
+                  </script>
                 </div>
 
                 <!-- Kanan: Informasi Medis, ID, dan Bank -->
@@ -299,9 +355,24 @@
       <div class="tab-pane fade" id="pangkat" role="tabpanel">
         <div class="card shadow-sm">
           <div class="card-body">
-            <h5 class="card-title">Pangkat Golongan</h5>
-            <p>Pangkat: -</p>
-            <p>Golongan: -</p>
+            <div class="card-header fw-bold">Informasi Pangkat Golongan</div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Pangkat Golongan</label>
+                <select class="form-select">
+                  <option hidden>-- Pilih Agama --</option>
+                  @foreach($negara as $item)
+                        <option value="{{ $item->id }}">{{ $item->negara }}</option>
+                  @endforeach
+                </select>
+                
+                <input type="text" class="form-control" value="{{ $pegawai->golongan }} - {{ $pegawai->pangkat }}">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">TMT</label>
+                <input type="date" class="form-control">
+              </div>
+            </div>
           </div>
         </div>
       </div>

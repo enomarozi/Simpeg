@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Pegawai, Agama, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara};
+use App\Models\{Pegawai, Agama, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan};
 use DB;
 
 class PegawaiController extends Controller
@@ -29,7 +29,8 @@ class PegawaiController extends Controller
         $golonganDarah = GolonganDarah::all();
         $kewarganegaraan = Kewarganegaraan::all();
         $negara = Negara::all();
-        return view('admin/detail',compact('title','pegawai','agama','perkawinan','golonganDarah','kewarganegaraan','negara'));
+        $kepangkatan = Kepangkatan::all();
+        return view('admin/detail',compact('title','pegawai','agama','perkawinan','golonganDarah','kewarganegaraan','negara','kepangkatan'));
     }
 
     public function Json_pegawai(){
