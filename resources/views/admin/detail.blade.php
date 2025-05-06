@@ -98,11 +98,13 @@
                       <div class="mb-3">
                         <label class="form-label">Jenis Kelamin</label><br>
                         <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="gender" id="male" value="L" checked>
+                          <input class="form-check-input" type="radio" name="gender" id="male" value="L"
+                                 {{ $pegawai->jenis_kelamin == 'L' ? 'checked' : '' }}>
                           <label class="form-check-label" for="male">Laki-laki</label>
                         </div>
                         <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="gender" id="female" value="P">
+                          <input class="form-check-input" type="radio" name="gender" id="female" value="P"
+                                 {{ $pegawai->jenis_kelamin == 'P' ? 'checked' : '' }}>
                           <label class="form-check-label" for="female">Perempuan</label>
                         </div>
                       </div>
@@ -111,8 +113,10 @@
                         <select class="form-select">
                             <option hidden>-- Pilih Agama --</option>
                             @foreach($agama as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                <option value="{{ $item->id }}" {{ $item->id == $pegawai->agama_id ? 'selected' : '' }}>
+                                  {{ $item->nama }}</option>
                             @endforeach
+                            
                         </select>
                       </div>
                       <div class="mb-3">
@@ -360,13 +364,12 @@
               <div class="mb-3">
                 <label class="form-label">Pangkat Golongan</label>
                 <select class="form-select">
-                  <option hidden>-- Pilih Agama --</option>
-                  @foreach($negara as $item)
-                        <option value="{{ $item->id }}">{{ $item->negara }}</option>
+                  @foreach($kepangkatan as $item)
+                  <option value="{{ $item->id }}" {{ $item->id == $pegawai->kepangkatan_id ? 'selected' : '' }}>
+                    {{ $item->golongan }} - {{ $item->pangkat }}
+                  </option>
                   @endforeach
                 </select>
-                
-                <input type="text" class="form-control" value="{{ $pegawai->golongan }} - {{ $pegawai->pangkat }}">
               </div>
               <div class="mb-3">
                 <label class="form-label">TMT</label>
@@ -379,14 +382,79 @@
 
       <!-- Jabatan Tab -->
       <div class="tab-pane fade" id="jabatan" role="tabpanel">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h5 class="card-title">Jabatan</h5>
-            <p>Nama Jabatan: -</p>
-            <p>Jenis Jabatan: -</p>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="row">
+        <!-- Jabatan Fungsional -->
+        <div class="col-md-6">
+          <div class="card shadow-sm mb-4">
+            <div class="card-header fw-bold">Informasi Jabatan Fungsional</div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Jabatan Fungsional</label>
+                <select class="form-select">
+                  <option selected>Tenaga Kependidikan</option>
+                  <!-- Tambahkan opsi lain jika diperlukan -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">TMT</label>
+                <input type="date" class="form-control" value="0-11-30">
+              </div>
+              <label class="form-label fw-bold mt-3">Keputusan</label>
+              <div class="mb-3">
+                <label class="form-label">Diputuskan Oleh</label>
+                <input type="text" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">No. Surat</label>
+                <input type="text" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Tanggal SK</label>
+                <input type="date" class="form-control" value="0000-00-00">
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <!-- Jabatan Struktural -->
+        <div class="col-md-6">
+          <div class="card shadow-sm mb-4">
+            <div class="card-header fw-bold">Informasi Jabatan Struktural</div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label">Jabatan Struktural</label>
+                <select class="form-select">
+                  <option selected>-- PILIH --</option>
+                  <!-- Tambahkan opsi jabatan struktural lain -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">TMT</label>
+                <input type="date" class="form-control" placeholder="Pilih Tanggal">
+              </div>
+              <label class="form-label fw-bold mt-3">Keputusan</label>
+              <div class="mb-3">
+                <label class="form-label">Diputuskan Oleh</label>
+                <input type="text" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">No. Surat</label>
+                <input type="text" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Tanggal SK</label>
+                <input type="date" class="form-control" placeholder="Pilih Tanggal">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- End Row -->
+    </div>
+  </div>
+</div>
+
 
       <!-- Pendidikan Tab -->
       <div class="tab-pane fade" id="pendidikan" role="tabpanel">

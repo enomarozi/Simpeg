@@ -9,6 +9,8 @@ use Database\Seeders\{
                     JenisPegawaiSeeder, KategoriPegawaiSeeder, KepangkatanSeeder,
                     PendidikanSeeder, PegawaiSeeder, StatusPerkawinanSeeder,
                     GolonganDarahSeeder, NegaraSeeder, KewargaNegaraanSeeder,
+                    JabatanDosenSeeder,
+                    JabatanTendikSeeder,
                     };
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +26,8 @@ class DatabaseSeeder extends Seeder
         $this->call(FakultasSeeder::class);
         $this->call(DepartemenSeeder::class);
         $this->call(JenisPegawaiSeeder::class);
+        $this->call(JabatanDosenSeeder::class);
+        $this->call(JabatanTendikSeeder::class);
         $this->call(KategoriPegawaiSeeder::class);
         $this->call(KepangkatanSeeder::class);
         $this->call(PendidikanSeeder::class);
