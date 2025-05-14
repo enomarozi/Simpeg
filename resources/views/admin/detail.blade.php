@@ -79,7 +79,6 @@
       </li>
     </ul>
 
-    <!-- Tab Content -->
     <div class="tab-content" id="profileTabContent">
       <!-- Biodata Tab -->
       <div class="tab-pane fade show active" id="biodata" role="tabpanel">
@@ -110,7 +109,7 @@
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Agama</label>
-                        <select class="form-select">
+                        <select name="agama" class="form-select">
                             <option hidden>-- Pilih Agama --</option>
                             @foreach($agama as $item)
                                 <option value="{{ $item->id }}" {{ $item->id == $pegawai->agama_id ? 'selected' : '' }}>
@@ -121,7 +120,7 @@
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Status Perkawinan</label>
-                        <select class="form-select">
+                        <select name="perkawinan" class="form-select">
                           <option hidden>-- Pilih Perkawinan --</option>
                             @foreach($perkawinan as $item)
                                 <option value="{{ $item->id }}">{{ $item->status }}</option>
@@ -130,7 +129,7 @@
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Status Kewarganegaraan</label>
-                        <select id='status_kewarganegaraan'class="form-select" onchange="KewarganegaraanSelect()">
+                        <select name="status_kewarganegaraan" id='status_kewarganegaraan'class="form-select" onchange="KewarganegaraanSelect()">
                           <option hidden>-- Pilih Kewarganegaraan --</option>
                           @foreach($kewarganegaraan as $item)
                                 <option value="{{ $item->id }}">{{ $item->kewarganegaraan }}</option>
@@ -138,7 +137,7 @@
                         </select>
                       </div>
                       <div class="mb-3" id="negara" style="display:none;">
-                        <label class="form-label">Kewarganegaraan</label>
+                        <label name="kewarganegaraan" class="form-label">Kewarganegaraan</label>
                         <select class="form-select">
                           @foreach($negara as $item)
                                 <option value="{{ $item->id }}">{{ $item->negara }}</option>
@@ -157,6 +156,10 @@
 
                         }
                       </script>
+                      <div class="mb-3">
+                        <label class="form-label">Usia Pensiun</label>
+                        <input type="text" class="form-control" name="usia_pensiun">
+                      </div>
                     </div>
                   </div>
 
@@ -168,37 +171,37 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Jalan</label>
-                        <textarea class="form-control"></textarea>
+                        <textarea name="jalan" class="form-control"></textarea>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Provinsi</label>
-                        <select class="form-select" id='provinsiSelect'>
+                        <select name="provinsi" class="form-select" id='provinsiSelect'>
                           <option hidden>-- Pilih Provinsi --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kota/Kabupaten</label>
-                        <select class="form-select" id='kotaSelect'>
+                        <select name="kabupaten-kota" class="form-select" id='kotaSelect'>
                           <option hidden>-- Pilih Kota/Kab --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kecamatan</label>
-                        <select class="form-select" id='kecamatanSelect'>
+                        <select name="kecamatan" class="form-select" id='kecamatanSelect'>
                           <option hidden>-- Pilih Kecamatan --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. Telepon</label>
-                        <input type="text" class="form-control" value="-">
+                        <input name="telepon" type="text" class="form-control" value="">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. HP</label>
-                        <input type="text" class="form-control" value="081374823635">
+                        <input name="hp" type="text" class="form-control" value="">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="ade.priyanto@lptik.unand.ac.id">
+                        <input name="email" type="email" class="form-control" value="">
                       </div>
                     </div>
                   </div>
@@ -261,6 +264,7 @@
                       });
                   </script>
                 </div>
+                
 
                 <!-- Kanan: Informasi Medis, ID, dan Bank -->
                 <div class="col-lg-6">
@@ -272,7 +276,7 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Golongan Darah</label>
-                        <select class="form-select">
+                        <select name="golongan_darah" class="form-select">
                           <option hidden>-- Pilih Golongan Darah --</option>
                             @foreach($golonganDarah as $item)
                                 <option value="{{ $item->id }}">{{ $item->golongan_darah }}</option>
@@ -281,15 +285,15 @@
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Tinggi Badan (cm)</label>
-                        <input type="number" class="form-control" value="169">
+                        <input type="number" class="form-control" name="tb">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Berat Badan (kg)</label>
-                        <input type="number" class="form-control" value="74">
+                        <input type="number" class="form-control" name="bb">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Cacat</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="cacat">
                       </div>
                     </div>
                   </div>
@@ -302,15 +306,15 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">No. KTP</label>
-                        <input type="text" class="form-control" value="1310012501910002">
+                        <input type="text" class="form-control" name="no_ktp">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. NPWP</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="no_npwp">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">BPJS Tenaga Kerja</label>
-                        <input type="text" class="form-control">
+                        <input type="text" class="form-control" name="no_bpjs">
                       </div>
                     </div>
                   </div>
@@ -323,17 +327,17 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Jenis Bank</label>
-                        <select class="form-select">
+                        <select class="form-select" name="jenis_bank">
                           <option>Bank Nagari</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. Rekening Bank</label>
-                        <input type="text" class="form-control" value="12">
+                        <input type="text" class="form-control" name="rekening">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Nama Penerima</label>
-                        <input type="text" class="form-control" value="Ade Priyanto">
+                        <input type="text" class="form-control" name="atas_nama">
                       </div>
                     </div>
                   </div>
@@ -382,81 +386,78 @@
 
       <!-- Jabatan Tab -->
       <div class="tab-pane fade" id="jabatan" role="tabpanel">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <div class="row">
-        <!-- Jabatan Fungsional -->
-        <div class="col-md-6">
-          <div class="card shadow-sm mb-4">
-            <div class="card-header fw-bold">Informasi Jabatan Fungsional</div>
-            <div class="card-body">
-              <div class="mb-3">
-                <label class="form-label">Jabatan Fungsional</label>
-                <select class="form-select">
-                  <option selected>Tenaga Kependidikan</option>
-                  <!-- Tambahkan opsi lain jika diperlukan -->
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">TMT</label>
-                <input type="date" class="form-control" value="0-11-30">
-              </div>
-              <label class="form-label fw-bold mt-3">Keputusan</label>
-              <div class="mb-3">
-                <label class="form-label">Diputuskan Oleh</label>
-                <input type="text" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">No. Surat</label>
-                <input type="text" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Tanggal SK</label>
-                <input type="date" class="form-control" value="0000-00-00">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="row">
+            <!-- Jabatan Fungsional -->
+            <div class="col-md-6">
+              <div class="card shadow-sm mb-4">
+                <div class="card-header fw-bold">Informasi Jabatan Fungsional</div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">Jabatan Fungsional</label>
+                    <select class="form-select">
+                      <option selected>Tenaga Kependidikan</option>
+                      <!-- Tambahkan opsi lain jika diperlukan -->
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">TMT</label>
+                    <input type="date" class="form-control" value="0-11-30">
+                  </div>
+                  <label class="form-label fw-bold mt-3">Keputusan</label>
+                  <div class="mb-3">
+                    <label class="form-label">Diputuskan Oleh</label>
+                    <input type="text" class="form-control">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">No. Surat</label>
+                    <input type="text" class="form-control">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Tanggal SK</label>
+                    <input type="date" class="form-control" value="">
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Jabatan Struktural -->
-        <div class="col-md-6">
-          <div class="card shadow-sm mb-4">
-            <div class="card-header fw-bold">Informasi Jabatan Struktural</div>
-            <div class="card-body">
-              <div class="mb-3">
-                <label class="form-label">Jabatan Struktural</label>
-                <select class="form-select">
-                  <option selected>-- PILIH --</option>
-                  <!-- Tambahkan opsi jabatan struktural lain -->
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">TMT</label>
-                <input type="date" class="form-control" placeholder="Pilih Tanggal">
-              </div>
-              <label class="form-label fw-bold mt-3">Keputusan</label>
-              <div class="mb-3">
-                <label class="form-label">Diputuskan Oleh</label>
-                <input type="text" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">No. Surat</label>
-                <input type="text" class="form-control">
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Tanggal SK</label>
-                <input type="date" class="form-control" placeholder="Pilih Tanggal">
+            <!-- Jabatan Struktural -->
+            <div class="col-md-6">
+              <div class="card shadow-sm mb-4">
+                <div class="card-header fw-bold">Informasi Jabatan Struktural</div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">Jabatan Struktural</label>
+                    <select class="form-select">
+                      <option selected>-- PILIH --</option>
+                      <!-- Tambahkan opsi jabatan struktural lain -->
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">TMT</label>
+                    <input type="date" class="form-control" placeholder="Pilih Tanggal">
+                  </div>
+                  <label class="form-label fw-bold mt-3">Keputusan</label>
+                  <div class="mb-3">
+                    <label class="form-label">Diputuskan Oleh</label>
+                    <input type="text" class="form-control">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">No. Surat</label>
+                    <input type="text" class="form-control">
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Tanggal SK</label>
+                    <input type="date" class="form-control" placeholder="Pilih Tanggal">
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </div> <!-- End Row -->
         </div>
-      </div> <!-- End Row -->
+      </div>
     </div>
-  </div>
-</div>
-
-
-      <!-- Pendidikan Tab -->
       <div class="tab-pane fade" id="pendidikan" role="tabpanel">
         <div class="card shadow-sm">
           <div class="card-body">
@@ -486,7 +487,5 @@
   </div>
 </div>
 </div>
-
-
-
+<script src="{{ asset('assets/js/requests.js') }}"></script>
 @endsection

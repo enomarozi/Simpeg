@@ -13,24 +13,31 @@ return new class extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id();
-            $table->string('nip',20)->unique();
+            $table->string('nip',20)->nullable();
             $table->string('nama',100);
             $table->string('gelar_depan',50)->nullable();
             $table->string('gelar_belakang',50)->nullable();
-            $table->enum('status',['Aktif','Tidak Aktif']);
+            $table->enum('status',['Aktif','Tidak Aktif','Pindah Masuk']);
             $table->enum('jenis_kelamin',['L','P']);
-            $table->string('tempat_lahir',100);
-            $table->date('tanggal_lahir');
-            
+            $table->string('tempat_lahir',100)->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->foreignId('agama_id')->nullable()->constrained('pegawai_agama')->onDelete('restrict');
+            $table->foreignId('jenis_kepegawaian_id')->default(1)->constrained('pegawai_jenis_kepegawaian')->onDelete('restrict');
+            $table->foreignId('kategori_kepegawaian_id')->nullable()->constrained('pegawai_kategori_kepegawaian')->onDelete('restrict');
+            $table->foreignId('departemen_id')->nullable()->constrained('pegawai_departemen')->onDelete('restrict');
+            $table->date('tmt_cpns')->nullable();
+            $table->foreignId('kepangkatan_id')->nullable()->constrained('pegawai_kepangkatan')->onDelete('restrict');
+            $table->date('tmt_pangkat')->nullable();
+            $table->foreignId('jabatan_id')->constrained('pegawai_jabatan_dosen')->onDelete('restrict');
+            $table->foreignId('pendidikan_id')->nullable()->constrained('pegawai_pendidikan')->onDelete('restrict');
+            $table->date('tmt_pensiun')->nullable();
+            $table->string('tahun_pensiun',4)->nullable();
+            $table->string('telepon',20)->unique()->nullable();
+            $table->string('hp',20)->unique()->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->foreignId('perkawinan_id')->nullable()->constrained('pegawai_status_perkawinan')->onDelete('restrict');
             $table->foreignId('kewarganegaraan_id')->nullable()->constrained('pegawai_kewarganegaraan')->onDelete('restrict');
             $table->foreignId('negara_id')->nullable()->constrained('pegawai_negara')->onDelete('restrict');
-            $table->foreignId('agama_id')->constrained('pegawai_agama')->onDelete('restrict');
-            $table->foreignId('jenis_kepegawaian_id')->constrained('pegawai_jenis_kepegawaian')->onDelete('restrict');
-            $table->foreignId('kategori_kepegawaian_id')->constrained('pegawai_kategori_kepegawaian')->onDelete('restrict');
-            $table->foreignId('departemen_id')->constrained('pegawai_departemen')->onDelete('restrict');
-            $table->foreignId('kepangkatan_id')->constrained('pegawai_kepangkatan')->onDelete('restrict');
-            $table->foreignId('golongan_darah_id')->nullable()->constrained('pegawai_golongan_darah')->onDelete('restrict');
-            $table->foreignId('perkawinan_id')->nullable()->constrained('pegawai_status_perkawinan')->onDelete('restrict');
             $table->timestamps();
             
             
