@@ -27,3 +27,5 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::GET('/kelola_pegawai', [PegawaiController::class, 'Kelola_pegawai'])->name('kelola_pegawai');
 	Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
 });
+
+Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');

@@ -43,4 +43,27 @@ class PegawaiController extends Controller
 
         return response()->json($pegawai);
     }
+
+    public function update_pegawai(Request $request){
+        $pegawai = Pegawai::find($request->pegawai_id);
+        if (!$pegawai) {
+            return response()->json(['message' => 'Pegawai tidak ditemukan'], 404);
+        }
+        $pegawai->update([
+            'jenis_kelamin' => $request->gender,
+            'agama_id' => $request->agama,
+            'perkawinan_id' => $request->perkawinan,
+            'kewarganegaraan_id' => $request->status_kewarganegaraan,
+            'negara_id' => $request->kewarganegaraan,
+            'usia_pensiun' => $request->usia_pensiun,
+            'telepon' => $request->telepon,
+            'hp' => $request->hp,
+            'email' => $request->email,
+            'kepangkatan_id' => $request->pangkat,
+            'tmt_pangkat' => $request->tmt_pangkat,
+            'jabatan_id' => $request->jabatan_f,
+        ]);
+
+        return response()->json(['message' => 'Pegawai berhasil diupdate']);
+    }
 }
