@@ -120,7 +120,6 @@
                                 <option value="{{ $item->id }}" {{ $item->id == $pegawai->agama_id ? 'selected' : '' }}>
                                   {{ $item->nama }}</option>
                             @endforeach
-                            
                         </select>
                       </div>
                       <div class="mb-3">
@@ -128,7 +127,8 @@
                         <select name="perkawinan" class="form-select">
                           <option hidden>-- Pilih Perkawinan --</option>
                             @foreach($perkawinan as $item)
-                                <option value="{{ $item->id }}">{{ $item->status }}</option>
+                                <option value="{{ $item->id }}" {{ $item->id == $pegawai->perkawinan_id ? 'selected' : ''}}>
+                                  {{ $item->status }}</option>
                             @endforeach
                         </select>
                       </div>
@@ -137,7 +137,8 @@
                         <select name="status_kewarganegaraan" id='status_kewarganegaraan'class="form-select" onchange="KewarganegaraanSelect()">
                           <option hidden>-- Pilih Kewarganegaraan --</option>
                           @foreach($kewarganegaraan as $item)
-                                <option value="{{ $item->id }}">{{ $item->kewarganegaraan }}</option>
+                                <option value="{{ $item->id }}" {{ $item->id == $pegawai->kewarganegaraan_id ? 'selected' : ''}}>
+                                  {{ $item->kewarganegaraan }}</option>
                           @endforeach
                         </select>
                       </div>
@@ -145,7 +146,8 @@
                         <label name="kewarganegaraan" class="form-label">Kewarganegaraan</label>
                         <select class="form-select">
                           @foreach($negara as $item)
-                                <option value="{{ $item->id }}">{{ $item->negara }}</option>
+                                <option value="{{ $item->id }}" {{ $item->id == $pegawai->negara_id ? 'selected' : ''}}>
+                                  {{ $item->negara }}</option>
                           @endforeach
                         </select>
                       </div>
@@ -176,7 +178,7 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Jalan</label>
-                        <textarea name="jalan" class="form-control"></textarea>
+                        <textarea name="alamat_lengkap" class="form-control"></textarea>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Provinsi</label>
@@ -407,7 +409,7 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">TMT</label>
-                <input type="date" class="form-control" name="tmt_pangkat">
+                <input type="date" class="form-control" name="tmt_pangkat" value="{{ $pegawai->tmt_pangkat ?? '' }}">
               </div>
             </div>
           </div>

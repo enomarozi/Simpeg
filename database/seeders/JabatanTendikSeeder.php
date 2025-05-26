@@ -10,7 +10,7 @@ class JabatanTendikSeeder extends Seeder
 {
     public function run()
     {
-        $jabatans = [
+        $jabatans_ = [
             'Pengadministrasi Sarana dan Prasarana', 'Pramu Bakti', 'Pengemudi', 'Pengelola Barang Milik Negara', 
             'Pengelola Informasi Akademik', 'Pustakawan Ahli Muda', 'Pengembang Teknologi Pembelajaran Ahli Pertama',
             'Pengelola Keuangan', 'Pengadministrasi Akademik', 'Kepala Seksi Keuangan dan Aset FEB Universitas Andalas',
@@ -52,7 +52,8 @@ class JabatanTendikSeeder extends Seeder
             'Pengadministrasi PKM', 'Bagian Umum', 'Analis Kepegawaian Madya', 'Pengadministrasi Kerumahtanggaan', 'Penata Dokumen Keuangan'
         ];
 
-        // Menyisipkan data ke tabel jabatan
+        $jabatans = ['Laboran','Pengadministrasian','Pengolah Data','Sopir','Teknisi','Tenaga IT','Tenaga Keamanan','Tenaga Kebersihan','Tenaga Kesehatan'];
+
         foreach ($jabatans as $jabatan) {
             DB::table('pegawai_jabatan_tendik')->insert([
                 'nama_jabatan' => $jabatan

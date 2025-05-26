@@ -13,7 +13,7 @@ function action(){
 			kewarganegaraan = 106;
 		}
 		const usia_pensiun = document.querySelector('input[name="usia_pensiun"]').value;
-		const jalan = document.querySelector('textarea[name="jalan"]').value;
+		const alamat_lengkap = document.querySelector('textarea[name="alamat_lengkap"]').value;
 		const provinsi = document.querySelector('select[name="provinsi"]').value;
 		const kabupaten_kota = document.querySelector('select[name="kabupaten-kota"]').value;
 		const kecamatan = document.querySelector('select[name="kecamatan"]').value;
@@ -62,14 +62,15 @@ function action(){
 				"X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
 			},
 
-			body: JSON.stringify({ 
+			body: JSON.stringify({
+				pegawai_id: pegawai_id, 
 				gender: gender,
 				agama: agama,
 				perkawinan: perkawinan,
 				status_kewarganegaraan: status_kewarganegaraan,
 				kewarganegaraan: kewarganegaraan,
 				usia_pensiun: usia_pensiun,
-				jalan: jalan,
+				alamat_lengkap: alamat_lengkap,
 				provinsi: provinsi,
 				kabupaten_kota: kabupaten_kota,
 				kecamatan: kecamatan,
@@ -106,7 +107,18 @@ function action(){
 
 			})
 		})
-		.then(response=>response.json())		
+		.then(response => {
+		    if (!response.ok) {
+		        return response.text().then(text => { throw new Error(text) });
+		    }
+		    return response.json();
+		})
+		.then(data => {
+		    console.log(data);
+		})
+		.catch(error => {
+		    console.error("Terjadi error:", error);
+		});		
 	});
 }
 action()

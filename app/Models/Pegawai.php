@@ -23,6 +23,10 @@ class Pegawai extends Model
         'fakultas_id',
         'departemen_id',
         'kepangkatan_id',
+        'tmt_pangkat',
+        'perkawinan_id',
+        'kewarganegaraan_id',
+        'negara_id',
         'created_at',
         'updated_at',
     ];
