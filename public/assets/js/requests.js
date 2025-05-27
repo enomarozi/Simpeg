@@ -121,4 +121,10 @@ function action(){
 		});		
 	});
 }
-action()
+
+function fakultasDepartemen(){
+	const fakultas = document.querySelector('select[name="fakultas_id"]').value;
+	console.log(fakultas);
+}
+action();
+fakultasDepartemen();

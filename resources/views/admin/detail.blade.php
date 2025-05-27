@@ -26,31 +26,71 @@
                     <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">NIP:</div>
-                        <div class="col-md-8">{{ $pegawai->nip }}</div>
+                        <div class="col-md-8">
+                            <input type="text" name="nip" class="form-control" value="{{ $pegawai->nip ?? '' }}">
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Nama:</div>
-                        <div class="col-md-8">{{ $pegawai->gelar_depan }} {{ $pegawai->nama }}, {{ $pegawai->gelar_belakang }}</div>
+                        <div class="col-md-8">
+                            <input type="text" name="gelar_depan" class="form-control d-inline w-auto" value="{{ $pegawai->gelar_depan ?? '' }}">
+                            <input type="text" name="nama" class="form-control d-inline w-auto" value="{{ $pegawai->nama ?? '' }}">
+                            <input type="text" name="gelar_belakang" class="form-control d-inline w-auto" value="{{ $pegawai->gelar_belakang ?? '' }}">
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Tempat Lahir:</div>
-                        <div class="col-md-8">{{ $pegawai->tempat_lahir }}</div>
+                        <div class="col-md-8">
+                            <input type="text" name="nip" class="form-control" value="{{ $pegawai->tempat_lahir ?? '' }}">
+                        </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-center">
                         <div class="col-md-4 fw-bold">Tanggal Lahir:</div>
-                        <div class="col-md-8">{{ \Carbon\Carbon::parse($pegawai->tanggal_lahir)->translatedFormat('d-M-Y') }}</div>
+                        <div class="col-md-8">
+                            <input type="date" name="tanggal_lahir" class="form-control form-control-sm w-auto"
+                                   value="{{ $pegawai->tanggal_lahir ? \Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('Y-m-d') : '' }}">
+                        </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-center">
                         <div class="col-md-4 fw-bold">Status Kepegawaian:</div>
-                        <div class="col-md-8">{{ $pegawai->nama_kategori_kepegawaian }} {{ $pegawai->nama_jenis_kepegawaian }}</div>
+                        <div class="col-md-8">
+                            <select name="status_kepegawaian" class="form-select">
+                              <option hidden>-- Pilih Status Kepegawaian --</option>
+                                @foreach($kategoriPegawai as $item)
+                                    <option value="{{ $item->nama_kategori_kepegawaian }}" {{ $item->nama_kategori_kepegawaian == $pegawai->nama_kategori_kepegawaian ? 'selected' : ''}}>
+                                      {{ $item->nama_kategori_kepegawaian }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Fakultas:</div>
-                        <div class="col-md-8">{{ $pegawai->nama_fakultas }}</div>
+                        <div class="col-md-8">
+                            <select name="fakultas_id" class="form-control">
+                                <option value="">Pilih Fakultas</option>
+                                @foreach($fakultas as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ $pegawai->nama_fakultas == $item->nama_fakultas ? 'selected' : '' }}>
+                                        {{ $item->nama_fakultas }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Departemen:</div>
-                        <div class="col-md-8">{{ $pegawai->nama_departemen }}</div>
+                        <div class="col-md-8">
+                            <select name="departemen_id" class="form-control">
+                                <option value="">Pilih Departemen</option>
+                                @foreach($pegawaiDepartemen as $item)
+                                    <option value="{{ $item->nama_departemen }}"
+                                        {{ $pegawai->nama_departemen == $item->nama_departemen ? 'selected' : '' }}>
+                                        {{ $item->nama_departemen }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

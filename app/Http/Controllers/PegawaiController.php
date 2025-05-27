@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Pegawai, Agama, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan};
+use App\Models\{Pegawai, Agama, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen};
 use App\Models\{PegawaiAlamat};
 use DB;
 
@@ -26,12 +26,16 @@ class PegawaiController extends Controller
         // dd($pegawai);
         $title = "Detail ".$pegawai->nama;
         $agama = Agama::all();
+        $kategoriPegawai =  KategoriPegawai::all();
+        $jenisPegawai = JenisPegawai::all();
+        $fakultas = Fakultas::all();
+        $pegawaiDepartemen = PegawaiDepartemen::all();
         $perkawinan = StatusPerkawinan::all();
         $golonganDarah = GolonganDarah::all();
         $kewarganegaraan = Kewarganegaraan::all();
         $negara = Negara::all();
         $kepangkatan = Kepangkatan::all();
-        return view('admin/detail',compact('title','pegawai','agama','perkawinan','golonganDarah','kewarganegaraan','negara','kepangkatan'));
+        return view('admin/detail',compact('title','pegawai','agama','kategoriPegawai','jenisPegawai','fakultas','pegawaiDepartemen','perkawinan','golonganDarah','kewarganegaraan','negara','kepangkatan'));
     }
 
     public function Json_pegawai(){
@@ -44,6 +48,11 @@ class PegawaiController extends Controller
             ->get();
 
         return response()->json($pegawai);
+    }
+
+    public function Json_departemen(){
+        $departemen = DB::table('pegawai_departemen');
+
     }
 
     public function update_pegawai(Request $request){
