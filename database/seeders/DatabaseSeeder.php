@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\{
                     AgamaSeeder, DepartemenSeeder, FakultasSeeder,
                     JenisPegawaiSeeder, KategoriPegawaiSeeder, KepangkatanSeeder,
-                    PendidikanSeeder, PegawaiSeederAll, StatusPerkawinanSeeder,
+                    PendidikanSeeder, PegawaiDosenAll, PegawaiTendikAll, StatusPerkawinanSeeder,
                     GolonganDarahSeeder, NegaraSeeder, KewargaNegaraanSeeder,
                     JabatanDosenSeeder, JabatanTendikSeeder,
                     };
@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
         $this->call(KategoriPegawaiSeeder::class);
         $this->call(KepangkatanSeeder::class);
         $this->call(PendidikanSeeder::class);
-        $this->call(PegawaiSeederAll::class);
+        $this->call(PegawaiDosenAll::class);
+        $this->call(PegawaiTendikAll::class);
         $this->call(StatusPerkawinanSeeder::class);
         $this->call(GolonganDarahSeeder::class);
         $this->call(NegaraSeeder::class);
