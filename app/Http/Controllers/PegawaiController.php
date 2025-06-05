@@ -18,10 +18,34 @@ class PegawaiController extends Controller
             ->leftJoin('pegawai_departemen', 'pegawai.departemen_id', '=', 'pegawai_departemen.id')
             ->leftJoin('pegawai_jenis_kepegawaian', 'pegawai.jenis_kepegawaian_id','=','pegawai_jenis_kepegawaian.id')
             ->leftJoin('pegawai_informasi_alamat', 'pegawai_informasi_alamat.pegawai_id','=','pegawai.id')
-            ->select('pegawai.id', 'pegawai.nip', 'pegawai.nama', 'pegawai.gelar_depan', 'pegawai.gelar_belakang', 'pegawai.jenis_kelamin', 'pegawai.tempat_lahir', 'pegawai.tanggal_lahir', 'agama_id', 'pegawai.status', 'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian','kategori_kepegawaian_id', 'pegawai_departemen.nama_departemen','fakultas_id','kepangkatan_id','tmt_pangkat','perkawinan_id','jabatan_id','kewarganegaraan_id','negara_id','pegawai_informasi_alamat.provinsi','pegawai_informasi_alamat.kabupaten_kota','pegawai_informasi_alamat.kecamatan')
+            ->select(
+                'pegawai.id', 
+                'pegawai.nip', 
+                'pegawai.nama', 
+                'pegawai.gelar_depan', 
+                'pegawai.gelar_belakang', 
+                'pegawai.jenis_kelamin', 
+                'pegawai.tempat_lahir', 
+                'pegawai.tanggal_lahir', 
+                'agama_id', 
+                'pegawai.status', 
+                'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian',
+                'kategori_kepegawaian_id', 
+                'pegawai_departemen.nama_departemen',
+                'pegawai.fakultas_id',
+                'kepangkatan_id',
+                'tmt_pangkat',
+                'perkawinan_id',
+                'jabatan_id',
+                'kewarganegaraan_id',
+                'negara_id',
+                'pegawai_informasi_alamat.provinsi',
+                'pegawai_informasi_alamat.kabupaten_kota',
+                'pegawai_informasi_alamat.kecamatan'
+            )
             ->where('pegawai.id', $id)
             ->first();
-        // dd($pegawai);
+        dd($pegawai);
         $title = "Detail ".$pegawai->nama;
         $agama = Agama::all();
         $kategoriPegawai =  KategoriPegawai::all();
