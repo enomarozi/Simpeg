@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AccountsController, PegawaiController};
+use App\Http\Controllers\{AccountsController, PegawaiController, RequestController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -29,3 +29,6 @@ Route::group(['prefix'=> 'admin'], function(){
 });
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
+
+Route::GET('/getFak',[RequestController::class,'getFak']);
+Route::get('/getDep/{fakultas_id}', [RequestController::class, 'getDep']);

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreignId('agama_id')->nullable()->constrained('pegawai_agama')->onDelete('restrict');
             $table->foreignId('jenis_kepegawaian_id')->nullable()->constrained('pegawai_jenis_kepegawaian')->onDelete('restrict');
             $table->foreignId('kategori_kepegawaian_id')->nullable()->constrained('pegawai_kategori_kepegawaian')->onDelete('restrict');
+            $table->foreignId('fakultas_id')->nullable()->constrained('pegawai_fakultas')->onDelete('restrict');
             $table->foreignId('departemen_id')->nullable()->constrained('pegawai_departemen')->onDelete('restrict');
             $table->date('tmt_cpns')->nullable();
             $table->foreignId('kepangkatan_id')->nullable()->constrained('pegawai_kepangkatan')->onDelete('restrict');

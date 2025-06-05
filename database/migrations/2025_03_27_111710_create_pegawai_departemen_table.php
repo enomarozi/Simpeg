@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pegawai_departemen', function(Blueprint $table){
             $table->id();
             $table->string('nama_departemen', 100);
-            $table->foreignId('fakultas_id')->constrained('fakultas')->onDelete('restrict');
+            $table->foreignId('fakultas_id')->nullable()->constrained('pegawai_fakultas')->onDelete('restrict');
         });
     }
 

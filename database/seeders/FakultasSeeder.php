@@ -12,7 +12,7 @@ class FakultasSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('fakultas')->insert([
+        DB::table('pegawai_fakultas')->insert([
             [
                 'nama_fakultas'=>'Fakultas ISIP'
             ],
@@ -60,7 +60,13 @@ class FakultasSeeder extends Seeder
             ],
             [
                 'nama_fakultas'=>'Fakultas Kes. Masyarakat',
-            ]
+            ],
+            [
+                'nama_fakultas'=>'Rumah Sakit UNAND',
+            ],
+            [
+                'nama_fakultas'=>'Rektorat',
+            ],
         ]);
     }
 }

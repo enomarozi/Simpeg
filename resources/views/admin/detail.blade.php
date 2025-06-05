@@ -41,54 +41,46 @@
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Tempat Lahir:</div>
                         <div class="col-md-8">
-                            <input type="text" name="nip" class="form-control" value="{{ $pegawai->tempat_lahir ?? '' }}">
+                            <input type="text" name="tempat_lahir" class="form-control" value="{{ $pegawai->tempat_lahir ?? '' }}">
                         </div>
                     </div>
                     <div class="row mb-2 align-items-center">
                         <div class="col-md-4 fw-bold">Tanggal Lahir:</div>
                         <div class="col-md-8">
-                            <input type="date" name="tanggal_lahir" class="form-control form-control-sm w-auto"
-                                   value="{{ $pegawai->tanggal_lahir ? \Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('Y-m-d') : '' }}">
+                            <input type="date" name="tanggal_lahir" class="form-control form-control-sm w-auto" value="{{ $pegawai->tanggal_lahir ? \Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('Y-m-d') : '' }}">
                         </div>
                     </div>
                     <div class="row mb-2 align-items-center">
                         <div class="col-md-4 fw-bold">Status Kepegawaian:</div>
                         <div class="col-md-8">
                             <select name="status_kepegawaian" class="form-select">
-                              <option hidden>-- Pilih Status Kepegawaian --</option>
+                              <option value="" disabled selected>-- Pilih Status Kepegawaian --</option>
                                 @foreach($kategoriPegawai as $item)
-                                    <option value="{{ $item->nama_kategori_kepegawaian }}" {{ $item->nama_kategori_kepegawaian == $pegawai->nama_kategori_kepegawaian ? 'selected' : ''}}>
-                                      {{ $item->nama_kategori_kepegawaian }}
+                                    <option value="{{ $item->id }}" {{ $item->id == $pegawai->kategori_kepegawaian_id ? 'selected' : ''}}>
+                                    {{ $item->nama_kategori_kepegawaian }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
+                    <input type="hidden" id="fakultas-id" value="{{ $pegawai->fakultas_id }}">
                     <div class="row mb-2">
-                        <div class="col-md-4 fw-bold">Fakultas:</div>
+                        @if($pegawai->jabatan_id === 1)
+                          <div class="col-md-4 fw-bold">Fakultas:</div>
+                        @else
+                          <div class="col-md-4 fw-bold">Unit Kerja:</div>
+                        @endif
                         <div class="col-md-8">
-                            <select name="fakultas_id" class="form-control">
-                                <option value="">Pilih Fakultas</option>
-                                @foreach($fakultas as $item)
-                                    <option value="{{ $item->id }}"
-                                        {{ $pegawai->nama_fakultas == $item->nama_fakultas ? 'selected' : '' }}>
-                                        {{ $item->nama_fakultas }}
-                                    </option>
-                                @endforeach
+                            <select id="fakultasSelect" name="fakultas_id" class="form-control">
+                              {{ $pegawai->jabatan_id === 1 ? '--- Pilih Fakultas ---' : '--- Pilih Unit Kerja ---' }}
                             </select>
                         </div>
                     </div>
+                    <input type="hidden" id="departemen-id" value="{{ $pegawai->departemen_id }}">
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Departemen:</div>
                         <div class="col-md-8">
-                            <select name="departemen_id" class="form-control">
-                                <option value="">Pilih Departemen</option>
-                                @foreach($pegawaiDepartemen as $item)
-                                    <option value="{{ $item->nama_departemen }}"
-                                        {{ $pegawai->nama_departemen == $item->nama_departemen ? 'selected' : '' }}>
-                                        {{ $item->nama_departemen }}
-                                    </option>
-                                @endforeach
+                            <select id="departemenSelect" name="departemen_id" class="form-control">
                             </select>
                         </div>
                     </div>
@@ -155,7 +147,7 @@
                       <div class="mb-3">
                         <label class="form-label">Agama</label>
                         <select name="agama" class="form-select">
-                            <option hidden>-- Pilih Agama --</option>
+                            <option value="" disabled selected>-- Pilih Agama --</option>
                             @foreach($agama as $item)
                                 <option value="{{ $item->id }}" {{ $item->id == $pegawai->agama_id ? 'selected' : '' }}>
                                   {{ $item->nama }}</option>
@@ -165,7 +157,7 @@
                       <div class="mb-3">
                         <label class="form-label">Status Perkawinan</label>
                         <select name="perkawinan" class="form-select">
-                          <option hidden>-- Pilih Perkawinan --</option>
+                          <option value="" disabled selected>-- Pilih Perkawinan --</option>
                             @foreach($perkawinan as $item)
                                 <option value="{{ $item->id }}" {{ $item->id == $pegawai->perkawinan_id ? 'selected' : ''}}>
                                   {{ $item->status }}</option>
@@ -175,7 +167,7 @@
                       <div class="mb-3">
                         <label class="form-label">Status Kewarganegaraan</label>
                         <select name="status_kewarganegaraan" id='status_kewarganegaraan'class="form-select" onchange="KewarganegaraanSelect()">
-                          <option hidden>-- Pilih Kewarganegaraan --</option>
+                          <option value="" disabled selected>-- Pilih Kewarganegaraan --</option>
                           @foreach($kewarganegaraan as $item)
                                 <option value="{{ $item->id }}" {{ $item->id == $pegawai->kewarganegaraan_id ? 'selected' : ''}}>
                                   {{ $item->kewarganegaraan }}</option>
@@ -223,19 +215,19 @@
                       <div class="mb-3">
                         <label class="form-label">Provinsi</label>
                         <select name="provinsi" class="form-select" id='provinsiSelect'>
-                          <option hidden>-- Pilih Provinsi --</option>
+                          <option value="" disabled selected>-- Pilih Provinsi --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kota/Kabupaten</label>
                         <select name="kabupaten-kota" class="form-select" id='kotaSelect'>
-                          <option hidden>-- Pilih Kota/Kab --</option>
+                          <option value="" disabled selected>-- Pilih Kota/Kab --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kecamatan</label>
                         <select name="kecamatan" class="form-select" id='kecamatanSelect'>
-                          <option hidden>-- Pilih Kecamatan --</option>
+                          <option value="" disabled selected>-- Pilih Kecamatan --</option>
                         </select>
                       </div>
                       <div class="mb-3">
@@ -324,7 +316,7 @@
                       <div class="mb-3">
                         <label class="form-label">Golongan Darah</label>
                         <select name="golongan_darah" class="form-select">
-                          <option hidden>-- Pilih Golongan Darah --</option>
+                          <option value="" disabled selected>-- Pilih Golongan Darah --</option>
                             @foreach($golonganDarah as $item)
                                 <option value="{{ $item->id }}">{{ $item->golongan_darah }}</option>
                             @endforeach
@@ -469,8 +461,12 @@
                   <div class="mb-3">
                     <label class="form-label">Jabatan Fungsional</label>
                     <select class="form-select" name='jabatan_f'>
-                      <option value='dosen'>Dosen</option>
-                      <option value='tendik'>Tenaga Kependidikan</option>
+                      <option value="" disabled selected>-- Pilih Jabatan --</option>
+                        @foreach($jabatan as $item)
+                            <option value="{{ $item->id }}" {{ $item->id == $pegawai->jabatan_id ? 'selected' : ''}}>
+                            {{ $item->nama }}
+                            </option>
+                        @endforeach
                     </select>
                   </div>
                   <div class="mb-3">
@@ -502,7 +498,7 @@
                   <div class="mb-3">
                     <label class="form-label">Jabatan Struktural</label>
                     <select class="form-select" name='jabatan_s'>
-                      <option selected>-- PILIH --</option>
+                      <option value="" disabled selected>-- PILIH --</option>
                       <!-- Tambahkan opsi jabatan struktural lain -->
                     </select>
                   </div>

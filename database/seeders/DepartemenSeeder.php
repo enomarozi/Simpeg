@@ -310,6 +310,14 @@ class DepartemenSeeder extends Seeder
             [
                 'nama_departemen' => 'Gizi',            
                 'fakultas_id' => 16
+            ],
+            [
+                'nama_departemen' => 'Rumah Sakit UNAND',
+                'fakultas_id' => 17
+            ],
+            [
+                'nama_departemen' => 'Rektorat',
+                'fakultas_id' => 18
             ]
         ]);
     }
