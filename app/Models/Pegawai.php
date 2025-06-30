@@ -31,6 +31,7 @@ class Pegawai extends Model
         'tahun_pensiun',
         'kewarganegaraan_id',
         'negara_id',
+        'atasan_id',
         'created_at',
         'updated_at',
     ];

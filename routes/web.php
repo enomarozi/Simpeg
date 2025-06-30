@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AccountsController, PegawaiController, RequestController};
+use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, KelolaPegawaiController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -24,11 +24,17 @@ Route::group(['prefix' => 'account'], function () {
 Route::group(['prefix'=> 'admin'], function(){
 	Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
 	Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
-	Route::GET('/kelola_pegawai', [PegawaiController::class, 'Kelola_pegawai'])->name('kelola_pegawai');
 	Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
+	Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
+	Route::GET('/skp_periode',[SKPController::class, 'skp_periode'])->name('skp.periode');
+	Route::POST('/skp_periodeAction',[SKPController::class, 'skp_periodeAction'])->name('skp.periodeAction');
 });
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
 
 Route::GET('/getFak',[RequestController::class,'getFak']);
 Route::get('/getDep/{fakultas_id}', [RequestController::class, 'getDep']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('skp', SKPController::class);
+});

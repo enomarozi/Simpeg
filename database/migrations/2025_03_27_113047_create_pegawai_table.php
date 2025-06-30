@@ -39,6 +39,7 @@ return new class extends Migration
             $table->foreignId('perkawinan_id')->nullable()->constrained('pegawai_status_perkawinan')->onDelete('restrict');
             $table->foreignId('kewarganegaraan_id')->nullable()->constrained('pegawai_kewarganegaraan')->onDelete('restrict');
             $table->foreignId('negara_id')->nullable()->constrained('pegawai_negara')->onDelete('restrict');
+            $table->integer('atasan_id')->nullable();
             $table->timestamps();
             
             

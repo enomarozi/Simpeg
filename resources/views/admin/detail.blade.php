@@ -76,7 +76,7 @@
                             </select>
                         </div>
                     </div>
-                    <input type="hidden" id="departemen-id" value="{{ $pegawai->departemen_id }}">
+                    <input type="hidden" id="departemen-id" value="{{ $pegawai->nama_departemen }}">
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Departemen:</div>
                         <div class="col-md-8">
@@ -93,6 +93,38 @@
     <button type="button" class="btn btn-primary" id="submitBtn">
         <i class="bi bi-save"></i> Simpan Data
     </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPilihAtasan">
+        <i class="bi-person-up"></i> Pilih Atasan
+    </button>
+    <div class="modal fade" id="modalPilihAtasan" tabindex="-1" aria-labelledby="modalPilihAtasanLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <form method="POST" action="{{ route('update_atasan') }}">
+            @csrf
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalPilihAtasanLabel">Pilih Atasan Langsung</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" name="pegawai" value="{{ $pegawai->id }}">
+                <label for="atasan_id" class="form-label">Nama Atasan</label>
+                <select class="form-select" name="atasan_id" id="atasan_id" required>
+                  <option value="">-- Pilih Atasan --</option>
+                  @foreach($pegawai_as_atasan as $atasan)
+                      <option value="{{ $atasan->id }}" {{ $atasan->id == $pegawai->atasan_id ? 'selected' : ''}}>
+                          {{ $atasan->nama }}
+                      </option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle"></i> Simpan Atasan</button>
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
 </div>
 <div class="container-fluid mt-3">
 <div class="card mt-4">

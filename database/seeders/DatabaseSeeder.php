@@ -15,12 +15,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->create([
-            'username'=>'administrator',
-            'name' => 'Eno Marozi',
-            'email' => 'marozieno0@gmail.com',
-            'password'=> '12345678',
-        ]);
         $this->call(AgamaSeeder::class);
         $this->call(FakultasSeeder::class);
         $this->call(DepartemenSeeder::class);
@@ -37,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(GolonganDarahSeeder::class);
         $this->call(NegaraSeeder::class);
         $this->call(KewargaNegaraanSeeder::class);
+        $this->call(RoleSeeder::class);
     }
 }

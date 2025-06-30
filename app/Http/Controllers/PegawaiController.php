@@ -3,17 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen};
 use App\Models\{PegawaiAlamat};
 use DB;
 
 class PegawaiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function Data_pegawai(){
+        $user = Auth::user();
         $title = "Data Pegawai";
-        return view('admin/index',compact('title'));
+        return view('admin/index',compact('title','user'));
     }
     public function Detail_pegawai($id){
+        $user = Auth::user();
         $pegawai = DB::table('pegawai')
             ->leftJoin('pegawai_departemen', 'pegawai.departemen_id', '=', 'pegawai_departemen.id')
             ->leftJoin('pegawai_jenis_kepegawaian', 'pegawai.jenis_kepegawaian_id','=','pegawai_jenis_kepegawaian.id')
@@ -32,20 +40,21 @@ class PegawaiController extends Controller
                 'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian',
                 'kategori_kepegawaian_id', 
                 'pegawai_departemen.nama_departemen',
-                'pegawai.fakultas_id',
+                'pegawai_departemen.fakultas_id',
                 'kepangkatan_id',
                 'tmt_pangkat',
                 'perkawinan_id',
                 'jabatan_id',
                 'kewarganegaraan_id',
                 'negara_id',
+                'pegawai.atasan_id',
                 'pegawai_informasi_alamat.provinsi',
                 'pegawai_informasi_alamat.kabupaten_kota',
                 'pegawai_informasi_alamat.kecamatan'
             )
             ->where('pegawai.id', $id)
             ->first();
-        dd($pegawai);
+        // dd($pegawai);
         $title = "Detail ".$pegawai->nama;
         $agama = Agama::all();
         $kategoriPegawai =  KategoriPegawai::all();
@@ -58,16 +67,17 @@ class PegawaiController extends Controller
         $negara = Negara::all();
         $kepangkatan = Kepangkatan::all();
         $jabatan = Jabatan::all();
-        return view('admin/detail',compact('title','pegawai','agama','kategoriPegawai','jenisPegawai','fakultas','pegawaiDepartemen','perkawinan','golonganDarah','kewarganegaraan','negara','kepangkatan','jabatan'));
+        $pegawai_as_atasan = Pegawai::select('id', 'nama')->get();
+        return view('admin/detail',compact('user','title','pegawai','agama','kategoriPegawai','jenisPegawai','fakultas','pegawaiDepartemen','perkawinan','golonganDarah','kewarganegaraan','negara','kepangkatan','jabatan','pegawai_as_atasan'));
     }
 
     public function Json_pegawai(){
         $pegawai = DB::table('pegawai')
             ->leftJoin('pegawai_departemen', 'pegawai.departemen_id', '=', 'pegawai_departemen.id')
-            ->leftJoin('fakultas', 'pegawai_departemen.fakultas_id', '=', 'fakultas.id')
+            ->leftJoin('pegawai_fakultas', 'pegawai_departemen.fakultas_id', '=', 'pegawai_fakultas.id')
             ->leftJoin('pegawai_kepangkatan', 'pegawai_kepangkatan.id', '=', 'pegawai.kepangkatan_id')
             ->leftJoin('pegawai_kategori_kepegawaian', 'pegawai.kategori_kepegawaian_id','=','pegawai_kategori_kepegawaian.id')
-            ->select('pegawai.id', 'pegawai.nip', 'pegawai.nama', 'pegawai.jenis_kelamin', 'pegawai.tempat_lahir', 'pegawai.status', 'fakultas.nama_fakultas', 'pegawai_kategori_kepegawaian.nama_kategori_kepegawaian', 'pegawai_departemen.nama_departemen', 'pegawai_kepangkatan.golongan', 'pegawai_kepangkatan.pangkat')
+            ->select('pegawai.id', 'pegawai.nip', 'pegawai.nama', 'pegawai.jenis_kelamin', 'pegawai.tempat_lahir', 'pegawai.status', 'pegawai_fakultas.nama_fakultas', 'pegawai_kategori_kepegawaian.nama_kategori_kepegawaian', 'pegawai_departemen.nama_departemen', 'pegawai_kepangkatan.golongan', 'pegawai_kepangkatan.pangkat')
             ->get();
 
         return response()->json($pegawai);
@@ -120,5 +130,16 @@ class PegawaiController extends Controller
         );
 
         return response()->json(['message' => 'Pegawai berhasil diupdate']);
+    }
+
+    public function update_atasan(Request $request){
+        $pegawai = Pegawai::find($request->pegawai);
+        if (!$pegawai) {
+            return response()->json(['message' => 'Pegawai tidak ditemukan'], 404);
+        }
+        $pegawai->update([
+            'atasan_id'=> $request->atasan_id,
+        ]);
+        return response()->json(['message' => 'Atasan Pegawai Berhasil diupdate']);
     }
 }
