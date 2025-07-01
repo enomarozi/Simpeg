@@ -35,10 +35,10 @@
         <form action="{{ route('loginAction') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required>
+                <input type="text" name="username" class="form-control" placeholder="Username" value="220199710202306101" required>
             </div>
             <div class="mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                <input type="password" name="password" class="form-control" placeholder="Password" value="12345678" required>
             </div>
             <div class="d-flex justify-content-between mb-3 small">
                 <div>

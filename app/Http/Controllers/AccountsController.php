@@ -15,8 +15,9 @@ use DB;
 class AccountsController extends Controller
 {
     public function index(){
+        $user = Auth::user();
         $title = "Dashboard";
-        return view('dashboard/dashboard',compact('title'));
+        return view('dashboard/dashboard',compact('title','user'));
     }
     public function login(){
         return view('accounts/login');

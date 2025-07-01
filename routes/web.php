@@ -13,9 +13,7 @@ Route::group(['prefix' => 'account'], function () {
 	Route::POST('/registrationAction',[AccountsController::class,'registrationAction'])->name('registrationAction');
 	Route::GET('/forgotpassword',[AccountsController::class,'forgotpassword'])->name('forgotpassword');
 	Route::POST('/forgotpasswordAction',[AccountsController::class,'forgotpasswordAction'])->name('forgotpasswordAction');
-
-	Route::get('/reset-password/{token}', [AccountsController::class, 'showResetPasswordForm'])->name('reset.password.get');
-
+	Route::GET('/reset-password/{token}', [AccountsController::class, 'showResetPasswordForm'])->name('reset.password.get');
 	Route::GET('/profile',[AccountsController::class,'profile'])->middleware('auth')->name('profile');
 	Route::GET('/setting',[AccountsController::class,'setting'])->middleware('auth')->name('setting');
 	Route::POST('/passwordAction',[AccountsController::class,'passwordAction'])->middleware('auth')->name('passwordAction');
@@ -26,6 +24,9 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
 	Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
 	Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
+	Route::GET('/data_user',[PegawaiController::class, 'data_user'])->name('data_user');
+	Route::POST('/set_id_pegawai',[PegawaiController::class, 'set_id_pegawai'])->name('set_id_pegawai');
+	Route::GET('/set_active_pegawai/{id}', [PegawaiController::class, 'set_active_pegawai'])->name('set_active_pegawai');
 	Route::GET('/skp_periode',[SKPController::class, 'skp_periode'])->name('skp.periode');
 	Route::POST('/skp_periodeAction',[SKPController::class, 'skp_periodeAction'])->name('skp.periodeAction');
 });

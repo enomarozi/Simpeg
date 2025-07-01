@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->tinyInteger('is_active')->default(1);
+            $table->integer('pegawai_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

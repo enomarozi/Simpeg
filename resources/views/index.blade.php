@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 	<link href="https://cdn.datatables.net/v/dt/dt-2.1.8/datatables.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <style>
     .modal {
@@ -113,21 +115,7 @@
                     Dashboard
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link dropdown-toggle bi bi-people" data-bs-toggle="collapse" href="#submenu1" role="button" aria-expanded="false" aria-controls="submenu1"> Pegawai
-                </a>
-                <div class="collapse" id="submenu1">
-                    <ul class="nav flex-column ms-3">
-                        <li class="nav-item mb-2">
-                            <a class="nav-link" href="{{ route('data_pegawai') }}">Data Pegawai</a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link" href="#">Kelola Pegawai</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            @if($user->hasRole('pegawai') && $user->hasRole('atasan_langsung'))
+            @if($user->hasRole('pegawai') || $user->hasRole('atasan'))
                 <li class="nav-item">
                     <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> SKP Tahunan
                     </a>
@@ -162,14 +150,36 @@
                         </ul>
                     </div>
                 </li>
-            @else
+            @elseif($user->hasRole('admin'))
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> SKP
+                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu1" role="button" aria-expanded="false" aria-controls="submenu1"> SKP
+                    </a>
+                    <div class="collapse" id="submenu1">
+                        <ul class="nav flex-column ms-3">
+                            <li class="nav-item mb-2">
+                                <a class="nav-link" href="{{ route('skp.periode') }}">SKP Periode</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle bi bi-people" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> Pegawai
                     </a>
                     <div class="collapse" id="submenu2">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('skp.periode') }}">SKP Periode</a>
+                                <a class="nav-link" href="{{ route('data_pegawai') }}">Data Pegawai</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle bi bi-people" data-bs-toggle="collapse" href="#submenu3" role="button" aria-expanded="false" aria-controls="submenu3"> Users
+                    </a>
+                    <div class="collapse" id="submenu3">
+                        <ul class="nav flex-column ms-3">
+                            <li class="nav-item mb-2">
+                                <a class="nav-link" href="{{ route('data_user') }}">Managemen User</a>
                             </li>
                         </ul>
                     </div>

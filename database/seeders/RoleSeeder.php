@@ -16,11 +16,11 @@ class RoleSeeder extends Seeder
     {
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'pegawai']);
-        Role::create(['name' => 'atasan_langsung']);
+        Role::create(['name' => 'atasan']);
 
         $admin = User::factory()->create([
             'username' => 'administrator',
-            'name' => 'Eno Marozi',
+            'name' => 'Administrator',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('12345678'),
         ]);
@@ -32,11 +32,11 @@ class RoleSeeder extends Seeder
             'email' => 'atasan@gmail.com',
             'password' => bcrypt('12345678'),
         ]);
-        $atasan->assignRole('atasan_langsung');
+        $atasan->assignRole('atasan');
 
         $pegawai = User::factory()->create([
-            'username' => 'pegawai',
-            'name' => 'Pegawai SKP',
+            'username' => '220199710202306101',
+            'name' => 'Eno Marozi',
             'email' => 'pegawai@gmail.com',
             'password' => bcrypt('12345678'),
         ]);

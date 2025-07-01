@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode };
+use App\Models\{ SKPPeriode, Pegawai };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,15 +17,13 @@ class SKPController extends Controller
     {
         $title = "SKP";
         $user = Auth::user();
-
-        if ($user->hasRole('admin') || $user->hasRole('atasan_langsung')){
-            $skps = SKP::with('user')->get();
-        } else {
-            $skps = SKP::where('user_id', $user->id)->get();
-            dd("Pegawai");
+        $SKPperiode = [];
+        if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
+            $SKPperiode = SKPPeriode::all();
         }
-
-        return view('skp.index', compact('skps','title','user'));
+        $pegawai = Pegawai::find($user->pegawai_id);
+        $atasan = Pegawai::find($pegawai->atasan_id);
+        return view('skp.index', compact('title','user','SKPperiode','pegawai','atasan'));
     }
 
     public function create()
@@ -53,7 +51,7 @@ class SKPController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole('admin') || $user->hasRole('atasan_langsung') || $user->id === $skp->user_id) {
+        if ($user->hasRole('admin') || $user->hasRole('atasan') || $user->id === $skp->user_id) {
             return view('skp.show', compact('skp'));
         }
 
@@ -125,6 +123,6 @@ class SKPController extends Controller
             'tanggal_selesai' => $request->selesai,
             'status' => $request->status,
         ]);
-        return response()->json(['message' => 'Periode SKP berhasil ditambah.']);
+        return redirect()->back()->with('success', 'Periode SKP berhasil ditambah.');
     }
 }

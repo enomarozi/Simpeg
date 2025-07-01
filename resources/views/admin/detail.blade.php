@@ -96,6 +96,24 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPilihAtasan">
         <i class="bi-person-up"></i> Pilih Atasan
     </button>
+    <script>
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Sukses',
+                text: '{{ session('success') }}',
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: '{{ session('error') }}',
+            });
+        @endif
+    </script>
+
     <div class="modal fade" id="modalPilihAtasan" tabindex="-1" aria-labelledby="modalPilihAtasanLabel" aria-hidden="true">
       <div class="modal-dialog modal-xl">
         <form method="POST" action="{{ route('update_atasan') }}">
