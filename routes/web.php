@@ -27,8 +27,9 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::GET('/data_user',[PegawaiController::class, 'data_user'])->name('data_user');
 	Route::POST('/set_id_pegawai',[PegawaiController::class, 'set_id_pegawai'])->name('set_id_pegawai');
 	Route::GET('/set_active_pegawai/{id}', [PegawaiController::class, 'set_active_pegawai'])->name('set_active_pegawai');
-	Route::GET('/skp_periode',[SKPController::class, 'skp_periode'])->name('skp.periode');
-	Route::POST('/skp_periodeAction',[SKPController::class, 'skp_periodeAction'])->name('skp.periodeAction');
+	Route::GET('/skp_periode',[SKPController::class, 'skp_periode'])->name('skp_periode');
+	Route::POST('/skp_periodeAction',[SKPController::class, 'skp_periodeAction'])->name('skp_periodeAction');
+	Route::POST('/skp_periode_del/{id}',[SKPController::class, 'skp_periode_del'])->name('skp_periode_del');
 });
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');

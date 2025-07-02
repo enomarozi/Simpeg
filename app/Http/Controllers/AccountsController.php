@@ -14,6 +14,20 @@ use DB;
 
 class AccountsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except([
+            'login', 
+            'loginAction', 
+            'registration', 
+            'registrationAction', 
+            'forgotpassword', 
+            'forgotpasswordAction', 
+            'showResetPasswordForm',
+            'logout',
+        ]);
+    }
+
     public function index(){
         $user = Auth::user();
         $title = "Dashboard";
@@ -24,20 +38,25 @@ class AccountsController extends Controller
     }
     public function loginAction(Request $request){
         $request->validate([
-            'username' => 'required|string|max:30',
-            'password' => 'required|string|',
+            'username' => 'required|string|min:10|max:30',
+            'password' => 'required|string|min:6|max:255',
         ]);
 
-        $remember = $request->has('remember');
-        if (Auth::attempt($request->only('username', 'password'), $remember)) {
-            $user = Auth::user();
-            if ($user->is_active == 0) {
-                Auth::logout();
-                return redirect()->back()->withErrors(['error' => 'Your account is not active.']);
-            }
-            return redirect()->route('index');
+        $user = User::where('username', $request->username)->first();
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'error' => 'Username or Password is incorrect.'
+            ])->withInput();
         }
-        return redirect()->back()->withErrors(['error' => 'Username or Password is incorrect.']);
+
+        if (!$user->is_active) {
+            return back()->withErrors([
+                'error' => 'Your account is not active.'
+            ])->withInput();
+        }
+        $remember = $request->has('remember');
+        Auth::login($user, $remember);
+        return redirect()->route('index');
     }
     public function registration(){
         return view('accounts/registration');
@@ -45,25 +64,20 @@ class AccountsController extends Controller
     public function registrationAction(Request $request){
         $validasi = $request->validate([
             'name'=>'required|min:3|max:40',
-            'username'=>'required|min:3|max:30',
-            'email'=>'required|min:5|max:60',
+            'username'=>'required|min:3|max:30|unique:users,username',
+            'email'=>'required|email|max:60|unique:users,email',
             'password'=>'required|min:8',
             'confirmpassword'=>'required|min:8|same:password',
         ]);
-
-        $username = $request->input('username');
-        $exists = User::where('username', $username)->exists();
-        if ($exists) {
-            return redirect()->back()->withErrors(['error' => 'Username has already been taken.']);
-        } else {
-            $user = new User();
-            $user->name = $request->name;
-            $user->username = $request->username;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
-            return redirect()->route('login')->withSuccess('User registered successfully.');
-        }
+        
+        $user = new User();
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return redirect()->route('login')->withSuccess('User registered successfully.');
+        
     }
     public function forgotpassword(){
         return view('accounts/forgotpassword');
@@ -105,7 +119,8 @@ class AccountsController extends Controller
     }
     public function setting(){
         $title = "Setting";
-        return view('accounts/setting',compact('title'));
+        $user = Auth::user();
+        return view('accounts/setting',compact('user','title'));
     }
     public function passwordAction(Request $request){
         $validasi = $request->validate([
@@ -127,8 +142,5 @@ class AccountsController extends Controller
     public function logout(){
         Auth::logout();
         return redirect('account/login');
-    }
-    public function test(){
-        return view('test');
     }
 }

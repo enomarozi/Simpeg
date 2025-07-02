@@ -1,8 +1,8 @@
 @extends('index')
 @section('content')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<table id="menus-table" class="display table table-striped table-bordered">
-    <thead>
+<h4>{{ $title }}</h4>
+<table id="menus-table" class="table table-hover align-middle mb-0">
+    <thead class="table-light">
         <tr>
             <th>#</th>
             <th>NIP</th>
@@ -70,7 +70,6 @@
                 <a href="delete/${menu.id}" class="btn btn-xs btn-danger" data-toggle="tooltip" title="Delete">
                     <i class="fas fa-trash-alt"></i> <!-- Ikon Delete -->
                 </a>
-
             `;
             
             row.appendChild(actionCell);

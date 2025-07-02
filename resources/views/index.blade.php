@@ -157,7 +157,7 @@
                     <div class="collapse" id="submenu1">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('skp.periode') }}">SKP Periode</a>
+                                <a class="nav-link" href="{{ route('skp_periode') }}">SKP Periode</a>
                             </li>
                         </ul>
                     </div>
@@ -194,17 +194,23 @@
         <script src="{{ asset('assets/js/jquery-3.7.1.slim.min.js') }}"></script>
         <script src="https://cdn.datatables.net/v/dt/dt-2.1.8/datatables.min.js"></script>
         @yield('content')
-        @if ($errors->any())
-            <div class="text-danger small mt-2 text-center w-100">
-                @foreach ($errors->all() as $error)
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @elseif(session('success'))
-            <div class="text-success small mt-2 text-center w-100">
-                {{ session('success') }}
-            </div>
-        @endif
+        <script>
+            @if(session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sukses',
+                    text: '{{ session('success') }}',
+                });
+            @endif
+
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: '{{ session('error') }}',
+                });
+            @endif
+        </script>
     </div>
 </div>
 <script>

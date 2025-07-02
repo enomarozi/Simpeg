@@ -1,29 +1,26 @@
 @extends('index')
 @section('content')
 <div class="container-fluid mt-3">
-    {{-- Tombol untuk buka modal --}}
-    <div class="mb-3 text-end">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahPeriode">
-            <i class="bi bi-plus-circle"></i> Tambah Periode
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahPeriode">
+            <i class="bi bi-plus-circle me-1"></i> Tambah Periode
         </button>
     </div>
-
-    {{-- Tabel Periode --}}
-    <div class="card border">
-        <div class="card-header">
-            <h5 class="mb-0">Daftar Periode SKP</h5>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">{{ $title }}</h5>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
-                    <thead>
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
                         <tr>
-                            <th>No</th>
-                            <th>Tahun</th>
-                            <th>Mulai</th>
-                            <th>Selesai</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th scope="col">No</th>
+                            <th scope="col">Tahun</th>
+                            <th scope="col">Mulai</th>
+                            <th scope="col">Selesai</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,17 +31,23 @@
                                 <td>{{ \Carbon\Carbon::parse($periode->tanggal_mulai)->format('d M Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($periode->tanggal_selesai)->format('d M Y') }}</td>
                                 <td>
-                                    <span class="badge {{ $periode->status === 'aktif' ? 'bg-success' : 'bg-secondary' }}">
+                                    <span class="badge rounded-pill 
+                                        {{ $periode->status === 'aktif' ? 'bg-success' : 'bg-secondary' }}">
                                         {{ ucfirst($periode->status) }}
                                     </span>
                                 </td>
                                 <td>
-                                    {{-- Aksi Edit & Delete bisa ditambahkan di sini --}}
+                                    <form action="{{ route('skp_periode_del', $periode->id) }}" method="POST" onchange="this.form.submit()" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus Periode">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Belum ada data periode SKP.</td>
+                                <td colspan="6" class="text-center py-4 text-muted">Belum ada data periode SKP.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -55,12 +58,12 @@
 
     <div class="modal fade" id="modalTambahPeriode" tabindex="-1" aria-labelledby="modalTambahPeriodeLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
-            <form method="POST" action="{{ route('skp.periodeAction') }}">
+            <form method="POST" action="{{ route('skp_periodeAction') }}">
                 @csrf
                 <div class="modal-content">
-                    <div class="modal-header bg-light text-dark">
-                        <h5 class="modal-title" id="modalTambahPeriodeLabel">Tambah Periode SKP</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="modalTambahPeriodeLabel"><i class="bi bi-calendar-plus me-2"></i> Tambah Periode SKP</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">

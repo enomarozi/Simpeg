@@ -35,7 +35,7 @@
                     <td>{{ $atasan->nama ?? '-' }}</td>
                 </tr>
                 <tr>
-                    <td>NIP</td>
+                    <td>NIP/NIKU</td>
                     <td>{{ $pegawai->nip ?? '-' }}</td>
                     <td>{{ $atasan->nip ?? '-' }}</td>
                 </tr>

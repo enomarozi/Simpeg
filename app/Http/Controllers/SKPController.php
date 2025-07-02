@@ -125,4 +125,12 @@ class SKPController extends Controller
         ]);
         return redirect()->back()->with('success', 'Periode SKP berhasil ditambah.');
     }
-}
+    public function skp_periode_del($id){
+        $periode = SKPPeriode::find($id);
+        if (!$periode) {
+            return redirect()->back()->withErrors(['error' => 'Periode tidak ditemukan.']);
+        }
+        $periode->delete();
+        return redirect()->back()->with('success', 'Periode berhasil dihapus.');
+        }
+    }
