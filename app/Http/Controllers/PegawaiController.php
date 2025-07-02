@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, User};
+use Spatie\Permission\Models\Role;
 use App\Models\{PegawaiAlamat};
 use DB;
 
@@ -134,18 +135,22 @@ class PegawaiController extends Controller
     public function data_user(){
         $user = Auth::user();
         $title = "Managemen User";
-        $users = DB::table('users')->select('id', 'name', 'username', 'email', 'pegawai_id','is_active')->get();
+        $users = User::with('roles:id,name')->select('id', 'name', 'username', 'email', 'pegawai_id', 'is_active')->get();
         $pegawai = Pegawai::select('id', 'nama')->get();
-        return view('admin/managemen_user',compact('title','users','pegawai','user'));
+        $roles = Role::where('name', '!=', 'admin')->select('id', 'name')->get();
+        return view('admin/managemen_user',compact('title','users','pegawai','user','roles'));
     }
     public function set_id_pegawai(Request $request){
-        $user = Auth::user();
         $request->validate([
             'username' => 'required|string|exists:users,username',
             'pegawai_id' => 'nullable|exists:pegawai,id',
         ]);
+
         $user = User::where('username', $request->username)->first();
-        if ($user) {
+        if ($user->username === 'administrator') {
+            return back()->withErrors(['error' => 'Action not allowed on administrator account.']);
+        }
+        elseif($user){
             $user->update([
                 'pegawai_id' => $request->pegawai_id,
             ]);
@@ -153,9 +158,29 @@ class PegawaiController extends Controller
         }
         return redirect()->back()->with('error', 'User tidak ditemukan.');
     }
+    public function set_role_pegawai(Request $request)
+    {
+        $user = User::find($request->user_id);
+
+        if ($user->username === 'administrator') {
+            return back()->withErrors(['error' => 'Action not allowed on administrator account.']);
+        }
+
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|exists:roles,name',
+        ]);
+
+        $user = User::find($request->user_id);
+        $user->syncRoles([$request->role]);
+
+        return redirect()->back()->with('success', 'Role updated successfully.');
+    }
     public function set_active_pegawai($id){
-        $user = Auth::user();
         $user = User::findOrFail($id);
+        if ($user->username === 'administrator') {
+            return back()->withErrors(['error' => 'Action not allowed on administrator account.']);
+        }
         $user->is_active = $user->is_active ? 0 : 1;
         $user->save();
 
@@ -163,6 +188,7 @@ class PegawaiController extends Controller
 
         return redirect()->back()->with('success', "User {$user->name} berhasil diubah menjadi {$status}.");
     }
+    
     
     public function update_atasan(Request $request){
         $user = Auth::user();

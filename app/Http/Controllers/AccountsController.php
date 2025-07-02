@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\{User,Roles};
 use App\Mail\SendEmail;
+use Spatie\Permission\Models\Role;
 use Hash;
 use Mail;
 use DB;
@@ -52,6 +53,12 @@ class AccountsController extends Controller
         if (!$user->is_active) {
             return back()->withErrors([
                 'error' => 'Your account is not active.'
+            ])->withInput();
+        }
+
+        if (!$user->getRoleNames()->first()){
+            return back()->withErrors([
+                'error' => 'No role assigned. Please contact the administrator.'
             ])->withInput();
         }
         $remember = $request->has('remember');

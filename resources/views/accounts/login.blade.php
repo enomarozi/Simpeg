@@ -55,7 +55,7 @@
                 {{ $errors->first('error') }}
             </div>
         @elseif (session('success'))
-            <div class="card p-3 text-success small text-center">
+            <div class="card p-3 text-success small text-center status_message">
                 {{ session('success') }}
             </div>
         @else
