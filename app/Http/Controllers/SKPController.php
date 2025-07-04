@@ -25,82 +25,18 @@ class SKPController extends Controller
         $atasan = Pegawai::find($pegawai->atasan_id);
         return view('skp.index', compact('title','user','SKPperiode','pegawai','atasan'));
     }
-
-    public function create()
+    public function rhkAdd(Request $request)
     {
-        return view('skp.create');
-    }
-
-    public function store(Request $request)
-    {
+        $user = Auth::user();
         $request->validate([
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
+            'periode_id_rhk'=>'required',
+            'intervensi_rhk_id'=>'',
+            'jenis_rhk'=>'required|min:1|max:2',
+            'rhk'=>'required',
         ]);
 
-        SKP::create([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'user_id' => Auth::id(),
-        ]);
+        dd($request->all());
 
-        return redirect()->route('skp.index')->with('success', 'SKP berhasil dibuat');
-    }
-
-    public function show(SKP $skp)
-    {
-        $user = Auth::user();
-
-        if ($user->hasRole('admin') || $user->hasRole('atasan') || $user->id === $skp->user_id) {
-            return view('skp.show', compact('skp'));
-        }
-
-        abort(403);
-    }
-
-    public function edit(SKP $skp)
-    {
-        $user = Auth::user();
-
-        if ($user->hasRole('admin') || $user->id === $skp->user_id) {
-            return view('skp.edit', compact('skp'));
-        }
-
-        abort(403);
-    }
-
-    public function update(Request $request, SKP $skp)
-    {
-        $user = Auth::user();
-
-        if (! $user->hasRole('admin') && $user->id !== $skp->user_id) {
-            abort(403);
-        }
-
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-        ]);
-
-        $skp->update([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-        ]);
-
-        return redirect()->route('skp.index')->with('success', 'SKP berhasil diupdate');
-    }
-
-    public function destroy(SKP $skp)
-    {
-        $user = Auth::user();
-
-        if (! $user->hasRole('admin') && $user->id !== $skp->user_id) {
-            abort(403);
-        }
-
-        $skp->delete();
-
-        return redirect()->route('skp.index')->with('success', 'SKP berhasil dihapus');
     }
     public function skp_periode(){
         $user = Auth::user();

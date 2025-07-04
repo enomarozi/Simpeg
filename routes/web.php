@@ -33,6 +33,8 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::POST('/skp_periode_del/{id}',[SKPController::class, 'skp_periode_del'])->name('skp_periode_del');
 });
 
+Route::POST('/rhkAdd', [SKPController::class, 'rhkAdd'])->name('rhkAdd');
+
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
 
 Route::GET('/getFak',[RequestController::class,'getFak']);

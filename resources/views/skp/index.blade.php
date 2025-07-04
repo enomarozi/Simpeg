@@ -91,10 +91,9 @@
         </button>
     </div>
 
-    {{-- Modal Tambah SKP --}}
     <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
-        <div class="modal-dialog modal-custom-width"> {{-- tetep pakai modal-custom-width --}}
-            <form action="#" method="POST">
+        <div class="modal-dialog modal-custom-width">
+            <form action="{{ route('rhkAdd') }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -104,27 +103,40 @@
                     <div class="modal-body">
 
                         <div class="mb-3">
-                            <label for="periode_id" class="form-label">Periode SKP</label>
-                            <select name="periode_id" id="periode_id" class="form-select" required>
+                            <label for="periode_id_rhk" class="form-label">Periode SKP</label>
+                            <select name="periode_id_rhk" id="periode_id_rhk" class="form-select" required>
                                 <option value="" disabled selected>-- Pilih Periode --</option>
-                                {{-- opsi periode dari backend --}}
+                                @foreach($SKPperiode as $periode)
+                                <option value="{{ $periode->id }}">
+                                    {{ \Carbon\Carbon::parse($periode->tanggal_mulai)->translatedFormat('d-M-Y') }}
+                                    s/d
+                                    {{ \Carbon\Carbon::parse($periode->tanggal_selesai)->translatedFormat('d-M-Y') }}
+                                </option>
+                                @endforeach
                             </select>
                         </div>
-
+                        @if($user->hasRole('atasan'))
                         <div class="mb-3">
                             <label for="intervensi_rhk_id" class="form-label">RHK Atasan yang Diintervensi (Opsional)</label>
                             <select name="intervensi_rhk_id" id="intervensi_rhk_id" class="form-select">
-                                <option value="" selected>-- Mandiri (Tidak pilih RHK atasan) --</option>
-                                {{-- opsi RHK atasan dari backend --}}
+                                <option value="" disabled selected>-- Pilih RHK --</option>
+                                <option value="1">Mandiri</option>
                             </select>
                         </div>
-
+                        @elseif($user->hasRole('pegawai'))
+                        <div class="mb-3">
+                            <label for="intervensi_rhk_id" class="form-label">RHK Atasan yang Diintervensi</label>
+                            <select name="intervensi_rhk_id" id="intervensi_rhk_id" class="form-select">
+                                <option value="" selected>-- Pilih RHK --</option>
+                            </select>
+                        </div>
+                        @endif
                         <div class="mb-3">
                             <label for="jenis_rhk" class="form-label">Jenis RHK</label>
                             <select name="jenis_rhk" id="jenis_rhk" class="form-select" required>
                                 <option value="" disabled selected>-- Pilih Jenis --</option>
-                                <option value="utama">Utama</option>
-                                <option value="tambahan">Tambahan</option>
+                                <option value="1">Utama</option>
+                                <option value="2">Tambahan</option>
                             </select>
                         </div>
 
