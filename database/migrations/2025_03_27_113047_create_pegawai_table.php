@@ -44,6 +44,16 @@ return new class extends Migration
             
             
         });
+
+    }
+    public function atasan()
+    {
+        return $this->belongsTo(Pegawai::class, 'atasan_id');
+    }
+
+    public function bawahan()
+    {
+        return $this->hasMany(Pegawai::class, 'atasan_id');
     }
 
     /**

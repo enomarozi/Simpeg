@@ -10,10 +10,10 @@
         <div class="card-header bg-white">
             <h5 class="mb-0">{{ $title }}</h5>
         </div>
-        <div class="card-body p-0">
+        <div class="card-body p-2">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-secondary text-center">
                         <tr>
                             <th scope="col">No</th>
                             <th scope="col">Tahun</th>

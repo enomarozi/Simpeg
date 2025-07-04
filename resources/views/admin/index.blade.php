@@ -2,7 +2,7 @@
 @section('content')
 <h4>{{ $title }}</h4>
 <table id="menus-table" class="table table-hover align-middle mb-0">
-    <thead class="table-light">
+    <thead class="table-secondary text-center">
         <tr>
             <th>#</th>
             <th>NIP</th>

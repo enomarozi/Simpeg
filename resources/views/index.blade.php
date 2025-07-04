@@ -78,6 +78,9 @@
         align-items: center; 
         justify-content: center; 
     }
+    .modal-custom-width {
+        max-width: 90% !important; /* atau nilai lain sesuai kebutuhan */
+    }
 </style>
 <body>
 
