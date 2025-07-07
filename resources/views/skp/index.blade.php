@@ -91,6 +91,91 @@
         </button>
     </div>
 
+    {{-- Tabel: Daftar RHK --}}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-primary">
+                <tr>
+                    <th colspan="5" class="text-start">HASIL KERJA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Bagian A: Utama -->
+                <tr class="table-info fw-bold">
+                    <td colspan="5">A. Utama</td>
+                </tr>
+
+                @php $no = 1; @endphp
+                @foreach($daftarRhk->where('jenis_rhk', 1) as $rhk)
+                <tr>
+                    <td class="text-center" style="width: 40px;">{{ $no++ }}.</td>
+                    <td colspan="3">
+                        <div class="fw-semibold">
+                            {{ $rhk->rencana_hasil_kerja }}
+                            @if($rhk->intervensi_rhk_id == 1)
+                                <span class="text-muted">(Mandiri)</span>
+                            @else
+                                <span class="text-muted">(Intervensi)</span>
+                            @endif
+                        </div>
+                        <div class="text-muted mt-2">
+                            <strong>Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:</strong>
+                            <ul class="mb-0">
+                                @foreach(json_decode($rhk->indikator ?? '[]') as $indikator)
+                                    <li>{{ $indikator }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </td>
+                    <td class="text-center align-top">
+                        <div class="mb-2">
+                            <button class="btn btn-sm btn-success"><i class="bi bi-star-fill"></i></button>
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-download"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+
+                <!-- Bagian B: Tambahan -->
+                <tr class="table-info fw-bold">
+                    <td colspan="5">B. Tambahan</td>
+                </tr>
+
+                @php $no = 1; @endphp
+                @foreach($daftarRhk->where('jenis_rhk', 2) as $rhk)
+                <tr>
+                    <td class="text-center">{{ $no++ }}.</td>
+                    <td colspan="3">
+                        <div class="fw-semibold">
+                            {{ $rhk->rencana_hasil_kerja }}
+                            @if($rhk->intervensi_rhk_id)
+                                <span class="text-muted">(Intervensi)</span>
+                            @endif
+                        </div>
+                        <div class="text-muted mt-2">
+                            <strong>Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:</strong>
+                            <ul class="mb-0">
+                                @foreach(json_decode($rhk->indikator ?? '[]') as $indikator)
+                                    <li>{{ $indikator }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </td>
+                    <td class="text-center align-top">
+                        <div class="mb-2">
+                            <button class="btn btn-sm btn-success"><i class="bi bi-star-fill"></i></button>
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-download"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+    </div>
+
+
+
     <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
         <div class="modal-dialog modal-custom-width">
             <form action="{{ route('rhkAdd') }}" method="POST">
@@ -101,7 +186,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
-
+                        <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
                         <div class="mb-3">
                             <label for="periode_id_rhk" class="form-label">Periode SKP</label>
                             <select name="periode_id_rhk" id="periode_id_rhk" class="form-select" required>

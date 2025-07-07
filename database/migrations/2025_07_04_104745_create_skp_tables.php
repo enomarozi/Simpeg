@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('skp', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
-            $table->foreignId('intervensi_rhk_id')->nullable()->constrained('rhk')->onDelete('set null');
-            $table->string('jenis_rhk', 25);
+            $table->unsignedBigInteger('intervensi_rhk_id')->nullable();
+            $table->unsignedTinyInteger('jenis_rhk');
             $table->text('rencana_hasil_kerja');
             $table->enum('status', ['draft', 'disetujui', 'ditolak'])->default('draft');
             $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');

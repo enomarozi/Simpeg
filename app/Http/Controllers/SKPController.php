@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai };
+use App\Models\{ SKPPeriode, Pegawai, SKP};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,9 +21,14 @@ class SKPController extends Controller
         if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
             $SKPperiode = SKPPeriode::all();
         }
+        $daftarRhk = Skp::with('periode')
+            ->where('pegawai_id', $user->pegawai_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $pegawai = Pegawai::find($user->pegawai_id);
         $atasan = Pegawai::find($pegawai->atasan_id);
-        return view('skp.index', compact('title','user','SKPperiode','pegawai','atasan'));
+        return view('skp.index', compact('title','user','SKPperiode','pegawai','atasan','daftarRhk'));
     }
     public function rhkAdd(Request $request)
     {
@@ -32,10 +37,16 @@ class SKPController extends Controller
             'periode_id_rhk'=>'required',
             'intervensi_rhk_id'=>'',
             'jenis_rhk'=>'required|min:1|max:2',
-            'rhk'=>'required',
+            'rhk'=>'required|string',
         ]);
-
-        dd($request->all());
+        SKP::create([
+            'pegawai_id' => $request->pegawai_id,
+            'periode_id' => $request->periode_id_rhk,
+            'intervensi_rhk_id' => $request->intervensi_rhk_id,
+            'jenis_rhk' => $request->jenis_rhk,
+            'rencana_hasil_kerja' => $request->rhk,
+        ]);
+        return redirect()->back()->with('success', 'RHK berhasil ditambah.');
 
     }
     public function skp_periode(){

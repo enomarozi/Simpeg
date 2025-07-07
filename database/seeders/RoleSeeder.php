@@ -35,9 +35,17 @@ class RoleSeeder extends Seeder
         $atasan->assignRole('atasan');
 
         $pegawai = User::factory()->create([
+            'username' => '199312052019031014',
+            'name' => 'Amirul Luthfi',
+            'email' => 'amirul@gmail.com',
+            'password' => bcrypt('12345678'),
+        ]);
+        $pegawai->assignRole('atasan');
+
+        $pegawai = User::factory()->create([
             'username' => '220199710202306101',
             'name' => 'Eno Marozi',
-            'email' => 'pegawai@gmail.com',
+            'email' => 'eno@gmail.com',
             'password' => bcrypt('12345678'),
         ]);
         $pegawai->assignRole('pegawai');
