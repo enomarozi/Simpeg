@@ -35,4 +35,9 @@ class Pegawai extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function atasan()
+    {
+        return $this->belongsTo(Pegawai::class, 'atasan_id');
+    }
 }

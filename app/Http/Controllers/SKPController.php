@@ -21,33 +21,49 @@ class SKPController extends Controller
         if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
             $SKPperiode = SKPPeriode::all();
         }
-        $daftarRhk = Skp::with('periode')
-            ->where('pegawai_id', $user->pegawai_id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
         $pegawai = Pegawai::find($user->pegawai_id);
-        $atasan = Pegawai::find($pegawai->atasan_id);
-        return view('skp.index', compact('title','user','SKPperiode','pegawai','atasan','daftarRhk'));
+        return view('skp.index', compact('title','user','SKPperiode','pegawai'));
     }
-    public function rhkAdd(Request $request)
+    public function skpadd(Request $request)
     {
         $user = Auth::user();
         $request->validate([
-            'periode_id_rhk'=>'required',
-            'intervensi_rhk_id'=>'',
-            'jenis_rhk'=>'required|min:1|max:2',
-            'rhk'=>'required|string',
+            'pegawai_id'=>'required',
+            'atasan_id'=>'required',
+            'periode_id'=>'required',
+            'intervensi_skp_id'=>'',
+            'jenis_skp'=>'required|min:1|max:2',
+            'skp'=>'required|string',
         ]);
         SKP::create([
             'pegawai_id' => $request->pegawai_id,
-            'periode_id' => $request->periode_id_rhk,
-            'intervensi_rhk_id' => $request->intervensi_rhk_id,
-            'jenis_rhk' => $request->jenis_rhk,
-            'rencana_hasil_kerja' => $request->rhk,
+            'atasan_id'=> $request->atasan_id,
+            'periode_id' => $request->periode_id,
+            'intervensi_skp_id' => $request->intervensi_skp_id,
+            'jenis_skp' => $request->jenis_skp,
+            'skp' => $request->skp,
         ]);
-        return redirect()->back()->with('success', 'RHK berhasil ditambah.');
+        return redirect()->back()->with('success', 'SKP berhasil ditambah.');
 
+    }
+    public function periode(Request $request)
+    {
+        $title = "SKP";
+        $periode = $request->periode_id;
+        $user = Auth::user();
+        $SKPperiode = [];
+        if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
+            $SKPperiode = SKPPeriode::all();
+        }
+        $daftarSkp = Skp::with('periode')
+            ->where('pegawai_id', $user->pegawai_id)
+            ->where('atasan_id', $user->pegawai->atasan->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $pegawai = $user->pegawai; 
+        $atasan = $pegawai->atasan;
+        return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','pegawai','atasan'));
     }
     public function skp_periode(){
         $user = Auth::user();

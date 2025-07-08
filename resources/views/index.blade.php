@@ -125,7 +125,7 @@
                     <div class="collapse" id="submenu2">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('skp.index') }}">Rencana SKP</a>
+                                <a class="nav-link" href="{{ route('skp') }}">Rencana SKP</a>
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link" href="#">Matriks Peran Hasil</a>

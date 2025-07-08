@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('skp', function (Blueprint $table) {
+        Schema::create('skp_pegawai', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
-            $table->foreignId('atasan_id')->constrained('pegawai')->onDelete('cascade');
-            $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
-            $table->unsignedBigInteger('intervensi_skp_id')->nullable();
             $table->unsignedTinyInteger('jenis_skp');
+            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
+            $table->unsignedBigInteger('intervensi_skp_id')->nullable();
             $table->text('skp');
             $table->enum('status', ['draft', 'disetujui', 'ditolak'])->default('draft');
+            $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('skp');
+        Schema::dropIfExists('skp_pegawai');
     }
 };

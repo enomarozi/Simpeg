@@ -33,13 +33,12 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::POST('/skp_periode_del/{id}',[SKPController::class, 'skp_periode_del'])->name('skp_periode_del');
 });
 
-Route::POST('/rhkAdd', [SKPController::class, 'rhkAdd'])->name('rhkAdd');
+Route::GET('/skp', [SKPController::class, 'index'])->name('skp');
+Route::GET('/skp_selected', [SKPController::class, 'periode'])->name('periode');
+Route::POST('/skpadd', [SKPController::class, 'skpadd'])->name('skpadd');
+
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
 
 Route::GET('/getFak',[RequestController::class,'getFak']);
 Route::get('/getDep/{fakultas_id}', [RequestController::class, 'getDep']);
-
-Route::middleware(['auth'])->group(function () {
-    Route::resource('skp', SKPController::class);
-});

@@ -10,11 +10,13 @@ class Skp extends Model
 
     protected $fillable = [
         'pegawai_id',
-        'intervensi_rhk_id',
-        'jenis_rhk',
-        'rencana_hasil_kerja',
-        'status',
+        'atasan_id',
         'periode_id',
+        'intervensi_skp_id',
+        'jenis_skp',
+        'skp',
+        'status',
+        
     ];
 
     public function periode()

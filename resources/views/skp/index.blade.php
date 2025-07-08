@@ -6,34 +6,34 @@
     {{-- Card: Form Pilih Periode SKP dan Unit Kerja --}}
     <div class="card mb-4">
         <div class="card-body">
-            <form action="#" method="POST">
+            <form action="{{ route('periode') }}" method="GET">
                 @csrf
                 <div class="row align-items-end">
                     {{-- Dropdown Periode SKP --}}
                     <div class="col-md-6">
                         <label for="status_kepegawaian" class="form-label fw-semibold">Periode SKP</label>
-                        <select name="periode_id" id="status_kepegawaian" class="form-select" required>
-                            <option value="" disabled selected>-- Pilih Periode --</option>
-                            @foreach($SKPperiode as $periode)
-                                <option value="{{ $periode->id }}">
-                                    {{ \Carbon\Carbon::parse($periode->tanggal_mulai)->translatedFormat('d-M-Y') }}
+                        <select name="periode_id" id="status_kepegawaian" class="form-select" onchange="this.form.submit()" required>
+                            <option value="" disabled {{ empty($periode) ? 'selected' : '' }}>-- Pilih Periode --</option>
+                            @foreach($SKPperiode as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d-M-Y') }}
                                     s/d
-                                    {{ \Carbon\Carbon::parse($periode->tanggal_selesai)->translatedFormat('d-M-Y') }}
+                                    {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d-M-Y') }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
                     {{-- Input Unit Kerja (readonly) --}}
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="unit_kerja" class="form-label fw-semibold">Unit Kerja</label>
                         <input type="text" id="unit_kerja" name="unit_kerja" class="form-control" value="Universitas Andalas" readonly>
                     </div>
 
                     {{-- Tombol Set --}}
-                    <div class="col-md-2">
+                    <!-- <div class="col-md-2">
                         <button type="submit" class="btn btn-success w-100">Set</button>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </div>
@@ -85,14 +85,20 @@
 
     {{-- Tombol Tambah SKP --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0 fw-bold">Daftar RHK</h5>
+        <h5 class="mb-0 fw-bold">Daftar SKP</h5>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
-            + Tambah RHK
+            + Tambah SKP
         </button>
     </div>
 
-    {{-- Tabel: Daftar RHK --}}
+    {{-- Tabel: Daftar SKP --}}
     <div class="table-responsive">
+        @if(!isset($daftarSkp))
+        <div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
+            <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
+            Periode belum dipilih. Silakan pilih periode SKP terlebih dahulu.
+        </div>
+        @else
         <table class="table table-bordered">
             <thead class="table-primary">
                 <tr>
@@ -104,15 +110,14 @@
                 <tr class="table-info fw-bold">
                     <td colspan="5">A. Utama</td>
                 </tr>
-
                 @php $no = 1; @endphp
-                @foreach($daftarRhk->where('jenis_rhk', 1) as $rhk)
+                @foreach($daftarSkp->where('jenis_skp', 1) as $skp)
                 <tr>
                     <td class="text-center" style="width: 40px;">{{ $no++ }}.</td>
                     <td colspan="3">
                         <div class="fw-semibold">
-                            {{ $rhk->rencana_hasil_kerja }}
-                            @if($rhk->intervensi_rhk_id == 1)
+                            {{ $skp->rencana_hasil_kerja }}
+                            @if($skp->intervensi_skp_id == 1)
                                 <span class="text-muted">(Mandiri)</span>
                             @else
                                 <span class="text-muted">(Intervensi)</span>
@@ -121,7 +126,7 @@
                         <div class="text-muted mt-2">
                             <strong>Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:</strong>
                             <ul class="mb-0">
-                                @foreach(json_decode($rhk->indikator ?? '[]') as $indikator)
+                                @foreach(json_decode($skp->indikator ?? '[]') as $indikator)
                                     <li>{{ $indikator }}</li>
                                 @endforeach
                             </ul>
@@ -142,20 +147,20 @@
                 </tr>
 
                 @php $no = 1; @endphp
-                @foreach($daftarRhk->where('jenis_rhk', 2) as $rhk)
+                @foreach($daftarSkp->where('jenis_skp', 2) as $skp)
                 <tr>
                     <td class="text-center">{{ $no++ }}.</td>
                     <td colspan="3">
                         <div class="fw-semibold">
-                            {{ $rhk->rencana_hasil_kerja }}
-                            @if($rhk->intervensi_rhk_id)
+                            {{ $skp->rencana_hasil_kerja }}
+                            @if($skp->intervensi_skp_id)
                                 <span class="text-muted">(Intervensi)</span>
                             @endif
                         </div>
                         <div class="text-muted mt-2">
                             <strong>Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:</strong>
                             <ul class="mb-0">
-                                @foreach(json_decode($rhk->indikator ?? '[]') as $indikator)
+                                @foreach(json_decode($skp->indikator ?? '[]') as $indikator)
                                     <li>{{ $indikator }}</li>
                                 @endforeach
                             </ul>
@@ -172,53 +177,43 @@
 
             </tbody>
         </table>
+        @endif
     </div>
 
 
 
     <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
         <div class="modal-dialog modal-custom-width">
-            <form action="{{ route('rhkAdd') }}" method="POST">
+            <form action="{{ route('skpadd') }}" method="POST">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalTambahSKPLabel">Tambah RHK</h5>
+                        <h5 class="modal-title" id="modalTambahSKPLabel">Tambah SKP</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
-                        <div class="mb-3">
-                            <label for="periode_id_rhk" class="form-label">Periode SKP</label>
-                            <select name="periode_id_rhk" id="periode_id_rhk" class="form-select" required>
-                                <option value="" disabled selected>-- Pilih Periode --</option>
-                                @foreach($SKPperiode as $periode)
-                                <option value="{{ $periode->id }}">
-                                    {{ \Carbon\Carbon::parse($periode->tanggal_mulai)->translatedFormat('d-M-Y') }}
-                                    s/d
-                                    {{ \Carbon\Carbon::parse($periode->tanggal_selesai)->translatedFormat('d-M-Y') }}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <input type="hidden" name="atasan_id" value="{{ $pegawai->atasan_id }}">
+                        <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
                         @if($user->hasRole('atasan'))
                         <div class="mb-3">
-                            <label for="intervensi_rhk_id" class="form-label">RHK Atasan yang Diintervensi (Opsional)</label>
-                            <select name="intervensi_rhk_id" id="intervensi_rhk_id" class="form-select">
-                                <option value="" disabled selected>-- Pilih RHK --</option>
+                            <label for="intervensi_skp_id" class="form-label">SKP Atasan yang Diintervensi (Opsional)</label>
+                            <select name="intervensi_skp_id" id="intervensi_skp_id" class="form-select">
+                                <option value="" disabled selected>-- Pilih SKP --</option>
                                 <option value="1">Mandiri</option>
                             </select>
                         </div>
                         @elseif($user->hasRole('pegawai'))
                         <div class="mb-3">
-                            <label for="intervensi_rhk_id" class="form-label">RHK Atasan yang Diintervensi</label>
-                            <select name="intervensi_rhk_id" id="intervensi_rhk_id" class="form-select">
-                                <option value="" selected>-- Pilih RHK --</option>
+                            <label for="intervensi_skp_id" class="form-label">SKP Atasan yang Diintervensi</label>
+                            <select name="intervensi_skp_id" id="intervensi_skp_id" class="form-select">
+                                <option value="" selected>-- Pilih SKP --</option>
                             </select>
                         </div>
                         @endif
                         <div class="mb-3">
-                            <label for="jenis_rhk" class="form-label">Jenis RHK</label>
-                            <select name="jenis_rhk" id="jenis_rhk" class="form-select" required>
+                            <label for="jenis_skp" class="form-label">Jenis SKP</label>
+                            <select name="jenis_skp" id="jenis_skp" class="form-select" required>
                                 <option value="" disabled selected>-- Pilih Jenis --</option>
                                 <option value="1">Utama</option>
                                 <option value="2">Tambahan</option>
@@ -226,8 +221,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="rhk" class="form-label">Rencana Hasil Kerja</label>
-                            <textarea name="rhk" id="rhk" class="form-control" rows="3" required></textarea>
+                            <label for="skp" class="form-label">Rencana Hasil Kerja</label>
+                            <textarea name="skp" id="skp" class="form-control" rows="3" required></textarea>
                         </div>
 
                     </div>
@@ -240,4 +235,19 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const periodeSelect = document.getElementById('status_kepegawaian');
+        const hiddenPeriodeInput = document.getElementById('periode_id_hidden');
+
+        if (periodeSelect && hiddenPeriodeInput) {
+            periodeSelect.addEventListener('change', function () {
+                hiddenPeriodeInput.value = this.value;
+            });
+
+            // Inisialisasi saat halaman dimuat (jika ada nilai default)
+            hiddenPeriodeInput.value = periodeSelect.value;
+        }
+    });
+</script>
 @endsection
