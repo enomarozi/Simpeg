@@ -57,7 +57,7 @@
     </div>
 
     <div class="modal fade" id="modalTambahPeriode" tabindex="-1" aria-labelledby="modalTambahPeriodeLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-custom-width">
             <form method="POST" action="{{ route('skp_periodeAction') }}">
                 @csrf
                 <div class="modal-content">

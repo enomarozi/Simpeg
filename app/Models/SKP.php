@@ -23,5 +23,9 @@ class Skp extends Model
     {
         return $this->belongsTo(SkpPeriode::class, 'periode_id');
     }
+    public function indikatorList()
+    {
+        return $this->hasMany(\App\Models\SKPIndikator::class, 'skp_id');
+    }
 }
 

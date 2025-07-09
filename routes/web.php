@@ -36,6 +36,7 @@ Route::group(['prefix'=> 'admin'], function(){
 Route::GET('/skp', [SKPController::class, 'index'])->name('skp');
 Route::GET('/skp_selected', [SKPController::class, 'periode'])->name('periode');
 Route::POST('/skpadd', [SKPController::class, 'skpadd'])->name('skpadd');
+Route::POST('/skpIndikator', [SKPController::class, 'skpIndikator'])->name('skpIndikator');
 
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');

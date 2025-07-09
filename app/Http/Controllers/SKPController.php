@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai, SKP};
+use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIndikator};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,7 +55,7 @@ class SKPController extends Controller
         if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
             $SKPperiode = SKPPeriode::all();
         }
-        $daftarSkp = Skp::with('periode')
+        $daftarSkp = Skp::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $user->pegawai_id)
             ->where('atasan_id', $user->pegawai->atasan->id)
             ->orderBy('created_at', 'desc')
@@ -64,6 +64,18 @@ class SKPController extends Controller
         $pegawai = $user->pegawai; 
         $atasan = $pegawai->atasan;
         return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','pegawai','atasan'));
+    }
+    public function skpIndikator(Request $request)
+    {
+        $validated = $request->validate([
+            'skp_id' => ['required', 'integer', 'exists:skp,id'],
+            'indikator' => ['required', 'string', 'max:255'],
+        ]);
+        SKPIndikator::create([
+            'skp_id'   => $validated['skp_id'],
+            'indikator' => $validated['indikator'],
+        ]);
+        return redirect()->back()->with('success', 'Poin indikator berhasil ditambahkan.');
     }
     public function skp_periode(){
         $user = Auth::user();

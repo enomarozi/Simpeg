@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container-fluid mt-3">
-
     {{-- Card: Form Pilih Periode SKP dan Unit Kerja --}}
     <div class="card mb-4">
         <div class="card-body">
@@ -93,12 +92,12 @@
 
     {{-- Tabel: Daftar SKP --}}
     <div class="table-responsive">
-        @if(!isset($daftarSkp))
+    @if(!isset($daftarSkp))
         <div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
             <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
             Periode belum dipilih. Silakan pilih periode SKP terlebih dahulu.
         </div>
-        @else
+    @else
         <table class="table table-bordered">
             <thead class="table-primary">
                 <tr>
@@ -112,129 +111,166 @@
                 </tr>
                 @php $no = 1; @endphp
                 @foreach($daftarSkp->where('jenis_skp', 1) as $skp)
-                <tr>
-                    <td class="text-center" style="width: 40px;">{{ $no++ }}.</td>
-                    <td colspan="3">
-                        <div class="fw-semibold">
-                            {{ $skp->rencana_hasil_kerja }}
-                            @if($skp->intervensi_skp_id == 1)
-                                <span class="text-muted">(Mandiri)</span>
-                            @else
-                                <span class="text-muted">(Intervensi)</span>
-                            @endif
-                        </div>
-                        <div class="text-muted mt-2">
-                            <strong>Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:</strong>
-                            <ul class="mb-0">
-                                @foreach(json_decode($skp->indikator ?? '[]') as $indikator)
-                                    <li>{{ $indikator }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </td>
-                    <td class="text-center align-top">
-                        <div class="mb-2">
+                    <tr>
+                        <td class="text-center align-top" style="width:40px;">{{ $no++ }}.</td>
+                        <td colspan="3" class="py-2 fw-bold">
+                            {{ $skp->intervensi_skp_id == 1 ? '(Mandiri)' : '(Intervensi)' }}
+                            | {{ $skp->skp }}
+                        </td>
+                        <td class="text-center align-top" rowspan="2">
                             <button class="btn btn-sm btn-success"><i class="bi bi-star-fill"></i></button>
                             <button class="btn btn-sm btn-primary"><i class="bi bi-download"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
+                        </td>
+                    </tr>
 
-                <!-- Bagian B: Tambahan -->
+                    <tr>
+                        <td></td>
+                        <td colspan="3" class="py-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="text-muted">
+                                    Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:
+                                </strong>
+                                <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}">
+                                    <i class="bi bi-plus-circle"></i> Tambah Poin Indikator
+                                </button>
+                            </div>
+
+                            <ul class="mb-0 mt-1">
+                                @forelse($skp->indikatorList as $indikator)
+                                    <li>{{ $indikator->indikator }}</li>
+                                @empty
+                                    <li class="text-muted">Belum ada indikator.</li>
+                                @endforelse
+                            </ul>
+                        </td>
+                    </tr>
+                @endforeach
                 <tr class="table-info fw-bold">
                     <td colspan="5">B. Tambahan</td>
                 </tr>
-
                 @php $no = 1; @endphp
                 @foreach($daftarSkp->where('jenis_skp', 2) as $skp)
-                <tr>
-                    <td class="text-center">{{ $no++ }}.</td>
-                    <td colspan="3">
-                        <div class="fw-semibold">
-                            {{ $skp->rencana_hasil_kerja }}
-                            @if($skp->intervensi_skp_id)
-                                <span class="text-muted">(Intervensi)</span>
-                            @endif
-                        </div>
-                        <div class="text-muted mt-2">
-                            <strong>Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:</strong>
-                            <ul class="mb-0">
-                                @foreach(json_decode($skp->indikator ?? '[]') as $indikator)
-                                    <li>{{ $indikator }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </td>
-                    <td class="text-center align-top">
-                        <div class="mb-2">
+                    <tr>
+                        <td class="text-center align-top" style="width:40px;">{{ $no++ }}.</td>
+                        <td colspan="3" class="py-2 fw-bold">
+                            {{ $skp->intervensi_skp_id == 1 ? '(Mandiri)' : '(Intervensi)' }}
+                            | {{ $skp->skp }}
+                        </td>
+                        <td class="text-center align-top" rowspan="2">
                             <button class="btn btn-sm btn-success"><i class="bi bi-star-fill"></i></button>
                             <button class="btn btn-sm btn-primary"><i class="bi bi-download"></i></button>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="3" class="py-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="text-muted">
+                                    Ukuran keberhasilan / Indikator Kinerja Individu, dan Target:
+                                </strong>
 
+                                <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}">
+                                    <i class="bi bi-plus-circle"></i> Tambah Poin Indikator
+                                </button>
+                            </div>
+
+                            <ul class="mb-0 mt-1">
+                                @forelse($skp->indikatorList as $indikator)
+                                    <li>{{ $indikator->indikator }}</li>
+                                @empty
+                                    <li class="text-muted">Belum ada indikator.</li>
+                                @endforelse
+                            </ul>
+                        </td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
-        @endif
+    @endif 
     </div>
+</div>
 
-
-
-    <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
-        <div class="modal-dialog modal-custom-width">
-            <form action="{{ route('skpadd') }}" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalTambahSKPLabel">Tambah SKP</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+{{-- Modal Tambah SKP --}}
+<div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <form action="{{ route('skpadd') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTambahSKPLabel">Tambah SKP</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
+                    <input type="hidden" name="atasan_id" value="{{ $pegawai->atasan_id }}">
+                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
+                    @if($user->hasRole('atasan'))
+                    <div class="mb-3">
+                        <label for="intervensi_skp_id" class="form-label">SKP Atasan yang Diintervensi (Opsional)</label>
+                        <select name="intervensi_skp_id" id="intervensi_skp_id" class="form-select">
+                            <option value="" disabled selected>-- Pilih SKP --</option>
+                            <option value="1">Mandiri</option>
+                        </select>
                     </div>
-                    <div class="modal-body">
-                        <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
-                        <input type="hidden" name="atasan_id" value="{{ $pegawai->atasan_id }}">
-                        <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
-                        @if($user->hasRole('atasan'))
-                        <div class="mb-3">
-                            <label for="intervensi_skp_id" class="form-label">SKP Atasan yang Diintervensi (Opsional)</label>
-                            <select name="intervensi_skp_id" id="intervensi_skp_id" class="form-select">
-                                <option value="" disabled selected>-- Pilih SKP --</option>
-                                <option value="1">Mandiri</option>
-                            </select>
-                        </div>
-                        @elseif($user->hasRole('pegawai'))
-                        <div class="mb-3">
-                            <label for="intervensi_skp_id" class="form-label">SKP Atasan yang Diintervensi</label>
-                            <select name="intervensi_skp_id" id="intervensi_skp_id" class="form-select">
-                                <option value="" selected>-- Pilih SKP --</option>
-                            </select>
-                        </div>
-                        @endif
-                        <div class="mb-3">
-                            <label for="jenis_skp" class="form-label">Jenis SKP</label>
-                            <select name="jenis_skp" id="jenis_skp" class="form-select" required>
-                                <option value="" disabled selected>-- Pilih Jenis --</option>
-                                <option value="1">Utama</option>
-                                <option value="2">Tambahan</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="skp" class="form-label">Rencana Hasil Kerja</label>
-                            <textarea name="skp" id="skp" class="form-control" rows="3" required></textarea>
-                        </div>
-
+                    @elseif($user->hasRole('pegawai'))
+                    <div class="mb-3">
+                        <label for="intervensi_skp_id" class="form-label">SKP Atasan yang Diintervensi</label>
+                        <select name="intervensi_skp_id" id="intervensi_skp_id" class="form-select">
+                            <option value="" selected>-- Pilih SKP --</option>
+                        </select>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Simpan</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    @endif
+                    <div class="mb-3">
+                        <label for="jenis_skp" class="form-label">Jenis SKP</label>
+                        <select name="jenis_skp" id="jenis_skp" class="form-select" required>
+                            <option value="" disabled selected>-- Pilih Jenis --</option>
+                            <option value="1">Utama</option>
+                            <option value="2">Tambahan</option>
+                        </select>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="skp" class="form-label">Sasaran Hasil Kerja</label>
+                        <textarea name="skp" id="skp" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{{-- Modal Tambah Point SKP --}}
+<div class="modal fade" id="modalTambahPoin" tabindex="-1" aria-labelledby="modalTambahPoinLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <div class="modal-content">
+            <form id="formTambahPoin" action="{{ route('skpIndikator') }}" method="POST">
+            @csrf
+                <input type="hidden" name="skp_id" id="modalSkpId">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTambahPoinLabel">Tambah Indikator</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="skp" class="form-label">Indikator</label>
+                        <textarea name="indikator" id="indikator" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const periodeSelect = document.getElementById('status_kepegawaian');
@@ -245,9 +281,21 @@
                 hiddenPeriodeInput.value = this.value;
             });
 
-            // Inisialisasi saat halaman dimuat (jika ada nilai default)
             hiddenPeriodeInput.value = periodeSelect.value;
         }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.getElementById('modalTambahPoin');
+        const modal = new bootstrap.Modal(modalElement);
+
+        document.querySelectorAll('.btn-tambah-poin').forEach(button => {
+            button.addEventListener('click', () => {
+                const skpId = button.getAttribute('data-skp-id');
+                document.getElementById('modalSkpId').value = skpId;
+                modal.show();
+            });
+        });
     });
 </script>
 @endsection
