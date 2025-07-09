@@ -31,7 +31,7 @@ class SKPController extends Controller
             'pegawai_id'=>'required',
             'atasan_id'=>'required',
             'periode_id'=>'required',
-            'intervensi_skp_id'=>'',
+            'pelaksanaan_skp'=>'',
             'jenis_skp'=>'required|min:1|max:2',
             'skp'=>'required|string',
         ]);
@@ -39,7 +39,7 @@ class SKPController extends Controller
             'pegawai_id' => $request->pegawai_id,
             'atasan_id'=> $request->atasan_id,
             'periode_id' => $request->periode_id,
-            'intervensi_skp_id' => $request->intervensi_skp_id,
+            'pelaksanaan_skp' => $request->pelaksanaan_skp,
             'jenis_skp' => $request->jenis_skp,
             'skp' => $request->skp,
         ]);
@@ -60,10 +60,10 @@ class SKPController extends Controller
             ->where('atasan_id', $user->pegawai->atasan->id)
             ->orderBy('created_at', 'desc')
             ->get();
-
+        $statusSkp = $daftarSkp[0]->status;
         $pegawai = $user->pegawai; 
         $atasan = $pegawai->atasan;
-        return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','pegawai','atasan'));
+        return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','statusSkp','pegawai','atasan'));
     }
     public function skpIndikator(Request $request)
     {

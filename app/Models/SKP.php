@@ -12,7 +12,7 @@ class Skp extends Model
         'pegawai_id',
         'atasan_id',
         'periode_id',
-        'intervensi_skp_id',
+        'pelaksanaan_skp',
         'jenis_skp',
         'skp',
         'status',

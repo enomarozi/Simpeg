@@ -33,8 +33,8 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::POST('/skp_periode_del/{id}',[SKPController::class, 'skp_periode_del'])->name('skp_periode_del');
 });
 
-Route::GET('/skp', [SKPController::class, 'index'])->name('skp');
-Route::GET('/skp_selected', [SKPController::class, 'periode'])->name('periode');
+Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');
+Route::GET('/rencana_skp_selected', [SKPController::class, 'periode'])->name('periode');
 Route::POST('/skpadd', [SKPController::class, 'skpadd'])->name('skpadd');
 Route::POST('/skpIndikator', [SKPController::class, 'skpIndikator'])->name('skpIndikator');
 
