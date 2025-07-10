@@ -35,8 +35,11 @@ Route::group(['prefix'=> 'admin'], function(){
 
 Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');
 Route::GET('/rencana_skp_selected', [SKPController::class, 'periode'])->name('periode');
-Route::POST('/skpadd', [SKPController::class, 'skpadd'])->name('skpadd');
+Route::POST('/skpAdd', [SKPController::class, 'skpAdd'])->name('skpAdd');
+Route::PUT('/skpEdit/{id}', [SKPController::class, 'skpEdit'])->name('skpEdit');
+Route::DELETE('/skpDelete/{id}', [SKPController::class, 'skpDelete'])->name('skpDelete');
 Route::POST('/skpIndikator', [SKPController::class, 'skpIndikator'])->name('skpIndikator');
+Route::POST('/skpIndikatorDel', [SKPController::class, 'skpIndikatorDel'])->name('skpIndikatorDel');
 
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');

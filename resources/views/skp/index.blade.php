@@ -85,7 +85,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
-            @if(!isset($daftarSkp))
+            @if(empty($daftarSkp) || $daftarSkp->isEmpty())
                 <div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
                     <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
                     Periode belum dipilih. Silakan pilih periode SKP terlebih dahulu.
@@ -123,17 +123,30 @@
                                 {{ $skp->pelaksanaan_skp == 1 ? '(Mandiri)' : '(Intervensi)' }} | {{ $skp->skp }}
                             </td>
                             <td>
-                                <ul class="mb-0 mt-1">
-                                    @forelse($skp->indikatorList as $indikator)
-                                        <li>{{ $indikator->indikator }}</li>
-                                    @empty
-                                        <li class="text-muted">Belum ada indikator.</li>
-                                    @endforelse
-                                </ul>
+                                <div class="d-flex flex-column gap-2">
+                                    <ul class="mb-0">
+                                        @forelse($skp->indikatorList as $indikator)
+                                            <li>{{ $indikator->indikator }}</li>
+                                        @empty
+                                            <li class="text-muted">Belum ada indikator.</li>
+                                        @endforelse
+                                    </ul>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}" title="Tambah Indikator">
+                                            <i class="bi bi-plus-circle me-1"></i> Tambah
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" data-indikator='@json($skp->indikatorList)' title="Hapus Indikator"> 
+                                            <i class="bi bi-trash3 me-1"></i> Hapus 
+                                        </button> -->
+                                    </div>
+                                </div>
                             </td>
                             <td class="text-center align-top">
-                                <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}">
-                                    <i class="bi bi-plus-circle"></i>
+                                <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalEditSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" data-jenis-skp="{{ $skp->jenis_skp }}" title="Edit SKP"> 
+                                    <i class="bi bi-pencil-square"></i> 
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalHapusSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" title="Hapus SKP">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -151,17 +164,30 @@
                                 {{ $skp->pelaksanaan_skp == 1 ? '(Mandiri)' : '(Intervensi)' }} | {{ $skp->skp }}
                             </td>
                             <td>
-                                <ul class="mb-0 mt-1">
-                                    @forelse($skp->indikatorList as $indikator)
-                                        <li>{{ $indikator->indikator }}</li>
-                                    @empty
-                                        <li class="text-muted">Belum ada indikator.</li>
-                                    @endforelse
-                                </ul>
+                                <div class="d-flex flex-column gap-2">
+                                    <ul class="mb-0">
+                                        @forelse($skp->indikatorList as $indikator)
+                                            <li>{{ $indikator->indikator }}</li>
+                                        @empty
+                                            <li class="text-muted">Belum ada indikator.</li>
+                                        @endforelse
+                                    </ul>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}" title="Tambah Indikator">
+                                            <i class="bi bi-plus-circle me-1"></i> Tambah
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" data-indikator='@json($skp->indikatorList)' title="Hapus Indikator"> 
+                                            <i class="bi bi-trash3 me-1"></i> Hapus 
+                                        </button> -->
+                                    </div>
+                                </div>
                             </td>
                             <td class="text-center align-top">
-                                <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}">
-                                    <i class="bi bi-plus-circle"></i>
+                                <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalEditSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" data-jenis-skp="{{ $skp->jenis_skp }}" title="Edit SKP"> 
+                                    <i class="bi bi-pencil-square"></i> 
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalHapusSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" title="Hapus SKP">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </td>
                         </tr>
@@ -177,7 +203,7 @@
 {{-- Modal Tambah SKP --}}
 <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
-        <form action="{{ route('skpadd') }}" method="POST">
+        <form action="{{ route('skpAdd') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -228,6 +254,71 @@
     </div>
 </div>
 
+
+{{-- Modal Edit SKP --}}
+<div class="modal fade" id="modalEditSkp" tabindex="-1" aria-labelledby="modalEditSkpLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <form id="formEditSkp" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditSkpLabel">Edit SKP</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
+                    <div class="mb-3">
+                        <label for="edit_jenis_skp" class="form-label">Jenis SKP</label>
+                        <select name="jenis_skp" id="edit_jenis_skp" class="form-select" required>
+                            <option value="1">Utama</option>
+                            <option value="2">Tambahan</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_skp" class="form-label">Sasaran Hasil Kerja</label>
+                        <textarea name="skp" id="edit_skp" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{{-- Modal Delete SKP --}}
+<div class="modal fade" id="modalHapusSkp" tabindex="-1" aria-labelledby="modalHapusSkpLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <form id="formHapusSkp" method="POST">
+        @csrf
+        @method('DELETE')
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalHapusSkpLabel">Konfirmasi Hapus SKP</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menghapus SKP berikut?</p>
+                        <div class="alert alert-secondary mb-0">
+                            <strong id="namaSkp">SKP</strong>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 {{-- Modal Tambah Point SKP --}}
 <div class="modal fade" id="modalTambahPoin" tabindex="-1" aria-labelledby="modalTambahPoinLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
@@ -256,31 +347,37 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const periodeSelect = document.getElementById('status_kepegawaian');
-        const hiddenPeriodeInput = document.getElementById('periode_id_hidden');
+{{-- Modal Delete Point SKP --}}
 
-        if (periodeSelect && hiddenPeriodeInput) {
-            periodeSelect.addEventListener('change', function () {
-                hiddenPeriodeInput.value = this.value;
-            });
-
-            hiddenPeriodeInput.value = periodeSelect.value;
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalElement = document.getElementById('modalTambahPoin');
-        const modal = new bootstrap.Modal(modalElement);
-
-        document.querySelectorAll('.btn-tambah-poin').forEach(button => {
-            button.addEventListener('click', () => {
-                const skpId = button.getAttribute('data-skp-id');
-                document.getElementById('modalSkpId').value = skpId;
-                modal.show();
-            });
-        });
-    });
-</script>
+<div class="modal fade" id="modalHapusPoin" tabindex="-1" aria-labelledby="modalHapusPoinLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <div class="modal-content">
+            <form id="formHapusPoin" action="{{ route('skpIndikatorDel') }}" method="POST">
+                @csrf
+                <input type="hidden" name="skp_id" id="hapusSkpId">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalHapusPoinLabel">Hapus Indikator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="indikator_id" class="form-label">Pilih Indikator yang Akan Dihapus</label>
+                        <select name="indikator_id" id="indikatorSelect" class="form-select" required>
+                            @forelse($skp->indikatorList as $indikator)
+                                <option value="{{ $indikator->id }}">{{ $indikator->indikator }}</option>
+                            @empty
+                                <option disabled>Belum ada indikator</option>
+                            @endforelse
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus Terpilih</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{{ asset('assets/js/skp.js') }}"></script>
 @endsection

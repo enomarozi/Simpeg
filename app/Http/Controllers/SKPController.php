@@ -24,7 +24,7 @@ class SKPController extends Controller
         $pegawai = Pegawai::find($user->pegawai_id);
         return view('skp.index', compact('title','user','SKPperiode','pegawai'));
     }
-    public function skpadd(Request $request)
+    public function skpAdd(Request $request)
     {
         $user = Auth::user();
         $request->validate([
@@ -44,7 +44,25 @@ class SKPController extends Controller
             'skp' => $request->skp,
         ]);
         return redirect()->back()->with('success', 'SKP berhasil ditambah.');
+    }
+    public function skpEdit(Request $request, $id){
+        $skp = SKP::findOrFail($id);
+        $skp->update([
+            'skp' => $request->skp,
+            'jenis_skp' => $request->jenis_skp,
+            'pegawai_id' => $request->pegawai_id,
+        ]);
 
+        return redirect()->back()->with('success', 'SKP berhasil diperbarui.');
+    }
+    public function skpDelete($id)
+    {
+        $user = Auth::user();
+        $skp = SKP::where('id', $id)
+            ->where('pegawai_id', $user->pegawai_id)
+            ->firstOrFail();
+        $skp->delete();
+        return redirect()->back()->with('success', 'SKP berhasil dihapus.');
     }
     public function periode(Request $request)
     {
@@ -60,7 +78,10 @@ class SKPController extends Controller
             ->where('atasan_id', $user->pegawai->atasan->id)
             ->orderBy('created_at', 'desc')
             ->get();
-        $statusSkp = $daftarSkp[0]->status;
+        $statusSkp = '';
+        if(count($daftarSkp) >= 1){
+            $statusSkp = $daftarSkp[0]->status;
+        }
         $pegawai = $user->pegawai; 
         $atasan = $pegawai->atasan;
         return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','statusSkp','pegawai','atasan'));
@@ -76,6 +97,9 @@ class SKPController extends Controller
             'indikator' => $validated['indikator'],
         ]);
         return redirect()->back()->with('success', 'Poin indikator berhasil ditambahkan.');
+    }
+    public function skpIndikatorDel($id){
+        dd($id);
     }
     public function skp_periode(){
         $user = Auth::user();
