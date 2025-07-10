@@ -77,11 +77,13 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
-            + Tambah SKP
-        </button>
-    </div>
+    @if(!empty($periode))
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
+                + Tambah SKP
+            </button>
+        </div>
+    @endif
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
@@ -363,11 +365,6 @@
                     <div class="mb-3">
                         <label for="indikator_id" class="form-label">Pilih Indikator yang Akan Dihapus</label>
                         <select name="indikator_id" id="indikatorSelect" class="form-select" required>
-                            @forelse($skp->indikatorList as $indikator)
-                                <option value="{{ $indikator->id }}">{{ $indikator->indikator }}</option>
-                            @empty
-                                <option disabled>Belum ada indikator</option>
-                            @endforelse
                         </select>
                     </div>
                 </div>
