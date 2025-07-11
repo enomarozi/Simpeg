@@ -137,9 +137,9 @@
                                         <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}" title="Tambah Indikator">
                                             <i class="bi bi-plus-circle me-1"></i> Tambah
                                         </button>
-                                        <!-- <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" data-indikator='@json($skp->indikatorList)' title="Hapus Indikator"> 
+                                        <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" title="Hapus Indikator"> 
                                             <i class="bi bi-trash3 me-1"></i> Hapus 
-                                        </button> -->
+                                        </button>
                                     </div>
                                 </div>
                             </td>
@@ -354,7 +354,7 @@
 <div class="modal fade" id="modalHapusPoin" tabindex="-1" aria-labelledby="modalHapusPoinLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
         <div class="modal-content">
-            <form id="formHapusPoin" action="{{ route('skpIndikatorDel') }}" method="POST">
+            <form id="formHapusPoin" action="{{ route('skpIndikatorDelete') }}"method="POST">
                 @csrf
                 <input type="hidden" name="skp_id" id="hapusSkpId">
                 <div class="modal-header bg-danger text-white">

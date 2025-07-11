@@ -98,8 +98,14 @@ class SKPController extends Controller
         ]);
         return redirect()->back()->with('success', 'Poin indikator berhasil ditambahkan.');
     }
-    public function skpIndikatorDel($id){
-        dd($id);
+    public function skpIndikatorGet($id)
+    {
+        $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
+        return response()->json($indikators);
+    }
+    public function skpIndikatorDelete(Request $request){
+        $skpId = $request->input('skp_id');
+        $indikatorId = $request->input('indikator_id');
     }
     public function skp_periode(){
         $user = Auth::user();

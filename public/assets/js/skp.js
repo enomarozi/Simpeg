@@ -63,3 +63,51 @@ function skp(){
 }
 
 skp();
+
+document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.btn-hapus-indikator');
+    const skpInput = document.getElementById('hapusSkpId');
+    const indikatorSelect = document.getElementById('indikatorSelect');
+    const form = document.getElementById('formHapusPoin');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const skpId = this.getAttribute('data-skp-id');
+            skpInput.value = skpId;
+
+            form.setAttribute('action', `/skpIndikatorDelete`);
+
+            if (indikatorSelect) {
+                indikatorSelect.innerHTML = '<option disabled selected>Memuat indikator...</option>';
+            }
+
+            // Fetch indikator dari server
+            fetch(`/skpIndikatorGet/${skpId}`)  // ✅ Perbaiki URL agar sesuai endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data indikator.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    indikatorSelect.innerHTML = ''; // Kosongkan sebelum isi baru
+
+                    if (!data || data.length === 0) {
+                        indikatorSelect.innerHTML = '<option disabled selected>Tidak ada indikator</option>';
+                        return;
+                    }
+
+                    data.forEach(indikator => {
+                        const option = document.createElement('option');
+                        option.value = indikator.id;
+                        option.textContent = indikator.indikator;
+                        indikatorSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    indikatorSelect.innerHTML = '<option disabled selected>Gagal memuat indikator</option>';
+                    console.error('Fetch error:', error);
+                });
+        });
+    });
+});
