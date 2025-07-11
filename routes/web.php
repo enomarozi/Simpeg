@@ -39,6 +39,7 @@ Route::POST('/skpAdd', [SKPController::class, 'skpAdd'])->name('skpAdd');
 Route::PUT('/skpEdit/{id}', [SKPController::class, 'skpEdit'])->name('skpEdit');
 Route::DELETE('/skpDelete/{id}', [SKPController::class, 'skpDelete'])->name('skpDelete');
 Route::POST('/skpIndikator', [SKPController::class, 'skpIndikator'])->name('skpIndikator');
+Route::POST('/skpIndikatorEdit', [SKPController::class, 'skpIndikatorEdit'])->name('skpIndikatorEdit');
 Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->name('skpIndikatorGet');
 Route::POST('/skpIndikatorDelete', [SKPController::class, 'skpIndikatorDelete'])->name('skpIndikatorDelete');
 

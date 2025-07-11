@@ -79,7 +79,7 @@
 
     @if(!empty($periode))
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
                 + Tambah SKP
             </button>
         </div>
@@ -137,7 +137,10 @@
                                         <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}" title="Tambah Indikator">
                                             <i class="bi bi-plus-circle me-1"></i> Tambah
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" title="Hapus Indikator"> 
+                                        <button type="button" class="btn btn-sm btn-outline-primary btn-edit-indikator" data-bs-toggle="modal" data-bs-target="#modalEditPoin" data-skp-id="{{ $skp->id }}"> 
+                                            <i class="bi bi-pencil-square me-1"></i> Edit 
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}"> 
                                             <i class="bi bi-trash3 me-1"></i> Hapus 
                                         </button>
                                     </div>
@@ -178,9 +181,12 @@
                                         <button class="btn btn-sm btn-outline-success btn-tambah-poin" data-skp-id="{{ $skp->id }}" title="Tambah Indikator">
                                             <i class="bi bi-plus-circle me-1"></i> Tambah
                                         </button>
-                                        <!-- <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" data-indikator='@json($skp->indikatorList)' title="Hapus Indikator"> 
+                                        <button type="button" class="btn btn-sm btn-outline-primary btn-edit-indikator" data-bs-toggle="modal" data-bs-target="#modalEditPoin" data-skp-id="{{ $skp->id }}"> 
+                                            <i class="bi bi-pencil-square me-1"></i> Edit 
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-indikator" data-bs-toggle="modal" data-bs-target="#modalHapusPoin" data-skp-id="{{ $skp->id }}" title="Hapus Indikator"> 
                                             <i class="bi bi-trash3 me-1"></i> Hapus 
-                                        </button> -->
+                                        </button>
                                     </div>
                                 </div>
                             </td>
@@ -335,7 +341,7 @@
 
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="skp" class="form-label">Indikator</label>
+                        <label for="indikator" class="form-label">Indikator</label>
                         <textarea name="indikator" id="indikator" class="form-control" rows="3" required></textarea>
                     </div>
                 </div>
@@ -343,6 +349,36 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Edit Point SKP --}}
+
+<div class="modal fade" id="modalEditPoin" tabindex="-1" aria-labelledby="modalEditPoinLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <div class="modal-content">
+            <form id="formEditPoin" action="{{ route('skpIndikatorEdit') }}"method="POST">
+                @csrf
+                <input type="hidden" name="skp_id" id="editSkpId">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalEditPoinLabel">Edit Indikator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="indikatorSelectEdit" class="form-label">Pilih Indikator yang Akan Diedit</label>
+                    <select name="indikator_id" id="indikatorSelectEdit" class="form-select" required>
+                    </select>
+                </div>
+                <div class="modal-body">
+                    <label for="indikator_update" class="form-label">Indikator</label>
+                    <textarea name="indikator_update" id="indikator_update" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Update Terpilih</button>
                 </div>
             </form>
         </div>
@@ -363,8 +399,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="indikator_id" class="form-label">Pilih Indikator yang Akan Dihapus</label>
-                        <select name="indikator_id" id="indikatorSelect" class="form-select" required>
+                        <label for="indikatorSelectDel" class="form-label">Pilih Indikator yang Akan Dihapus</label>
+                        <select name="indikator_id" id="indikatorSelectDel" class="form-select" required>
                         </select>
                     </div>
                 </div>

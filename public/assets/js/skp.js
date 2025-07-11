@@ -66,19 +66,18 @@ skp();
 
 document.addEventListener('DOMContentLoaded', function () {
     const deleteButtons = document.querySelectorAll('.btn-hapus-indikator');
-    const skpInput = document.getElementById('hapusSkpId');
-    const indikatorSelect = document.getElementById('indikatorSelect');
-    const form = document.getElementById('formHapusPoin');
+    const skpInputDel = document.getElementById('hapusSkpId');
+    const indikatorSelectDel = document.getElementById('indikatorSelectDel');
+    const formDel = document.getElementById('formHapusPoin');
 
     deleteButtons.forEach(button => {
         button.addEventListener('click', function () {
             const skpId = this.getAttribute('data-skp-id');
-            skpInput.value = skpId;
+            skpInputDel.value = skpId;
+            formDel.setAttribute('action', `/skpIndikatorDelete`);
 
-            form.setAttribute('action', `/skpIndikatorDelete`);
-
-            if (indikatorSelect) {
-                indikatorSelect.innerHTML = '<option disabled selected>Memuat indikator...</option>';
+            if (indikatorSelectDel) {
+                indikatorSelectDel.innerHTML = '<option disabled selected>Memuat indikator...</option>';
             }
 
             // Fetch indikator dari server
@@ -90,10 +89,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    indikatorSelect.innerHTML = ''; // Kosongkan sebelum isi baru
+                    indikatorSelectDel.innerHTML = ''; // Kosongkan sebelum isi baru
 
                     if (!data || data.length === 0) {
-                        indikatorSelect.innerHTML = '<option disabled selected>Tidak ada indikator</option>';
+                        indikatorSelectDel.innerHTML = '<option disabled selected>Tidak ada indikator</option>';
                         return;
                     }
 
@@ -101,11 +100,57 @@ document.addEventListener('DOMContentLoaded', function () {
                         const option = document.createElement('option');
                         option.value = indikator.id;
                         option.textContent = indikator.indikator;
-                        indikatorSelect.appendChild(option);
+                        indikatorSelectDel.appendChild(option);
                     });
                 })
                 .catch(error => {
-                    indikatorSelect.innerHTML = '<option disabled selected>Gagal memuat indikator</option>';
+                    indikatorSelectDel.innerHTML = '<option disabled selected>Gagal memuat indikator</option>';
+                    console.error('Fetch error:', error);
+                });
+        });
+    });
+
+    const editButtons = document.querySelectorAll('.btn-edit-indikator');
+    const skpInputEdit = document.getElementById('editSkpId');
+    const indikatorSelectEdit = document.getElementById('indikatorSelectEdit');
+    const formEdit = document.getElementById('formEditPoin');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const skpId = this.getAttribute('data-skp-id');
+            skpInputEdit.value = skpId;
+
+            formEdit.setAttribute('action', `/skpIndikatorEdit`);
+
+            if (indikatorSelectEdit) {
+                indikatorSelectEdit.innerHTML = '<option disabled selected>Memuat indikator...</option>';
+            }
+
+            // Fetch indikator dari server
+            fetch(`/skpIndikatorGet/${skpId}`)  // ✅ Perbaiki URL agar sesuai endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Gagal mengambil data indikator.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    indikatorSelectEdit.innerHTML = ''; // Kosongkan sebelum isi baru
+
+                    if (!data || data.length === 0) {
+                        indikatorSelectEdit.innerHTML = '<option disabled selected>Tidak ada indikator</option>';
+                        return;
+                    }
+
+                    data.forEach(indikator => {
+                        const option = document.createElement('option');
+                        option.value = indikator.id;
+                        option.textContent = indikator.indikator;
+                        indikatorSelectEdit.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    indikatorSelectEdit.innerHTML = '<option disabled selected>Gagal memuat indikator</option>';
                     console.error('Fetch error:', error);
                 });
         });

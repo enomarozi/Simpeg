@@ -98,14 +98,54 @@ class SKPController extends Controller
         ]);
         return redirect()->back()->with('success', 'Poin indikator berhasil ditambahkan.');
     }
+    public function skpIndikatorEdit(Request $request){
+        $user = Auth::user()->pegawai_id;
+        $skp_id = $request->input('skp_id');
+        $indikator_id = $request->input('indikator_id');
+
+        $skp = SKP::where('id', $skp_id)
+                  ->where('pegawai_id', $user)
+                  ->first();
+        if (!$skp) {
+            return redirect()->back()->with('error', 'SKP tidak ditemukan atau bukan milik Anda.');
+        }
+        $indikator = SKPIndikator::where('id', $indikator_id)
+                        ->where('skp_id', $skp_id)
+                        ->first();
+        if (!$indikator) {
+            return redirect()->back()->with('error', 'Indikator tidak ditemukan.');
+        }
+        $indikator->indikator = $indikator_id;
+        $indikator->save();
+
+        return redirect()->back()->with('success', 'Indikator berhasil diperbarui.');
+    }
+    public function skpIndikatorDelete(Request $request){
+        $user = Auth::user()->pegawai_id;
+        $skp_id = $request->input('skp_id');
+        $indikator_id = $request->input('indikator_id');
+
+        $skp = SKP::where('id', $skp_id)
+              ->where('pegawai_id', $user)
+              ->first();
+
+        if (!$skp) {
+            return redirect()->back()->with('error', 'SKP tidak ditemukan atau bukan milik Anda.');
+        }
+        $deleted = SKPIndikator::where('skp_id', $skp_id)
+                ->where('id', $indikator_id)
+                ->delete();
+
+        if ($deleted) {
+            return redirect()->back()->with('success', 'Indikator berhasil dihapus.');
+        } else {
+            return redirect()->back()->with('error', 'Indikator tidak ditemukan atau gagal dihapus.');
+        }
+    }
     public function skpIndikatorGet($id)
     {
         $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
         return response()->json($indikators);
-    }
-    public function skpIndikatorDelete(Request $request){
-        $skpId = $request->input('skp_id');
-        $indikatorId = $request->input('indikator_id');
     }
     public function skp_periode(){
         $user = Auth::user();
