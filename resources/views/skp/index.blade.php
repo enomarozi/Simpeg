@@ -48,27 +48,27 @@
                     <tbody>
                         <tr>
                             <td>Nama</td>
-                            <td>{{ $pegawai->nama ?? '-' }}</td>
+                            <td>{{ $user->pegawai->nama ?? '-' }}</td>
                             <td>{{ $atasan->nama ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>NIP/NIKU</td>
-                            <td>{{ $pegawai->nip ?? '-' }}</td>
+                            <td>{{ $user->pegawai->nip ?? '-' }}</td>
                             <td>{{ $atasan->nip ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>Jabatan</td>
-                            <td>{{ $pegawai->jabatan ?? '-' }}</td>
-                            <td>{{ $atasan->jabatan ?? '-' }}</td>
+                            <td>{{ $user->pegawai->jabatan ?? '-' }}</td>
+                            <td>{{ $user->pegawai->jabatan ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>Pangkat</td>
-                            <td>{{ $pegawai->pangkat ?? '-' }}</td>
-                            <td>{{ $atasan->pangkat ?? '-' }}</td>
+                            <td>{{ $user->pegawai->pangkat ?? '-' }}</td>
+                            <td>{{ $user->pegawai->pangkat ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>Unit Kerja</td>
-                            <td>{{ $pegawai->unit_kerja ?? '-' }}</td>
+                            <td>{{ $user->pegawai->unit_kerja ?? '-' }}</td>
                             <td>{{ $atasan->unit_kerja ?? '-' }}</td>
                         </tr>
                     </tbody>
@@ -87,10 +87,15 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
-            @if(empty($daftarSkp) || $daftarSkp->isEmpty())
+            @if(empty($daftarSkp))
                 <div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
                     <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
                     Periode belum dipilih. Silakan pilih periode SKP terlebih dahulu.
+                </div>
+            @elseif($daftarSkp->isEmpty()) 
+                <div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
+                    <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
+                    SKP untuk periode ini belum tersedia.
                 </div>
             @else
                 @php
@@ -207,7 +212,7 @@
         </div>
     </div>
 </div>
-
+@if(!empty($periode))
 {{-- Modal Tambah SKP --}}
 <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
@@ -219,8 +224,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
-                    <input type="hidden" name="atasan_id" value="{{ $pegawai->atasan_id }}">
                     <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
                     @if($user->hasRole('atasan'))
                     <div class="mb-3">
@@ -235,6 +238,11 @@
                         <label for="pelaksanaan_skp" class="form-label">SKP Atasan yang Diintervensi</label>
                         <select name="pelaksanaan_skp" id="pelaksanaan_skp" class="form-select">
                             <option value="" selected>-- Pilih SKP --</option>
+                            @foreach($intervensiSkp as $item)
+                                <option value="{{ $item->id }}">
+                                    Intervensi | {{ $item->skp->skp }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     @endif
@@ -246,11 +254,12 @@
                             <option value="2">Tambahan</option>
                         </select>
                     </div>
-
+                    @if($user->hasRole('atasan'))
                     <div class="mb-3">
                         <label for="skp" class="form-label">Sasaran Hasil Kerja</label>
                         <textarea name="skp" id="skp" class="form-control" rows="3" required></textarea>
                     </div>
+                    @endif
 
                 </div>
                 <div class="modal-footer">
@@ -412,5 +421,7 @@
         </div>
     </div>
 </div>
+
 <script src="{{ asset('assets/js/skp.js') }}"></script>
+@endif
 @endsection

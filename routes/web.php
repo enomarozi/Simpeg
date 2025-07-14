@@ -44,7 +44,7 @@ Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->
 Route::POST('/skpIndikatorDelete', [SKPController::class, 'skpIndikatorDelete'])->name('skpIndikatorDelete');
 
 Route::GET('/intervensi_skp', [IntervensiSKPController::class, 'index'])->name('intervensi_skp');
-Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periode');
+Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periodeIntervensi');
 Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');

@@ -9,7 +9,7 @@
     </div>
     <div class="card mb-4 bg-opacity-10 border">
         <div class="card-body">
-            <form action="{{ route('periode') }}" method="GET">
+            <form action="{{ route('periodeIntervensi') }}" method="GET">
                 @csrf
                 <div class="row align-items-end">
                     <div class="col-md-6">
@@ -40,51 +40,102 @@
             </button>
         </div>
     @endif
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+            @if(empty($daftarIntervensi))
+                <div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
+                    <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
+                    Periode belum dipilih. Silakan pilih periode SKP terlebih dahulu.
+                </div>
+            @elseif($daftarIntervensi->isEmpty()) 
+            	<div class="alert alert-light text-center fw-semibold border rounded shadow-sm py-3">
+                    <i class="bi bi-exclamation-circle me-2 text-secondary"></i>
+                    Data intervensi untuk periode ini belum tersedia.
+                </div>
+            @else
+          		<table class="table table-bordered table-striped">
+				    <thead>
+				        <tr>
+				            <th>No</th>
+				            <th>Pegawai</th>
+				            <th>Isi SKP</th>
+				            <th>Status</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        @foreach($daftarIntervensi as $index => $intervensi)
+					        <tr>
+					            <td>{{ $index + 1 }}</td>
+					            <td>{{ $intervensi->bawahan->nama ?? '-' }}</td>
+					            <td>{{ $intervensi->skp->skp ?? '-' }}</td> {{-- isi SKP --}}
+					            <td>
+					                @php
+					                    $statusClass = match($intervensi->status) {
+					                        'diintervensi' => 'badge bg-warning',
+					                        'diajukan' => 'badge bg-info',
+					                        'diterima' => 'badge bg-success',
+					                        'ditolak' => 'badge bg-danger',
+					                        default => 'badge bg-secondary',
+					                    };
+					                @endphp
+					                <span class="{{ $statusClass }}">{{ ucfirst($intervensi->status) }}</span>
+					            </td>
+					        </tr>
+					    @endforeach
+				    </tbody>
+				</table>
+			@endif
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- Modal Tambah Intervensi SKP --}}
-<div class="modal fade" id="modalTambahIntervensiSKP" tabindex="-1" aria-labelledby="modalTambahIntervensiLabel" aria-hidden="true">
-    <div class="modal-dialog modal-custom-width">
-        <form action="{{ route('intervensiAdd') }}" method="POST">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTambahIntervensiLabel">Tambah Intervensi SKP</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
-                    <div class="mb-3">
-                        <label for="skp_intervensi" class="form-label">SKP</label>
-                        <select name="skp_intervensi" id="skp_intervensi" class="form-select" required>
-                            <option value="" disabled selected>-- Pilih SKP diIntervensi --</option>
-                                @foreach($daftarSkp as $item)
-                                    <option value="{{ $item->id }}">
-                 						{{ $item->skp }}
-                                    </option>
-                                @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="bawahan_id" class="form-label">Bawahan</label>
-                        <select name="bawahan_id" id="bawahan_id" class="form-select" required>
-                            <option value="" disabled selected>-- Pilih SKP diIntervensi --</option>
-                                @foreach($daftarBawahan as $item)
-                                    <option value="{{ $item->id }}">
-                 						{{ $item->nama }}
-                                    </option>
-                                @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+@if(!empty($periode))
+	<div class="modal fade" id="modalTambahIntervensiSKP" tabindex="-1" aria-labelledby="modalTambahIntervensiLabel" aria-hidden="true">
+	    <div class="modal-dialog modal-custom-width">
+	        <form action="{{ route('intervensiAdd') }}" method="POST">
+	            @csrf
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <h5 class="modal-title" id="modalTambahIntervensiLabel">Tambah Intervensi SKP</h5>
+	                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+	                </div>
+	                <div class="modal-body">
+	                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
+	                    <div class="mb-3">
+	                        <label for="skp_intervensi" class="form-label">SKP</label>
+	                        <select name="skp_intervensi" id="skp_intervensi" class="form-select" required>
+	                            <option value="" disabled selected>-- Pilih SKP diIntervensi --</option>
+	                                @foreach($daftarSkp as $item)
+	                                    <option value="{{ $item->id }}">
+	                 						{{ $item->skp }}
+	                                    </option>
+	                                @endforeach
+	                        </select>
+	                    </div>
+	                    <div class="mb-3">
+	                        <label for="bawahan_id" class="form-label">Bawahan</label>
+	                        <select name="bawahan_id" id="bawahan_id" class="form-select" required>
+	                            <option value="" disabled selected>-- Pilih SKP diIntervensi --</option>
+	                                @foreach($daftarBawahan as $item)
+	                                    <option value="{{ $item->id }}">
+	                 						{{ $item->nama }}
+	                                    </option>
+	                                @endforeach
+	                        </select>
+	                    </div>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="submit" class="btn btn-success">Simpan</button>
+	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+@endif
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
         const periodeSelect = document.getElementById('status_kepegawaian');

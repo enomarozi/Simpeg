@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIndikator};
+use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIndikator, SKPIntervensi};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +26,8 @@ class SKPController extends Controller
     }
     public function skpAdd(Request $request)
     {
-        $user = Auth::user();
+        $pegawai_id = Auth::user()->pegawai_id;
+        $atasan_id = Pegawai::where('id', $pegawai_id)->value('atasan_id');
         $request->validate([
             'pegawai_id'=>'required',
             'atasan_id'=>'required',
@@ -36,8 +37,8 @@ class SKPController extends Controller
             'skp'=>'required|string',
         ]);
         SKP::create([
-            'pegawai_id' => $request->pegawai_id,
-            'atasan_id'=> $request->atasan_id,
+            'pegawai_id' => $pegawai_id,
+            'atasan_id'=> $atasan_id,
             'periode_id' => $request->periode_id,
             'pelaksanaan_skp' => $request->pelaksanaan_skp,
             'jenis_skp' => $request->jenis_skp,
@@ -69,11 +70,16 @@ class SKPController extends Controller
         $title = "SKP";
         $periode = $request->periode_id;
         $user = Auth::user();
+        // dd($user->pegawai->atasan_id);
         $SKPperiode = [];
         if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
             $SKPperiode = SKPPeriode::all();
         }
-        $daftarSkp = Skp::with(['periode', 'indikatorList'])
+        $intervensiSkp = SKPIntervensi::with(['periode'])
+            ->where('bawahan_id', $user->pegawai_id)
+            ->get();
+            
+        $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $user->pegawai_id)
             ->where('atasan_id', $user->pegawai->atasan->id)
             ->orderBy('created_at', 'desc')
@@ -84,7 +90,7 @@ class SKPController extends Controller
         }
         $pegawai = $user->pegawai; 
         $atasan = $pegawai->atasan;
-        return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','statusSkp','pegawai','atasan'));
+        return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','statusSkp','pegawai','atasan','intervensiSkp'));
     }
     public function skpIndikator(Request $request)
     {

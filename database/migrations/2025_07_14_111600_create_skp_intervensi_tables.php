@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('skp_intervensi_tables', function (Blueprint $table) {
+        Schema::create('skp_intervensi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
-            $table->foreignId('atasan_id')->constrained('pegawai')->onDelete('cascade');
+            $table->foreignId('bawahan_id')->constrained('pegawai')->onDelete('cascade');
             $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
             $table->foreignId('skp_id')->constrained('skp')->onDelete('cascade');
             $table->enum('status', ['diintervensi', 'diajukan', 'diterima', 'ditolak'])->default('diintervensi');
