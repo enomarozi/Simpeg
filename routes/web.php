@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, KelolaPegawaiController};
+use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -43,6 +43,9 @@ Route::POST('/skpIndikatorEdit', [SKPController::class, 'skpIndikatorEdit'])->na
 Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->name('skpIndikatorGet');
 Route::POST('/skpIndikatorDelete', [SKPController::class, 'skpIndikatorDelete'])->name('skpIndikatorDelete');
 
+Route::GET('/intervensi_skp', [IntervensiSKPController::class, 'index'])->name('intervensi_skp');
+Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periode');
+Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
 

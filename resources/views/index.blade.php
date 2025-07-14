@@ -128,7 +128,7 @@
                                 <a class="nav-link" href="{{ route('rencana_skp') }}">Rencana SKP</a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="#">Matriks Peran Hasil</a>
+                                <a class="nav-link" href="{{ route('intervensi_skp') }}">Matriks Peran Hasil</a>
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link" href="#">Evaluasi SKP</a>
