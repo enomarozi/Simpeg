@@ -31,10 +31,11 @@
                                 <td>{{ \Carbon\Carbon::parse($periode->tanggal_mulai)->format('d M Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($periode->tanggal_selesai)->format('d M Y') }}</td>
                                 <td>
-                                    <span class="badge rounded-pill 
-                                        {{ $periode->status === 'aktif' ? 'bg-success' : 'bg-secondary' }}">
-                                        {{ ucfirst($periode->status) }}
-                                    </span>
+                                    <a href="{{ route('set_active_periode', $periode->status) }}"
+                                       class="btn btn-sm px-3 {{ $periode->status ? 'btn-success' : 'btn-secondary' }}"
+                                       title="Klik untuk {{ $periode->status ? 'nonaktifkan' : 'aktifkan' }}">
+                                        <i class="bi {{ $periode->status ? 'bi-toggle-on' : 'bi-toggle-off' }} fs-5"></i>
+                                    </a>
                                 </td>
                                 <td>
                                     <form action="{{ route('skp_periode_del', $periode->id) }}" method="POST" onchange="this.form.submit()" class="d-inline">

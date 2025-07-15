@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController};
+use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController, ManagemenUserController, PeriodeController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -24,13 +24,14 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
 	Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
 	Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
-	Route::GET('/data_user',[PegawaiController::class, 'data_user'])->name('data_user');
-	Route::POST('/set_id_pegawai',[PegawaiController::class, 'set_id_pegawai'])->name('set_id_pegawai');
-	Route::POST('/set_role_pegawai/', [PegawaiController::class, 'set_role_pegawai'])->name('set_role_pegawai');
-	Route::GET('/set_active_pegawai/{id}', [PegawaiController::class, 'set_active_pegawai'])->name('set_active_pegawai');
-	Route::GET('/skp_periode',[SKPController::class, 'skp_periode'])->name('skp_periode');
-	Route::POST('/skp_periodeAction',[SKPController::class, 'skp_periodeAction'])->name('skp_periodeAction');
-	Route::POST('/skp_periode_del/{id}',[SKPController::class, 'skp_periode_del'])->name('skp_periode_del');
+	Route::GET('/skp_periode',[PeriodeController::class, 'skp_periode'])->name('skp_periode');
+	Route::GET('/set_active_periode/{id}', [PeriodeController::class, 'set_active_periode'])->name('set_active_periode');
+	Route::POST('/skp_periodeAction',[PeriodeController::class, 'skp_periodeAction'])->name('skp_periodeAction');
+	Route::POST('/skp_periode_del/{id}',[PeriodeController::class, 'skp_periode_del'])->name('skp_periode_del');
+	Route::GET('/data_user',[ManagemenUserController::class, 'data_user'])->name('data_user');
+	Route::POST('/set_id_pegawai',[ManagemenUserController::class, 'set_id_pegawai'])->name('set_id_pegawai');
+	Route::POST('/set_role_pegawai/', [ManagemenUserController::class, 'set_role_pegawai'])->name('set_role_pegawai');
+	Route::GET('/set_active_pegawai/{id}', [ManagemenUserController::class, 'set_active_pegawai'])->name('set_active_pegawai');
 });
 
 Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');

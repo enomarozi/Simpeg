@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIndikator, SKPIntervensi};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Abort;
 
 class SKPController extends Controller
 {
@@ -70,7 +71,6 @@ class SKPController extends Controller
         $title = "SKP";
         $periode = $request->periode_id;
         $user = Auth::user();
-        // dd($user->pegawai->atasan_id);
         $SKPperiode = [];
         if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
             $SKPperiode = SKPPeriode::all();
@@ -153,35 +153,4 @@ class SKPController extends Controller
         $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
         return response()->json($indikators);
     }
-    public function skp_periode(){
-        $user = Auth::user();
-        $title = "SKP Periode";
-        $periodeList = SKPPeriode::all(); 
-        return view('admin.skp_periode', compact('title','user','periodeList'));
-    }
-    public function skp_periodeAction(Request $request){
-        $user = Auth::user();
-        $request->validate([
-            'tahun' => 'required|numeric|min:2000|max:2100',
-            'mulai' => 'required|date',
-            'selesai' => 'required|date|after_or_equal:mulai',
-            'status' => 'required|in:aktif,nonaktif',
-        ]);
-
-        SKPPeriode::create([
-            'tahun' => $request->tahun,
-            'tanggal_mulai' => $request->mulai,
-            'tanggal_selesai' => $request->selesai,
-            'status' => $request->status,
-        ]);
-        return redirect()->back()->with('success', 'Periode SKP berhasil ditambah.');
-    }
-    public function skp_periode_del($id){
-        $periode = SKPPeriode::find($id);
-        if (!$periode) {
-            return redirect()->back()->withErrors(['error' => 'Periode tidak ditemukan.']);
-        }
-        $periode->delete();
-        return redirect()->back()->with('success', 'Periode berhasil dihapus.');
-        }
-    }
+}
