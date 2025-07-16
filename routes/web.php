@@ -20,18 +20,26 @@ Route::group(['prefix' => 'account'], function () {
 });
 
 Route::group(['prefix'=> 'admin'], function(){
-	Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
-	Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
-	Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
-	Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
-	Route::GET('/skp_periode',[PeriodeController::class, 'skp_periode'])->name('skp_periode');
-	Route::GET('/set_active_periode/{id}', [PeriodeController::class, 'set_active_periode'])->name('set_active_periode');
-	Route::POST('/skp_periodeAction',[PeriodeController::class, 'skp_periodeAction'])->name('skp_periodeAction');
-	Route::POST('/skp_periode_del/{id}',[PeriodeController::class, 'skp_periode_del'])->name('skp_periode_del');
-	Route::GET('/data_user',[ManagemenUserController::class, 'data_user'])->name('data_user');
-	Route::POST('/set_id_pegawai',[ManagemenUserController::class, 'set_id_pegawai'])->name('set_id_pegawai');
-	Route::POST('/set_role_pegawai/', [ManagemenUserController::class, 'set_role_pegawai'])->name('set_role_pegawai');
-	Route::GET('/set_active_pegawai/{id}', [ManagemenUserController::class, 'set_active_pegawai'])->name('set_active_pegawai');
+	Route::group(['prefix'=>'pegawai'], function(){
+		Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
+		Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
+		Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
+		Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
+	});
+	Route::group(['prefix'=>'periode'], function(){
+		Route::GET('/skp_periode',[PeriodeController::class, 'skp_periode'])->name('skp_periode');
+		Route::GET('/set_active_periode/{id}', [PeriodeController::class, 'set_active_periode'])->name('set_active_periode');
+		Route::POST('/skp_periodeAction',[PeriodeController::class, 'skp_periodeAction'])->name('skp_periodeAction');
+		Route::POST('/skp_periode_del/{id}',[PeriodeController::class, 'skp_periode_del'])->name('skp_periode_del');
+	});
+	Route::group(['prefix'=>'user'], function(){
+		Route::GET('/data_user',[ManagemenUserController::class, 'data_user'])->name('data_user');
+		Route::POST('/userAdd',[ManagemenUserController::class, 'userAdd'])->name('userAdd');
+		Route::POST('/userUpdate',[ManagemenUserController::class, 'userUpdate'])->name('userUpdate');
+		Route::POST('/set_id_pegawai',[ManagemenUserController::class, 'set_id_pegawai'])->name('set_id_pegawai');
+		Route::POST('/set_role_pegawai/', [ManagemenUserController::class, 'set_role_pegawai'])->name('set_role_pegawai');
+		Route::GET('/set_active_pegawai/{id}', [ManagemenUserController::class, 'set_active_pegawai'])->name('set_active_pegawai');
+	});
 });
 
 Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');

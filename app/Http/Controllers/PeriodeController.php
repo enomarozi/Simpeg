@@ -45,6 +45,12 @@ class PeriodeController extends Controller
         ]);
         return redirect()->back()->with('success', 'Periode SKP berhasil ditambah.');
     }
+    public function set_active_periode($id){
+        $periode = SKPPeriode::findOrFail($id);
+        $periode->status = $periode->status === 'aktif' ? 'nonaktif' : 'aktif';
+        $periode->save();
+        return redirect()->back()->with('success', "Status periode berhasil diubah menjadi {$periode->status}.");
+    }
     public function skp_periode_del($id){
         $periode = SKPPeriode::find($id);
         if (!$periode) {

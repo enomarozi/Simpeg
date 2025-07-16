@@ -31,10 +31,10 @@
                                 <td>{{ \Carbon\Carbon::parse($periode->tanggal_mulai)->format('d M Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($periode->tanggal_selesai)->format('d M Y') }}</td>
                                 <td>
-                                    <a href="{{ route('set_active_periode', $periode->status) }}"
-                                       class="btn btn-sm px-3 {{ $periode->status ? 'btn-success' : 'btn-secondary' }}"
-                                       title="Klik untuk {{ $periode->status ? 'nonaktifkan' : 'aktifkan' }}">
-                                        <i class="bi {{ $periode->status ? 'bi-toggle-on' : 'bi-toggle-off' }} fs-5"></i>
+                                    <a href="{{ route('set_active_periode', $periode->id) }}"
+                                       class="btn btn-sm px-3 {{ $periode->status === 'aktif' ? 'btn-success' : 'btn-secondary' }}"
+                                       title="Klik untuk {{ $periode->status === 'aktif' ? 'nonaktifkan' : 'aktifkan' }}">
+                                        <i class="bi {{ $periode->status === 'aktif' ? 'bi-toggle-on' : 'bi-toggle-off' }} fs-5"></i>
                                     </a>
                                 </td>
                                 <td>

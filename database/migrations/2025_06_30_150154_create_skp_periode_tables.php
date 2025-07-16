@@ -13,7 +13,7 @@ return new class extends Migration
             $table->year('tahun');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
-            $table->enum('status', ['aktif', 'nonaktif'])->default('nonaktif');
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
         });
     }
