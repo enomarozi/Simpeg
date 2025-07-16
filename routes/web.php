@@ -35,7 +35,7 @@ Route::group(['prefix'=> 'admin'], function(){
 	Route::group(['prefix'=>'user'], function(){
 		Route::GET('/data_user',[ManagemenUserController::class, 'data_user'])->name('data_user');
 		Route::POST('/userAdd',[ManagemenUserController::class, 'userAdd'])->name('userAdd');
-		Route::POST('/userUpdate',[ManagemenUserController::class, 'userUpdate'])->name('userUpdate');
+		Route::POST('/userUpdate/{id}',[ManagemenUserController::class, 'userUpdate'])->name('userUpdate');
 		Route::POST('/set_id_pegawai',[ManagemenUserController::class, 'set_id_pegawai'])->name('set_id_pegawai');
 		Route::POST('/set_role_pegawai/', [ManagemenUserController::class, 'set_role_pegawai'])->name('set_role_pegawai');
 		Route::GET('/set_active_pegawai/{id}', [ManagemenUserController::class, 'set_active_pegawai'])->name('set_active_pegawai');

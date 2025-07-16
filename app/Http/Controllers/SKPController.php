@@ -12,6 +12,13 @@ class SKPController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(function($request, $next){
+            $this->user = Auth::user();
+            if (!$this->user->hasRole('pegawai') && !$this->user->hasRole('atasan')) {
+                abort(403, 'Unauthorized');
+            }
+            return $next($request);
+        });
     }
 
     public function index()
@@ -20,7 +27,7 @@ class SKPController extends Controller
         $user = Auth::user();
         $SKPperiode = [];
         if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
-            $SKPperiode = SKPPeriode::all();
+            $SKPperiode = SKPPeriode::where('is_active', 1)->get();
         }
         $pegawai = Pegawai::find($user->pegawai_id);
         return view('skp.index', compact('title','user','SKPperiode','pegawai'));
@@ -68,6 +75,9 @@ class SKPController extends Controller
     }
     public function periode(Request $request)
     {
+        if($this->user->pegawai->atasan_id === null){
+            return redirect()->back()->with('error', 'Atasan anda belum ada.');
+        }
         $title = "SKP";
         $periode = $request->periode_id;
         $user = Auth::user();
@@ -78,12 +88,12 @@ class SKPController extends Controller
         $intervensiSkp = SKPIntervensi::with(['periode'])
             ->where('bawahan_id', $user->pegawai_id)
             ->get();
-            
         $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $user->pegawai_id)
             ->where('atasan_id', $user->pegawai->atasan->id)
             ->orderBy('created_at', 'desc')
             ->get();
+
         $statusSkp = '';
         if(count($daftarSkp) >= 1){
             $statusSkp = $daftarSkp[0]->status;

@@ -66,7 +66,7 @@ class RoleSeeder extends Seeder
             'tahun' => 2025,
             'tanggal_mulai' => '2025-01-01',
             'tanggal_selesai' => '2025-12-31',
-            'status' => 'aktif',
+            'is_active' => '0',
         ]);
     }
 }

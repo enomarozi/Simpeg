@@ -153,7 +153,6 @@
         <div class="modal-dialog modal-custom-width">
             <form action="{{ route('userUpdate', $u->id) }}" method="POST">
                 @csrf
-                @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header bg-warning text-dark">
                         <h5 class="modal-title" id="editUserModalLabel{{ $u->id }}">Edit User</h5>

@@ -34,22 +34,22 @@ class PeriodeController extends Controller
             'tahun' => 'required|numeric|min:2000|max:2100',
             'mulai' => 'required|date',
             'selesai' => 'required|date|after_or_equal:mulai',
-            'status' => 'required|in:aktif,nonaktif',
+            'status' => 'required|in:0,1',
         ]);
 
         SKPPeriode::create([
             'tahun' => $request->tahun,
             'tanggal_mulai' => $request->mulai,
             'tanggal_selesai' => $request->selesai,
-            'status' => $request->status,
+            'is_active' => $request->status,
         ]);
         return redirect()->back()->with('success', 'Periode SKP berhasil ditambah.');
     }
     public function set_active_periode($id){
         $periode = SKPPeriode::findOrFail($id);
-        $periode->status = $periode->status === 'aktif' ? 'nonaktif' : 'aktif';
+        $periode->is_active = $periode->is_active ? 0 : 1;
         $periode->save();
-        return redirect()->back()->with('success', "Status periode berhasil diubah menjadi {$periode->status}.");
+        return redirect()->back()->with('success', "Status periode berhasil diubah.");
     }
     public function skp_periode_del($id){
         $periode = SKPPeriode::find($id);
