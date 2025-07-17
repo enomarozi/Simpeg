@@ -1,23 +1,29 @@
 @extends('index')
 @section('content')
-<h4>{{ $title }}</h4>
-<table id="menus-table" class="table table-hover align-middle mb-0">
-    <thead class="table-secondary text-center">
-        <tr>
-            <th>#</th>
-            <th>NIP</th>
-            <th>Nama</th>
-            <th>Fakultas</th>
-            <th>Departemen</th>
-            <th>Status Kepegawaian</th>
-            <th>Golongan</th>
-            <!-- <th>Pangkat</th> -->
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="menus-tbody">
-    </tbody>
-</table>
+<div class="container-fluid">
+    <div class="card mb-5 shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>Data Pegawai</h4>
+        </div>
+    </div>
+    <table id="menus-table" class="table table-hover align-middle mb-0">
+        <thead class="table-secondary text-center">
+            <tr>
+                <th>#</th>
+                <th>NIP</th>
+                <th>Nama</th>
+                <th>Fakultas</th>
+                <th>Departemen</th>
+                <th>Status Kepegawaian</th>
+                <th>Golongan</th>
+                <!-- <th>Pangkat</th> -->
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="menus-tbody">
+        </tbody>
+    </table>
+</div>
 
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {

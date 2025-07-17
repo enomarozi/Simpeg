@@ -120,15 +120,21 @@
             </li>
             @if($user->hasRole('pegawai') || $user->hasRole('atasan'))
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> SKP Tahunan
+                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide {{ Request::routeIs('rencana_skp', 'intervensi_skp') ? '' : 'collapsed' }}" 
+                       data-bs-toggle="collapse" 
+                       href="#submenu2" 
+                       role="button" 
+                       aria-expanded="{{ Request::routeIs('rencana_skp', 'intervensi_skp') ? 'true' : 'false' }}" 
+                       aria-controls="submenu2">
+                       SKP Tahunan
                     </a>
-                    <div class="collapse" id="submenu2">
+                    <div class="collapse {{ Request::routeIs('rencana_skp', 'intervensi_skp') ? 'show' : '' }}" id="submenu2">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('rencana_skp') }}">Rencana SKP</a>
+                                <a class="nav-link {{ Request::routeIs('rencana_skp') ? 'active' : '' }}" href="{{ route('rencana_skp') }}">Rencana SKP</a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('intervensi_skp') }}">Matriks Peran Hasil</a>
+                                <a class="nav-link {{ Request::routeIs('intervensi_skp') ? 'active' : '' }}" href="{{ route('intervensi_skp') }}">Matriks Peran Hasil</a>
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link" href="#">Evaluasi SKP</a>
@@ -140,7 +146,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu3" role="button" aria-expanded="false" aria-controls="submenu3"> Log Harian
+                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide collapsed" 
+                       data-bs-toggle="collapse" 
+                       href="#submenu3" 
+                       role="button" 
+                       aria-expanded="false" 
+                       aria-controls="submenu3">
+                       Log Harian
                     </a>
                     <div class="collapse" id="submenu3">
                         <ul class="nav flex-column ms-3">
@@ -155,34 +167,52 @@
                 </li>
             @elseif($user->hasRole('admin'))
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide" data-bs-toggle="collapse" href="#submenu1" role="button" aria-expanded="false" aria-controls="submenu1"> SKP
+                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide {{ Request::routeIs('skp_periode') ? '' : 'collapsed' }}" 
+                       data-bs-toggle="collapse" 
+                       href="#submenu1" 
+                       role="button" 
+                       aria-expanded="{{ Request::routeIs('skp_periode') ? 'true' : 'false' }}" 
+                       aria-controls="submenu1">
+                       SKP
                     </a>
-                    <div class="collapse" id="submenu1">
+                    <div class="collapse {{ Request::routeIs('skp_periode') ? 'show' : '' }}" id="submenu1">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('skp_periode') }}">SKP Periode</a>
+                                <a class="nav-link {{ Request::routeIs('skp_periode') ? 'active' : '' }}" href="{{ route('skp_periode') }}">SKP Periode</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle bi bi-people" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2"> Pegawai
+                    <a class="nav-link dropdown-toggle bi bi-people {{ Request::routeIs('data_pegawai') ? '' : 'collapsed' }}" 
+                       data-bs-toggle="collapse" 
+                       href="#submenu2" 
+                       role="button" 
+                       aria-expanded="{{ Request::routeIs('data_pegawai') ? 'true' : 'false' }}" 
+                       aria-controls="submenu2">
+                       Pegawai
                     </a>
-                    <div class="collapse" id="submenu2">
+                    <div class="collapse {{ Request::routeIs('data_pegawai') ? 'show' : '' }}" id="submenu2">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('data_pegawai') }}">Data Pegawai</a>
+                                <a class="nav-link {{ Request::routeIs('data_pegawai') ? 'active' : '' }}" href="{{ route('data_pegawai') }}">Data Pegawai</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link dropdown-toggle bi bi-people" data-bs-toggle="collapse" href="#submenu3" role="button" aria-expanded="false" aria-controls="submenu3"> Users
+                    <a class="nav-link dropdown-toggle bi-person-gear {{ Request::routeIs('data_user') ? '' : 'collapsed' }}" 
+                       data-bs-toggle="collapse" 
+                       href="#submenu3" 
+                       role="button" 
+                       aria-expanded="{{ Request::routeIs('data_user') ? 'true' : 'false' }}" 
+                       aria-controls="submenu3">
+                       Users
                     </a>
-                    <div class="collapse" id="submenu3">
+                    <div class="collapse {{ Request::routeIs('data_user') ? 'show' : '' }}" id="submenu3">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="{{ route('data_user') }}">Managemen User</a>
+                                <a class="nav-link {{ Request::routeIs('data_user') ? 'active' : '' }}" href="{{ route('data_user') }}">Managemen User</a>
                             </li>
                         </ul>
                     </div>

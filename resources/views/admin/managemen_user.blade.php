@@ -1,8 +1,12 @@
 @extends('index')
 
 @section('content')
-<h4>{{ $title }}</h4>
-<div class="container-fluid mt-3">
+<div class="container-fluid">
+    <div class="card mb-5 shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>Manajemen User</h4>
+        </div>
+    </div>
     <div class="d-flex justify-content-end mb-3">
         <button type="button" class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
             <i class="bi bi-plus-circle me-1"></i> Tambah User
@@ -13,7 +17,7 @@
             <tr>
                 <th>#</th>
                 <th>Nama</th>
-                <th>Username</th>
+                <th>NIP/NIKU</th>
                 <th>Email</th>
                 <th>Pegawai_ID</th>
                 <th>Role</th>

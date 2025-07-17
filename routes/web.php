@@ -20,17 +20,17 @@ Route::group(['prefix' => 'account'], function () {
 });
 
 Route::group(['prefix'=> 'admin'], function(){
-	Route::group(['prefix'=>'pegawai'], function(){
-		Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
-		Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
-		Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
-		Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
-	});
 	Route::group(['prefix'=>'periode'], function(){
 		Route::GET('/skp_periode',[PeriodeController::class, 'skp_periode'])->name('skp_periode');
 		Route::GET('/set_active_periode/{id}', [PeriodeController::class, 'set_active_periode'])->name('set_active_periode');
 		Route::POST('/skp_periodeAction',[PeriodeController::class, 'skp_periodeAction'])->name('skp_periodeAction');
 		Route::POST('/skp_periode_del/{id}',[PeriodeController::class, 'skp_periode_del'])->name('skp_periode_del');
+	});
+	Route::group(['prefix'=>'pegawai'], function(){
+		Route::GET('/data_pegawai', [PegawaiController::class, 'Data_pegawai'])->name('data_pegawai');
+		Route::GET('/detail/{id}',[PegawaiController::class, 'Detail_pegawai'])->name('detail');
+		Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
+		Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
 	});
 	Route::group(['prefix'=>'user'], function(){
 		Route::GET('/data_user',[ManagemenUserController::class, 'data_user'])->name('data_user');
@@ -42,15 +42,19 @@ Route::group(['prefix'=> 'admin'], function(){
 	});
 });
 
-Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');
-Route::GET('/rencana_skp_selected', [SKPController::class, 'periode'])->name('periode');
-Route::POST('/skpAdd', [SKPController::class, 'skpAdd'])->name('skpAdd');
-Route::PUT('/skpEdit/{id}', [SKPController::class, 'skpEdit'])->name('skpEdit');
-Route::DELETE('/skpDelete/{id}', [SKPController::class, 'skpDelete'])->name('skpDelete');
-Route::POST('/skpIndikator', [SKPController::class, 'skpIndikator'])->name('skpIndikator');
-Route::POST('/skpIndikatorEdit', [SKPController::class, 'skpIndikatorEdit'])->name('skpIndikatorEdit');
-Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->name('skpIndikatorGet');
-Route::POST('/skpIndikatorDelete', [SKPController::class, 'skpIndikatorDelete'])->name('skpIndikatorDelete');
+Route::group(['prefix'=> 'skp'], function(){
+	Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');
+	Route::GET('/rencana_skp_selected', [SKPController::class, 'periode'])->name('periode');
+	Route::POST('/skpAdd', [SKPController::class, 'skpAdd'])->name('skpAdd');
+	Route::PUT('/skpEdit/{id}', [SKPController::class, 'skpEdit'])->name('skpEdit');
+	Route::DELETE('/skpDelete/{id}', [SKPController::class, 'skpDelete'])->name('skpDelete');
+	Route::POST('/skpIndikatorAdd', [SKPController::class, 'skpIndikatorAdd'])->name('skpIndikatorAdd');
+	Route::POST('/skpIndikatorEdit', [SKPController::class, 'skpIndikatorEdit'])->name('skpIndikatorEdit');
+	Route::POST('/skpIndikatorDelete', [SKPController::class, 'skpIndikatorDelete'])->name('skpIndikatorDelete');
+	Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->name('skpIndikatorGet');
+});
+
+
 
 Route::GET('/intervensi_skp', [IntervensiSKPController::class, 'index'])->name('intervensi_skp');
 Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periodeIntervensi');

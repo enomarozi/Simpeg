@@ -20,33 +20,62 @@ class SKPController extends Controller
             return $next($request);
         });
     }
-
     public function index()
     {
         $title = "SKP";
-        $user = Auth::user();
-        $SKPperiode = [];
-        if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
-            $SKPperiode = SKPPeriode::where('is_active', 1)->get();
+        $SKPPeriode = [];
+        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
+            $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
         }
-        $pegawai = Pegawai::find($user->pegawai_id);
-        return view('skp.index', compact('title','user','SKPperiode','pegawai'));
+        return view('skp.index', [
+            'title'=> $title,
+            'user'=> $this->user,
+            'SKPPeriode'=> $SKPPeriode,
+        ]);
+    }
+    public function periode(Request $request)
+    {
+        if($this->user->pegawai->atasan_id === null){
+            return redirect()->back()->with('error', 'Atasan anda belum ada.');
+        }
+        $title = "SKP";
+        $SKPPeriode = [];
+        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
+            $SKPPeriode = SKPPeriode::all();
+        }
+        $intervensiSkp = SKPIntervensi::with(['periode'])
+            ->where('bawahan_id', $this->user->pegawai_id)
+            ->get();
+        $daftarSkp = SKP::with(['periode', 'indikatorList'])
+            ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $this->user->pegawai->atasan->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $statusSkp = '';
+        if(count($daftarSkp) >= 1){
+            $statusSkp = $daftarSkp[0]->status;
+        }
+        return view('skp.index',[
+            'title'=> $title,
+            'periode'=> $request->periode_id,
+            'user'=> $this->user,
+            'SKPPeriode' => $SKPPeriode,
+            'daftarSkp' => $daftarSkp,
+            'statusSkp' => $statusSkp,
+        ]);
     }
     public function skpAdd(Request $request)
     {
-        $pegawai_id = Auth::user()->pegawai_id;
-        $atasan_id = Pegawai::where('id', $pegawai_id)->value('atasan_id');
         $request->validate([
-            'pegawai_id'=>'required',
-            'atasan_id'=>'required',
             'periode_id'=>'required',
             'pelaksanaan_skp'=>'',
             'jenis_skp'=>'required|min:1|max:2',
             'skp'=>'required|string',
         ]);
+
         SKP::create([
-            'pegawai_id' => $pegawai_id,
-            'atasan_id'=> $atasan_id,
+            'pegawai_id' => $this->user->pegawai_id,
+            'atasan_id'=> $this->user->pegawai->atasan_id,
             'periode_id' => $request->periode_id,
             'pelaksanaan_skp' => $request->pelaksanaan_skp,
             'jenis_skp' => $request->jenis_skp,
@@ -55,55 +84,29 @@ class SKPController extends Controller
         return redirect()->back()->with('success', 'SKP berhasil ditambah.');
     }
     public function skpEdit(Request $request, $id){
-        $skp = SKP::findOrFail($id);
+        $skp = SKP::where('id', $id)
+            ->where('pegawai_id', $this->user->pegawai_id)
+            ->firstOrFail();
+
         $skp->update([
             'skp' => $request->skp,
             'jenis_skp' => $request->jenis_skp,
-            'pegawai_id' => $request->pegawai_id,
         ]);
-
         return redirect()->back()->with('success', 'SKP berhasil diperbarui.');
     }
     public function skpDelete($id)
     {
-        $user = Auth::user();
         $skp = SKP::where('id', $id)
-            ->where('pegawai_id', $user->pegawai_id)
+            ->where('pegawai_id', $this->user->pegawai_id)
             ->firstOrFail();
         $skp->delete();
         return redirect()->back()->with('success', 'SKP berhasil dihapus.');
     }
-    public function periode(Request $request)
+    public function skpIndikatorAdd(Request $request)
     {
-        if($this->user->pegawai->atasan_id === null){
-            return redirect()->back()->with('error', 'Atasan anda belum ada.');
-        }
-        $title = "SKP";
-        $periode = $request->periode_id;
-        $user = Auth::user();
-        $SKPperiode = [];
-        if ($user->hasRole('pegawai') || $user->hasRole('atasan')){
-            $SKPperiode = SKPPeriode::all();
-        }
-        $intervensiSkp = SKPIntervensi::with(['periode'])
-            ->where('bawahan_id', $user->pegawai_id)
-            ->get();
-        $daftarSkp = SKP::with(['periode', 'indikatorList'])
-            ->where('pegawai_id', $user->pegawai_id)
-            ->where('atasan_id', $user->pegawai->atasan->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $statusSkp = '';
-        if(count($daftarSkp) >= 1){
-            $statusSkp = $daftarSkp[0]->status;
-        }
-        $pegawai = $user->pegawai; 
-        $atasan = $pegawai->atasan;
-        return view('skp.index', compact('title','periode','user','SKPperiode','daftarSkp','statusSkp','pegawai','atasan','intervensiSkp'));
-    }
-    public function skpIndikator(Request $request)
-    {
+        $skp = SKP::where('id', $request->skp_id)
+            ->where('pegawai_id', $this->user->pegawai_id)
+            ->firstOrFail();
         $validated = $request->validate([
             'skp_id' => ['required', 'integer', 'exists:skp,id'],
             'indikator' => ['required', 'string', 'max:255'],
@@ -115,43 +118,36 @@ class SKPController extends Controller
         return redirect()->back()->with('success', 'Poin indikator berhasil ditambahkan.');
     }
     public function skpIndikatorEdit(Request $request){
-        $user = Auth::user()->pegawai_id;
-        $skp_id = $request->input('skp_id');
+        $skp_id = $request->skp_id;
         $indikator_id = $request->input('indikator_id');
-
         $skp = SKP::where('id', $skp_id)
-                  ->where('pegawai_id', $user)
-                  ->first();
+                  ->where('pegawai_id', $this->user->pegawai_id)
+                  ->firstOrFail();
         if (!$skp) {
             return redirect()->back()->with('error', 'SKP tidak ditemukan atau bukan milik Anda.');
         }
         $indikator = SKPIndikator::where('id', $indikator_id)
                         ->where('skp_id', $skp_id)
-                        ->first();
+                        ->firstOrFail();
         if (!$indikator) {
             return redirect()->back()->with('error', 'Indikator tidak ditemukan.');
         }
-        $indikator->indikator = $indikator_id;
+        $indikator->indikator = $request->indikator_update;
         $indikator->save();
-
         return redirect()->back()->with('success', 'Indikator berhasil diperbarui.');
     }
     public function skpIndikatorDelete(Request $request){
-        $user = Auth::user()->pegawai_id;
         $skp_id = $request->input('skp_id');
         $indikator_id = $request->input('indikator_id');
-
         $skp = SKP::where('id', $skp_id)
-              ->where('pegawai_id', $user)
-              ->first();
-
+              ->where('pegawai_id', $this->user->pegawai_id)
+              ->firstOrFail();
         if (!$skp) {
             return redirect()->back()->with('error', 'SKP tidak ditemukan atau bukan milik Anda.');
         }
         $deleted = SKPIndikator::where('skp_id', $skp_id)
                 ->where('id', $indikator_id)
                 ->delete();
-
         if ($deleted) {
             return redirect()->back()->with('success', 'Indikator berhasil dihapus.');
         } else {
@@ -160,7 +156,12 @@ class SKPController extends Controller
     }
     public function skpIndikatorGet($id)
     {
-        $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
-        return response()->json($indikators);
+        $skp = SKP::where('id', $id)
+              ->where('pegawai_id', $this->user->pegawai_id)
+              ->firstOrFail();
+        if($skp){
+            $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
+            return response()->json($indikators);
+        }
     }
 }

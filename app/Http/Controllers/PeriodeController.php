@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 use App\Models\{ SKPPeriode };
 
 class PeriodeController extends Controller
@@ -25,8 +24,12 @@ class PeriodeController extends Controller
     public function skp_periode(){
         $user = Auth::user();
         $title = "SKP Periode";
-        $periodeList = SKPPeriode::all(); 
-        return view('admin.skp_periode', compact('title','user','periodeList'));
+        $periodeList = SKPPeriode::all();
+        return view('admin.skp_periode',[
+            'title'=>$title,
+            'user'=> $this->user,
+            'periodeList'=>$periodeList,
+        ]);
     }
     public function skp_periodeAction(Request $request){
         $user = Auth::user();

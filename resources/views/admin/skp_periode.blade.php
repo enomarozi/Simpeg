@@ -1,6 +1,11 @@
 @extends('index')
 @section('content')
-<div class="container-fluid mt-3">
+<div class="container-fluid">
+    <div class="card mb-5 shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>SKP Periode</h4>
+        </div>
+    </div>
     <div class="d-flex justify-content-end mb-3">
         <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahPeriode">
             <i class="bi bi-plus-circle me-1"></i> Tambah Periode

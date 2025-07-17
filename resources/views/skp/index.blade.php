@@ -1,5 +1,4 @@
 @extends('index')
-
 @section('content')
 <div class="container-fluid">
     <div class="card mb-5 shadow-sm border-0">
@@ -16,7 +15,7 @@
                         <label for="status_kepegawaian" class="form-label fw-semibold">Periode SKP</label>
                         <select name="periode_id" id="status_kepegawaian" class="form-select" onchange="this.form.submit()" required>
                             <option value="" disabled {{ empty($periode) ? 'selected' : '' }}>-- Pilih Periode --</option>
-                            @foreach($SKPperiode as $item)
+                            @foreach($SKPPeriode as $item)
                                 <option value="{{ $item->id }}">
                                     {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d-M-Y') }}
                                     s/d
@@ -49,27 +48,27 @@
                         <tr>
                             <td>Nama</td>
                             <td>{{ $user->pegawai->nama ?? '-' }}</td>
-                            <td>{{ $atasan->nama ?? '-' }}</td>
+                            <td>{{ $user->pegawai->atasan->nama ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>NIP/NIKU</td>
                             <td>{{ $user->pegawai->nip ?? '-' }}</td>
-                            <td>{{ $atasan->nip ?? '-' }}</td>
+                            <td>{{ $user->pegawai->atasan->nip ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>Jabatan</td>
                             <td>{{ $user->pegawai->jabatan ?? '-' }}</td>
-                            <td>{{ $user->pegawai->jabatan ?? '-' }}</td>
+                            <td>{{ $user->pegawai->atasan->jabatan ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>Pangkat</td>
                             <td>{{ $user->pegawai->pangkat ?? '-' }}</td>
-                            <td>{{ $user->pegawai->pangkat ?? '-' }}</td>
+                            <td>{{ $user->pegawai->atasan->pangkat ?? '-' }}</td>
                         </tr>
                         <tr>
                             <td>Unit Kerja</td>
                             <td>{{ $user->pegawai->unit_kerja ?? '-' }}</td>
-                            <td>{{ $atasan->unit_kerja ?? '-' }}</td>
+                            <td>{{ $user->pegawai->atasan->unit_kerja ?? '-' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -219,7 +218,7 @@
         <form action="{{ route('skpAdd') }}" method="POST">
             @csrf
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="modalTambahSKPLabel">Tambah SKP</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
@@ -263,8 +262,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Simpan</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Tambah</button>
                 </div>
             </div>
         </form>
@@ -279,12 +278,11 @@
             @csrf
             @method('PUT')
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="modalEditSkpLabel">Edit SKP</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
                     <div class="mb-3">
                         <label for="edit_jenis_skp" class="form-label">Jenis SKP</label>
                         <select name="jenis_skp" id="edit_jenis_skp" class="form-select" required>
@@ -300,8 +298,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
         </form>
@@ -328,7 +326,7 @@
                     </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
                 </div>
             </div>
         </form>
@@ -340,10 +338,10 @@
 <div class="modal fade" id="modalTambahPoin" tabindex="-1" aria-labelledby="modalTambahPoinLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
         <div class="modal-content">
-            <form id="formTambahPoin" action="{{ route('skpIndikator') }}" method="POST">
+            <form id="formTambahPoin" action="{{ route('skpIndikatorAdd') }}" method="POST">
             @csrf
                 <input type="hidden" name="skp_id" id="modalSkpId">
-                <div class="modal-header">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title" id="modalTambahPoinLabel">Tambah Indikator</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -357,7 +355,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-success">Tambah</button>
                 </div>
             </form>
         </div>
@@ -387,7 +385,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Update Terpilih</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
@@ -415,7 +413,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Hapus Terpilih</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
                 </div>
             </form>
         </div>

@@ -35,7 +35,7 @@ function skp(){
                 const textarea = document.getElementById('edit_skp');
                 const jenisSelect = document.getElementById('edit_jenis_skp');
 
-                if (form) form.action = `/skpEdit/${skpId}`;
+                if (form) form.action = `/skp/skpEdit/${skpId}`;
                 if (textarea) textarea.value = skpText;
                 if (jenisSelect && jenisSkp) jenisSelect.value = jenisSkp;
             });
@@ -51,7 +51,7 @@ function skp(){
                 const namaElem = document.getElementById('namaSkp');
                 const formElem = document.getElementById('formHapusSkp');
                 if (namaElem) namaElem.textContent = skpNama;
-                if (formElem) formElem.action = `/skpDelete/${skpId}`;
+                if (formElem) formElem.action = `/skp/skpDelete/${skpId}`;
             });
         }
 
@@ -74,14 +74,13 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const skpId = this.getAttribute('data-skp-id');
             skpInputDel.value = skpId;
-            formDel.setAttribute('action', `/skpIndikatorDelete`);
+            formDel.setAttribute('action', `/skp/skpIndikatorDelete`);
 
             if (indikatorSelectDel) {
                 indikatorSelectDel.innerHTML = '<option disabled selected>Memuat indikator...</option>';
             }
 
-            // Fetch indikator dari server
-            fetch(`/skpIndikatorGet/${skpId}`)  // ✅ Perbaiki URL agar sesuai endpoint
+            fetch(`/skp/skpIndikatorGet/${skpId}`) 
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Gagal mengambil data indikator.');
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    indikatorSelectDel.innerHTML = ''; // Kosongkan sebelum isi baru
+                    indikatorSelectDel.innerHTML = '';
 
                     if (!data || data.length === 0) {
                         indikatorSelectDel.innerHTML = '<option disabled selected>Tidak ada indikator</option>';
@@ -120,14 +119,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const skpId = this.getAttribute('data-skp-id');
             skpInputEdit.value = skpId;
 
-            formEdit.setAttribute('action', `/skpIndikatorEdit`);
+            formEdit.setAttribute('action', `/skp/skpIndikatorEdit`);
 
             if (indikatorSelectEdit) {
                 indikatorSelectEdit.innerHTML = '<option disabled selected>Memuat indikator...</option>';
             }
 
             // Fetch indikator dari server
-            fetch(`/skpIndikatorGet/${skpId}`)  // ✅ Perbaiki URL agar sesuai endpoint
+            fetch(`/skp/skpIndikatorGet/${skpId}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Gagal mengambil data indikator.');
@@ -135,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    indikatorSelectEdit.innerHTML = ''; // Kosongkan sebelum isi baru
+                    indikatorSelectEdit.innerHTML = '';
 
                     if (!data || data.length === 0) {
                         indikatorSelectEdit.innerHTML = '<option disabled selected>Tidak ada indikator</option>';

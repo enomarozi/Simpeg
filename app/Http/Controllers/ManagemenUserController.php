@@ -118,6 +118,9 @@ class ManagemenUserController extends Controller
         if ($user->username === 'administrator') {
             return back()->withErrors(['error' => 'Aksi tidak diperbolehkan pada akun administrator.']);
         }
+        if ($request->role === 'admin'){
+            return back()->withErrors(['error' => 'Role admin hanya boleh digunakan oleh akun dengan status administrator']);
+        }
         $user->syncRoles([$request->role]);
         return redirect()->back()->with('success', 'Role berhasil diperbarui.');
     }
