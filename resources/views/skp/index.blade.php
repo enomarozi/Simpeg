@@ -397,7 +397,7 @@
 <div class="modal fade" id="modalHapusPoin" tabindex="-1" aria-labelledby="modalHapusPoinLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
         <div class="modal-content">
-            <form id="formHapusPoin" action="{{ route('skpIndikatorDelete') }}"method="POST">
+            <form id="formHapusPoin" action="{{ route('skpIntervensiDelete') }}"method="POST">
                 @csrf
                 <input type="hidden" name="skp_id" id="hapusSkpId">
                 <div class="modal-header bg-danger text-white">

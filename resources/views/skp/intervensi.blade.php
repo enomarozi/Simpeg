@@ -16,7 +16,7 @@
                         <label for="status_kepegawaian" class="form-label fw-semibold">Periode SKP</label>
                         <select name="periode_id" id="status_kepegawaian" class="form-select" onchange="this.form.submit()" required>
                             <option value="" disabled {{ empty($periode) ? 'selected' : '' }}>-- Pilih Periode --</option>
-                            @foreach($SKPperiode as $item)
+                            @foreach($SKPPeriode as $item)
                                 <option value="{{ $item->id }}">
                                     {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d-M-Y') }}
                                     s/d
@@ -36,7 +36,7 @@
     @if(!empty($periode))
         <div class="d-flex justify-content-between align-items-center mb-3">
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahIntervensiSKP">
-                + Tambah SKP
+                + Tambah Intervensi
             </button>
         </div>
     @endif
@@ -61,6 +61,7 @@
 				            <th>Pegawai</th>
 				            <th>Isi SKP</th>
 				            <th>Status</th>
+				            <th>Action</th>
 				        </tr>
 				    </thead>
 				    <tbody>
@@ -81,6 +82,19 @@
 					                @endphp
 					                <span class="{{ $statusClass }}">{{ ucfirst($intervensi->status) }}</span>
 					            </td>
+					            <td>
+								    <button 
+								    	type="button" 
+								    	class="btn btn-sm btn-danger" 
+								    	data-bs-toggle="modal" 
+								    	data-bs-target="#modalHapusIntervensi" 
+								    	data-skp-id="{{ $intervensi->skp_id }}" 
+								    	data-intervensi-id="{{ $intervensi->id }}" 
+								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}" 
+								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
+								    	Hapus
+									</button>
+								</td>
 					        </tr>
 					    @endforeach
 				    </tbody>
@@ -98,7 +112,7 @@
 	        <form action="{{ route('intervensiAdd') }}" method="POST">
 	            @csrf
 	            <div class="modal-content">
-	                <div class="modal-header">
+	                <div class="modal-header bg-success text-white">
 	                    <h5 class="modal-title" id="modalTambahIntervensiLabel">Tambah Intervensi SKP</h5>
 	                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
 	                </div>
@@ -135,6 +149,28 @@
 	        </form>
 	    </div>
 	</div>
+	<div class="modal fade" id="modalHapusIntervensi" tabindex="-1" aria-labelledby="modalHapusIntervensi" aria-hidden="true">
+	    <div class="modal-dialog modal-custom-width">
+	        <div class="modal-content">
+	            <form id="formHapusPoin" action="{{ route('intervensiDelete') }}" method="POST">
+	                @csrf
+	                <input type="hidden" name="skp_id" id="hapusSkpId">
+	                <input type="hidden" name="intervensi_id" id="hapusIntervensiId">
+	                <div class="modal-header bg-danger text-white">
+	                    <h5 class="modal-title" id="modalHapusIntervensi">Hapus Indikator</h5>
+	                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+	                </div>
+	                <div class="modal-body">
+	                    <p id="pesanKonfirmasi" class="text-center fw-semibold text-danger"></p>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+	                    <button type="submit" class="btn btn-danger">Hapus</button>
+	                </div>
+	            </form>
+	        </div>
+	    </div>
+	</div>
 @endif
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
@@ -147,6 +183,21 @@
             });
             hiddenPeriodeInput.value = periodeSelect.value;
         }
+
+        const modal = document.getElementById('modalHapusIntervensi');
+	    modal.addEventListener('show.bs.modal', function (event) {
+	        const button = event.relatedTarget;
+	        const skpId = button.getAttribute('data-skp-id');
+	        const intervensiId = button.getAttribute('data-intervensi-id');
+	        const nama = button.getAttribute('data-nama');
+	        const intervensi = button.getAttribute('data-intervensi');
+
+	        modal.querySelector('#hapusSkpId').value = skpId;
+	        modal.querySelector('#hapusIntervensiId').value = intervensiId;
+
+	        const pesan = `Hapus intervensi <strong>${nama}</strong> (SKP: <em>${intervensi}</em>)?`
+	        modal.querySelector('#pesanKonfirmasi').innerHTML = pesan;
+	    });
     });
 </script>
 @endsection

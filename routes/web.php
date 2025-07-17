@@ -54,13 +54,14 @@ Route::group(['prefix'=> 'skp'], function(){
 	Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->name('skpIndikatorGet');
 });
 
+Route::group(['prefix'=> 'intervensi'], function(){
+	Route::GET('/intervensi_skp', [IntervensiSKPController::class, 'index'])->name('intervensi_skp');
+	Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periodeIntervensi');
+	Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
+	Route::POST('/intervensiDelete', [IntervensiSKPController::class, 'intervensiDelete'])->name('intervensiDelete');
+});
 
-
-Route::GET('/intervensi_skp', [IntervensiSKPController::class, 'index'])->name('intervensi_skp');
-Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periodeIntervensi');
-Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
 
 Route::POST('/api/update_pegawai', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
-
 Route::GET('/getFak',[RequestController::class,'getFak']);
 Route::get('/getDep/{fakultas_id}', [RequestController::class, 'getDep']);
