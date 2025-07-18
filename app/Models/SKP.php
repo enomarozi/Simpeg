@@ -27,5 +27,9 @@ class Skp extends Model
     {
         return $this->hasMany(\App\Models\SKPIndikator::class, 'skp_id');
     }
+    public function intervensi()
+    {
+        return $this->belongsTo(\App\Models\SKPIntervensi::class, 'pelaksanaan_skp');
+    }
 }
 

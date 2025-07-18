@@ -121,12 +121,25 @@
                         <tr class="table-info fw-bold">
                             <td colspan="4">A. Utama</td>
                         </tr>
-                        @php $no = 1; @endphp
-                        @foreach($daftarSkp->where('jenis_skp', 1) as $skp)
+                        @php $no = 1;@endphp
+                        @foreach($daftarSkp->where('jenis_skp', 1) as $skp)  
+                        @php
+                            if($skp->pelaksanaan_skp == 1){
+                                $skpText = $skp->skp;
+                            } elseif($skp->pelaksanaan_skp > 1 && $skp->intervensi && $skp->intervensi->skp) {
+                                $skpText = $skp->intervensi->skp->skp;
+                            } else {
+                                $skpText = 'SKP Atasan tidak ditemukan';
+                            }
+                        @endphp                      
                         <tr>
                             <td class="text-center align-top">{{ $no++ }}.</td>
                             <td class="align-top">
-                                {{ $skp->pelaksanaan_skp == 1 ? '(Mandiri)' : '(Intervensi)' }} | {{ $skp->skp }}
+                                @if($skp->pelaksanaan_skp == 1)
+                                    (Mandiri) | {{ $skpText }}
+                                @elseif($skp->pelaksanaan_skp > 1)
+                                    (Intervensi) | {{ $skpText }}
+                                @endif
                             </td>
                             <td>
                                 <div class="d-flex flex-column gap-2">
@@ -151,10 +164,25 @@
                                 </div>
                             </td>
                             <td class="text-center align-top">
-                                <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalEditSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" data-jenis-skp="{{ $skp->jenis_skp }}" title="Edit SKP"> 
-                                    <i class="bi bi-pencil-square"></i> 
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalHapusSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" title="Hapus SKP">
+                                @if($skp->pelaksanaan_skp == 1)
+                                    <button type="button" 
+                                        class="btn btn-sm btn-outline-primary me-1" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalEditSkp" 
+                                        data-skp-id="{{ $skp->id }}" 
+                                        data-skp="{{ $skpText }}" 
+                                        data-jenis-skp="{{ $skp->jenis_skp }}" 
+                                        title="Edit SKP"> 
+                                        <i class="bi bi-pencil-square"></i> 
+                                    </button>
+                                @endif
+                                <button type="button" 
+                                    class="btn btn-sm btn-outline-danger" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalHapusSkp" 
+                                    data-skp-id="{{ $skp->id }}" 
+                                    data-skp="{{ $skpText }}"
+                                    title="Hapus SKP">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>
@@ -167,10 +195,23 @@
                         </tr>
                         @php $no = 1; @endphp
                         @foreach($daftarSkp->where('jenis_skp', 2) as $skp)
+                        @php
+                            if($skp->pelaksanaan_skp == 1){
+                                $skpText = $skp->skp;
+                            } elseif($skp->pelaksanaan_skp > 1 && $skp->intervensi && $skp->intervensi->skp) {
+                                $skpText = $skp->intervensi->skp->skp;
+                            } else {
+                                $skpText = 'SKP Atasan tidak ditemukan';
+                            }
+                        @endphp 
                         <tr>
                             <td class="text-center align-top">{{ $no++ }}.</td>
                             <td class="align-top">
-                                {{ $skp->pelaksanaan_skp == 1 ? '(Mandiri)' : '(Intervensi)' }} | {{ $skp->skp }}
+                                @if($skp->pelaksanaan_skp == 1)
+                                    (Mandiri) | {{ $skpText }}
+                                @elseif($skp->pelaksanaan_skp > 1)
+                                    (Intervensi) | {{ $skpText }}
+                                @endif
                             </td>
                             <td>
                                 <div class="d-flex flex-column gap-2">
@@ -195,10 +236,25 @@
                                 </div>
                             </td>
                             <td class="text-center align-top">
-                                <button type="button" class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#modalEditSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" data-jenis-skp="{{ $skp->jenis_skp }}" title="Edit SKP"> 
-                                    <i class="bi bi-pencil-square"></i> 
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalHapusSkp" data-skp-id="{{ $skp->id }}" data-skp="{{ $skp->skp }}" title="Hapus SKP">
+                                @if($skp->pelaksanaan_skp == 1)
+                                    <button type="button" 
+                                        class="btn btn-sm btn-outline-primary me-1" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalEditSkp" 
+                                        data-skp-id="{{ $skp->id }}" 
+                                        data-skp="{{ $skpText }}" 
+                                        data-jenis-skp="{{ $skp->jenis_skp }}" 
+                                        title="Edit SKP"> 
+                                        <i class="bi bi-pencil-square"></i> 
+                                    </button>
+                                @endif
+                                <button type="button" 
+                                    class="btn btn-sm btn-outline-danger" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modalHapusSkp" 
+                                    data-skp-id="{{ $skp->id }}" 
+                                    data-skp="{{ $skpText }}"
+                                    title="Hapus SKP">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </td>
@@ -224,19 +280,18 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
-                    @if($user->hasRole('atasan'))
+                    
                     <div class="mb-3">
-                        <label for="pelaksanaan_skp" class="form-label">SKP Atasan yang Diintervensi (Opsional)</label>
+                        @if($user->hasRole('atasan'))
+                            <label for="pelaksanaan_skp" class="form-label">SKP Atasan yang Diintervensi (Opsional)</label>
+                        @elseif($user->hasRole('pegawai'))
+                            <label for="pelaksanaan_skp" class="form-label">SKP Atasan yang Diintervensi</label>
+                        @endif
                         <select name="pelaksanaan_skp" id="pelaksanaan_skp" class="form-select">
                             <option value="" disabled selected>-- Pilih SKP --</option>
-                            <option value="1">Mandiri</option>
-                        </select>
-                    </div>
-                    @elseif($user->hasRole('pegawai'))
-                    <div class="mb-3">
-                        <label for="pelaksanaan_skp" class="form-label">SKP Atasan yang Diintervensi</label>
-                        <select name="pelaksanaan_skp" id="pelaksanaan_skp" class="form-select">
-                            <option value="" selected>-- Pilih SKP --</option>
+                            @if($user->hasRole('atasan'))
+                                <option value="1">Mandiri</option>
+                            @endif
                             @foreach($intervensiSkp as $item)
                                 <option value="{{ $item->id }}">
                                     Intervensi | {{ $item->skp->skp }}
@@ -244,7 +299,6 @@
                             @endforeach
                         </select>
                     </div>
-                    @endif
                     <div class="mb-3">
                         <label for="jenis_skp" class="form-label">Jenis SKP</label>
                         <select name="jenis_skp" id="jenis_skp" class="form-select" required>
@@ -397,7 +451,7 @@
 <div class="modal fade" id="modalHapusPoin" tabindex="-1" aria-labelledby="modalHapusPoinLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width">
         <div class="modal-content">
-            <form id="formHapusPoin" action="{{ route('skpIntervensiDelete') }}"method="POST">
+            <form id="formHapusPoin" action="{{ route('intervensiDelete') }}"method="POST">
                 @csrf
                 <input type="hidden" name="skp_id" id="hapusSkpId">
                 <div class="modal-header bg-danger text-white">
