@@ -62,11 +62,27 @@ class RoleSeeder extends Seeder
         ]);
         $pegawai->assignRole('pegawai');
 
+        $pegawai = User::factory()->create([
+            'username' => '1234567890',
+            'name' => 'Nofi Ardi',
+            'email' => 'nofi@gmail.com',
+            'pegawai_id' => '3054',
+            'password' => bcrypt('12345678'),
+        ]);
+        $pegawai->assignRole('pegawai');
+
         SKPPeriode::create([
             'tahun' => 2025,
             'tanggal_mulai' => '2025-01-01',
             'tanggal_selesai' => '2025-12-31',
-            'is_active' => '0',
+            'is_active' => '1',
+        ]);
+
+        SKPPeriode::create([
+            'tahun' => 2026,
+            'tanggal_mulai' => '2026-01-01',
+            'tanggal_selesai' => '2026-12-31',
+            'is_active' => '1',
         ]);
     }
 }

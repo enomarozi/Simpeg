@@ -11,12 +11,12 @@
             <form action="{{ route('periode') }}" method="GET">
                 @csrf
                 <div class="row align-items-end">
-                    <div class="col-md-6">
-                        <label for="status_kepegawaian" class="form-label fw-semibold">Periode SKP</label>
-                        <select name="periode_id" id="status_kepegawaian" class="form-select" onchange="this.form.submit()" required>
-                            <option value="" disabled {{ empty($periode) ? 'selected' : '' }}>-- Pilih Periode --</option>
+                    <div class="col-md-4">
+                        <label for="periode_id" class="form-label fw-semibold">Periode SKP</label>
+                        <select name="periode_id" id="periode_id" class="form-select" onchange="this.form.submit()" required>
+                            <option value="" disabled {{ empty($periode ?? null) ? 'selected' : '' }}>-- Pilih Periode --</option>
                             @foreach($SKPPeriode as $item)
-                                <option value="{{ $item->id }}">
+                                <option value="{{ $item->id }}" {{ ($periode ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d-M-Y') }}
                                     s/d
                                     {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d-M-Y') }}
@@ -24,7 +24,20 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6">
+
+                    <div class="col-md-4">
+                        <label for="atasan_id" class="form-label fw-semibold">Atasan</label>
+                        <select name="atasan_id" id="atasan_id" class="form-select" onchange="this.form.submit()" required>
+                            <option value="" disabled {{ empty($atasan_id ?? null) ? 'selected' : '' }}>-- Pilih Atasan --</option>
+                            @foreach($daftarAtasan as $atasan)
+                                <option value="{{ $atasan->atasan_id }}" {{ ($atasan_id ?? '') == $atasan->atasan_id ? 'selected' : '' }}>
+                                    {{ $atasan->atasan->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
                         <label for="unit_kerja" class="form-label fw-semibold">Unit Kerja</label>
                         <input type="text" id="unit_kerja" name="unit_kerja" class="form-control" value="Universitas Andalas" readonly>
                     </div>
@@ -48,27 +61,27 @@
                         <tr>
                             <td>Nama</td>
                             <td>{{ $user->pegawai->nama ?? '-' }}</td>
-                            <td>{{ $user->pegawai->atasan->nama ?? '-' }}</td>
+                            <td>{{ $atasanId[0]->nama ?? ($user->pegawai->atasan->nama ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>NIP/NIKU</td>
                             <td>{{ $user->pegawai->nip ?? '-' }}</td>
-                            <td>{{ $user->pegawai->atasan->nip ?? '-' }}</td>
+                            <td>{{ $atasanId[0]->nip ?? ($user->pegawai->atasan->nip ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>Jabatan</td>
                             <td>{{ $user->pegawai->jabatan ?? '-' }}</td>
-                            <td>{{ $user->pegawai->atasan->jabatan ?? '-' }}</td>
+                            <td>{{ $atasanId[0]->jabatan ?? ($user->pegawai->atasan->jabatan ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>Pangkat</td>
                             <td>{{ $user->pegawai->pangkat ?? '-' }}</td>
-                            <td>{{ $user->pegawai->atasan->pangkat ?? '-' }}</td>
+                            <td>{{ $atasanId[0]->pangkat ?? ($user->pegawai->atasan->pangkat ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>Unit Kerja</td>
                             <td>{{ $user->pegawai->unit_kerja ?? '-' }}</td>
-                            <td>{{ $user->pegawai->atasan->unit_kerja ?? '-' }}</td>
+                            <td>{{ $atasanId[0]->unit_kerja ?? ($user->pegawai->atasan->unit_kerja ?? '-') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -292,7 +305,7 @@
                             @if($user->hasRole('atasan'))
                                 <option value="1">Mandiri</option>
                             @endif
-                            @foreach($intervensiSkp as $item)
+                            @foreach($daftarIntervensi as $item)
                                 <option value="{{ $item->id }}">
                                     Intervensi | {{ $item->skp->skp }}
                                 </option>

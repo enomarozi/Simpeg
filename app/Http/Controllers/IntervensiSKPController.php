@@ -38,10 +38,25 @@ class IntervensiSKPController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         $daftarBawahan = Pegawai::where('atasan_id', $this->user->pegawai_id)->get();
+        if(count($daftarBawahan) == 0){
+            return redirect()->back()->with('error', 'Belum ada bawahan.');
+        }
         $daftarIntervensi = SKPIntervensi::with(['periode'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function($intervensi){
+                $adaSKP = SKP::where("pelaksanaan_skp",$intervensi->id)
+                    ->where('atasan_id',$intervensi->pegawai_id)
+                    ->exists();
+
+                if($adaSKP){
+                    $intervensi->status_display = "intervensi diterima";
+                }else{
+                    $intervensi->status_display = $intervensi->status;
+                }
+                return $intervensi;
+            });
         return view('skp.intervensi',[
             'title'=>$title,
             'user'=>$this->user,
@@ -68,7 +83,9 @@ class IntervensiSKPController extends Controller
             ],
             'skp_intervensi'=>'required|string',
         ]);
-        $daftarIntervensi = SKPIntervensi::Where('skp_id',$request->skp_intervensi)->first();
+        $daftarIntervensi = SKPIntervensi::Where('skp_id',$request->skp_intervensi)
+                ->Where('bawahan_id',$request->bawahan_id)
+                ->first();
         if($daftarIntervensi !== null){
             return redirect()->back()->with('error', 'SKP sudah diintervensi.');
         }

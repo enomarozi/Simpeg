@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIndikator, SKPIntervensi};
+use App\Models\{ SKPPeriode, Pegawai, SKPAtasanPegawai, SKP, SKPIndikator, SKPIntervensi};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Abort;
@@ -35,35 +35,42 @@ class SKPController extends Controller
     }
     public function periode(Request $request)
     {
+        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
+            $SKPPeriode = SKPPeriode::all();
+        }
         if($this->user->pegawai->atasan_id === null){
             return redirect()->back()->with('error', 'Atasan anda belum ada.');
         }
         $title = "SKP";
-        $SKPPeriode = [];
-        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
-            $SKPPeriode = SKPPeriode::all();
-        }
-        $intervensiSkp = SKPIntervensi::with(['periode'])
-            ->where('bawahan_id', $this->user->pegawai_id)
+        $daftarAtasan = SKPAtasanPegawai::Where('pegawai_id',$this->user->pegawai_id)
+            ->Where('periode_id',$request->periode_id)
             ->get();
-
         $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $this->user->pegawai_id)
-            ->where('atasan_id', $this->user->pegawai->atasan->id)
+            ->where('atasan_id',$request->atasan_id)
+            ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
             ->get();
-        $statusSkp = '';
+        $daftarIntervensi = SKPIntervensi::with(['periode'])
+            ->where('bawahan_id', $this->user->pegawai_id)
+            ->get();
+        if(count($daftarSkp) !== 0){
+            $atasanId = Pegawai::Where('id',$daftarSkp[0]->atasan_id)->get();
+        }
         if(count($daftarSkp) >= 1){
             $statusSkp = $daftarSkp[0]->status;
         }
         return view('skp.index',[
             'title'=> $title,
-            'periode'=> $request->periode_id,
+            'periode'=> $request->periode_id ?? '',
+            'atasan_id'=> $request->atasan_id,
             'user'=> $this->user,
+            'daftarAtasan' => $daftarAtasan,
+            'atasanId'=> $atasanId ?? '',
             'SKPPeriode' => $SKPPeriode,
             'daftarSkp' => $daftarSkp,
-            'intervensiSkp' => $intervensiSkp,
-            'statusSkp' => $statusSkp,
+            'daftarIntervensi' => $daftarIntervensi,
+            'statusSkp' => $statusSkp ?? '',
         ]);
     }
     public function skpAdd(Request $request)

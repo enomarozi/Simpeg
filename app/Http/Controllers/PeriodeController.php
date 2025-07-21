@@ -22,7 +22,6 @@ class PeriodeController extends Controller
         });
     }
     public function skp_periode(){
-        $user = Auth::user();
         $title = "SKP Periode";
         $periodeList = SKPPeriode::all();
         return view('admin.skp_periode',[
@@ -32,18 +31,16 @@ class PeriodeController extends Controller
         ]);
     }
     public function skp_periodeAction(Request $request){
-        $user = Auth::user();
         $request->validate([
             'tahun' => 'required|numeric|min:2000|max:2100',
-            'mulai' => 'required|date',
-            'selesai' => 'required|date|after_or_equal:mulai',
-            'status' => 'required|in:0,1',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
         SKPPeriode::create([
             'tahun' => $request->tahun,
-            'tanggal_mulai' => $request->mulai,
-            'tanggal_selesai' => $request->selesai,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
             'is_active' => $request->status,
         ]);
         return redirect()->back()->with('success', 'Periode SKP berhasil ditambah.');
@@ -54,8 +51,8 @@ class PeriodeController extends Controller
         $periode->save();
         return redirect()->back()->with('success', "Status periode berhasil diubah.");
     }
-    public function skp_periode_del($id){
-        $periode = SKPPeriode::find($id);
+    public function skp_periode_del(Request $request){
+        $periode = SKPPeriode::find($request->periode_id);
         if (!$periode) {
             return redirect()->back()->withErrors(['error' => 'Periode tidak ditemukan.']);
         }

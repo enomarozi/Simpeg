@@ -43,12 +43,15 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <form action="{{ route('skp_periode_del', $periode->id) }}" method="POST" onchange="this.form.submit()" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus Periode">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-sm btn-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalHapusPeriode" 
+                                        data-periode-id="{{ $periode->id }}"
+                                        data-periode-tahun="{{ $periode->tahun }}">
+                                        Hapus
+                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -61,44 +64,76 @@
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="modalTambahPeriode" tabindex="-1" aria-labelledby="modalTambahPeriodeLabel" aria-hidden="true">
-        <div class="modal-dialog modal-custom-width">
-            <form method="POST" action="{{ route('skp_periodeAction') }}">
+{{-- Modal Tambah Periode SKP --}}
+<div class="modal fade" id="modalTambahPeriode" tabindex="-1" aria-labelledby="modalTambahPeriodeLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <form method="POST" action="{{ route('skp_periodeAction') }}">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="modalTambahPeriodeLabel"><i class="bi bi-calendar-plus me-2"></i> Tambah Periode SKP</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="tahun" class="form-label">Tahun</label>
+                        <input type="number" class="form-control" name="tahun" id="tahun" required placeholder="2025" min="2020" max="2100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                        <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                        <input type="date" class="form-control" name="tanggal_selesai" id="tanggal_selesai" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Simpan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Modal Hapus Periode SKP --}}
+<div class="modal fade" id="modalHapusPeriode" tabindex="-1" aria-labelledby="modalHapusPeriode" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <div class="modal-content">
+            <form id="formHapusPoin" action="{{ route('skp_periode_del') }}" method="POST">
                 @csrf
-                <div class="modal-content">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title" id="modalTambahPeriodeLabel"><i class="bi bi-calendar-plus me-2"></i> Tambah Periode SKP</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="tahun" class="form-label">Tahun</label>
-                            <input type="number" class="form-control" name="tahun" id="tahun" required placeholder="2025" min="2020" max="2100">
-                        </div>
-                        <div class="mb-3">
-                            <label for="mulai" class="form-label">Tanggal Mulai</label>
-                            <input type="date" class="form-control" name="mulai" id="mulai" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="selesai" class="form-label">Tanggal Selesai</label>
-                            <input type="date" class="form-control" name="selesai" id="selesai" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status</label>
-                            <select name="status" id="status" class="form-select" required>
-                                <option value="aktif">Aktif</option>
-                                <option value="nonaktif">Nonaktif</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Simpan</button>
-                    </div>
+                <input type="hidden" name="periode_id" id="hapusPeriodeId">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalHapusPeriode">Hapus Periode</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="pesanKonfirmasi" class="text-center fw-semibold"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('modalHapusPeriode');
+        modal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const periodeId = button.getAttribute('data-periode-id');
+            const periodeTahun = button.getAttribute('data-periode-tahun');
+
+            modal.querySelector('#hapusPeriodeId').value = periodeId;
+            const pesan = `Anda yakin ingin menghapus periode Tahun <strong>${periodeTahun}</strong>?<p class="text-danger"><i>( Akan menghapus seluruh SKP Pegawai 2026 )</i></p>`
+            modal.querySelector('#pesanKonfirmasi').innerHTML = pesan;
+        });
+    });
+</script>
 @endsection

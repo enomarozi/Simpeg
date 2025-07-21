@@ -72,15 +72,13 @@
 					            <td>{{ $intervensi->skp->skp ?? '-' }}</td> {{-- isi SKP --}}
 					            <td>
 					                @php
-					                    $statusClass = match($intervensi->status) {
+					                    $status = $intervensi->status_display;
+					                    $statusClass = match($status) {
 					                        'diintervensi' => 'badge bg-warning',
-					                        'diajukan' => 'badge bg-info',
-					                        'diterima' => 'badge bg-success',
-					                        'ditolak' => 'badge bg-danger',
-					                        default => 'badge bg-secondary',
+					                        'intervensi diterima' => 'badge bg-success',
 					                    };
 					                @endphp
-					                <span class="{{ $statusClass }}">{{ ucfirst($intervensi->status) }}</span>
+					                <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
 					            </td>
 					            <td>
 								    <button 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat};
+use App\Models\{SKPAtasanPegawai, SKPPeriode};
 use DB;
 
 class PegawaiController extends Controller
@@ -66,6 +67,7 @@ class PegawaiController extends Controller
         if (!$pegawai) {
             abort(404, 'Pegawai tidak ditemukan.');
         }
+        $title = "Detail ".$pegawai->nama;
         $referenceData = [
             'agama'             => Agama::all(),
             'kategoriPegawai'   => KategoriPegawai::all(),
@@ -80,20 +82,6 @@ class PegawaiController extends Controller
             'jabatan'           => Jabatan::all(),
             'pegawai_as_atasan' => Pegawai::select('id', 'nama')->get(),
         ];
-
-        $title = "Detail ".$pegawai->nama;
-        $agama = Agama::all();
-        $kategoriPegawai =  KategoriPegawai::all();
-        $jenisPegawai = JenisPegawai::all();
-        $fakultas = Fakultas::all();
-        $pegawaiDepartemen = PegawaiDepartemen::all();
-        $perkawinan = StatusPerkawinan::all();
-        $golonganDarah = GolonganDarah::all();
-        $kewarganegaraan = Kewarganegaraan::all();
-        $negara = Negara::all();
-        $kepangkatan = Kepangkatan::all();
-        $jabatan = Jabatan::all();
-        $pegawai_as_atasan = Pegawai::select('id', 'nama')->get();
         return view('admin.detail', array_merge([
             'user'    => $this->user,
             'pegawai' => $pegawai,
@@ -167,7 +155,6 @@ class PegawaiController extends Controller
                 'alamat_lengkap' => $request->alamat_lengkap,
             ]
         );
-
         return redirect()->back()->with('success', 'Data '.$pegawai->nama.' Berhasil diupdate.');
     }
     
@@ -175,6 +162,24 @@ class PegawaiController extends Controller
         $pegawai = Pegawai::find($request->pegawai);
         if (!$pegawai) {
             return redirect()->back()->with('error', 'Pegawai tidak ditemukan.');
+        }
+        if ($request->pegawai === $request->atasan_id){
+            return redirect()->back()->with('error', 'Pegawai dan Atasan sama.');
+        }
+        $periode_sekarang = SKPPeriode::where('tahun',now()->year)->first();
+        if($periode_sekarang === null){
+            return redirect()->back()->with('error', 'Periode '.(now()->year).' tidak ditemukan.');
+        }
+        $atasan_sekarang = SKPAtasanPegawai::where('pegawai_id', $request->pegawai)
+                ->where('atasan_id', $request->atasan_id)
+                ->where('periode_id', $periode_sekarang->id)
+                ->first();
+        if($atasan_sekarang === null){
+            SKPAtasanPegawai::create([
+                'pegawai_id' => $request->pegawai,
+                'atasan_id' => $request->atasan_id,
+                'periode_id' => $periode_sekarang->id,
+            ]);
         }
         $pegawai->update([
             'atasan_id'=> $request->atasan_id,
