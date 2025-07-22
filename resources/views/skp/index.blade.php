@@ -9,7 +9,6 @@
     <div class="card mb-4 bg-opacity-10 border">
         <div class="card-body">
             <form action="{{ route('periode') }}" method="GET">
-                @csrf
                 <div class="row align-items-end">
                     <div class="col-md-4">
                         <label for="periode_id" class="form-label fw-semibold">Periode SKP</label>
@@ -29,11 +28,13 @@
                         <label for="atasan_id" class="form-label fw-semibold">Atasan</label>
                         <select name="atasan_id" id="atasan_id" class="form-select" onchange="this.form.submit()" required>
                             <option value="" disabled {{ empty($atasan_id ?? null) ? 'selected' : '' }}>-- Pilih Atasan --</option>
+                            @if(!empty($daftarAtasan))
                             @foreach($daftarAtasan as $atasan)
                                 <option value="{{ $atasan->atasan_id }}" {{ ($atasan_id ?? '') == $atasan->atasan_id ? 'selected' : '' }}>
                                     {{ $atasan->atasan->nama }}
                                 </option>
                             @endforeach
+                            @endif
                         </select>
                     </div>
 
@@ -61,27 +62,27 @@
                         <tr>
                             <td>Nama</td>
                             <td>{{ $user->pegawai->nama ?? '-' }}</td>
-                            <td>{{ $atasanId[0]->nama ?? ($user->pegawai->atasan->nama ?? '-') }}</td>
+                            <td>{{ $atasanId->nama ?? ($user->pegawai->atasan->nama ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>NIP/NIKU</td>
                             <td>{{ $user->pegawai->nip ?? '-' }}</td>
-                            <td>{{ $atasanId[0]->nip ?? ($user->pegawai->atasan->nip ?? '-') }}</td>
+                            <td>{{ $atasanId->nip ?? ($user->pegawai->atasan->nip ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>Jabatan</td>
                             <td>{{ $user->pegawai->jabatan ?? '-' }}</td>
-                            <td>{{ $atasanId[0]->jabatan ?? ($user->pegawai->atasan->jabatan ?? '-') }}</td>
+                            <td>{{ $atasanId->jabatan ?? ($user->pegawai->atasan->jabatan ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>Pangkat</td>
                             <td>{{ $user->pegawai->pangkat ?? '-' }}</td>
-                            <td>{{ $atasanId[0]->pangkat ?? ($user->pegawai->atasan->pangkat ?? '-') }}</td>
+                            <td>{{ $atasanId->pangkat ?? ($user->pegawai->atasan->pangkat ?? '-') }}</td>
                         </tr>
                         <tr>
                             <td>Unit Kerja</td>
                             <td>{{ $user->pegawai->unit_kerja ?? '-' }}</td>
-                            <td>{{ $atasanId[0]->unit_kerja ?? ($user->pegawai->atasan->unit_kerja ?? '-') }}</td>
+                            <td>{{ $atasanId->unit_kerja ?? ($user->pegawai->atasan->unit_kerja ?? '-') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -292,7 +293,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="">                                 
+                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="{{ $periode }}">                                 
                     
                     <div class="mb-3">
                         @if($user->hasRole('atasan'))

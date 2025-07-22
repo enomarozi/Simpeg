@@ -35,16 +35,33 @@ class SKPController extends Controller
     }
     public function periode(Request $request)
     {
-        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
-            $SKPPeriode = SKPPeriode::all();
-        }
         if($this->user->pegawai->atasan_id === null){
             return redirect()->back()->with('error', 'Atasan anda belum ada.');
+        }
+        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
+            $SKPPeriode = SKPPeriode::all();
         }
         $title = "SKP";
         $daftarAtasan = SKPAtasanPegawai::Where('pegawai_id',$this->user->pegawai_id)
             ->Where('periode_id',$request->periode_id)
             ->get();
+        if ($request->has('periode_id') && !$request->has('atasan_id')) {
+            if ($daftarAtasan->count() >= 1) {
+                return redirect()->route('periode', [
+                    'periode_id' => $request->periode_id,
+                    'atasan_id' => $daftarAtasan[0]->atasan_id
+                ]);
+            } else {
+                return redirect()->back()->with('error', 'Tidak ditemukan atasan untuk periode yang dipilih.');
+            }
+        }
+        $checkAtasan = SKPAtasanPegawai::Where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $request->atasan_id)
+            ->where('periode_id', $request->periode_id)
+            ->first();
+        if($checkAtasan == null){
+            return redirect()->back()->with('error', 'Tidak ditemukan atasan untuk periode yang dipilih.');
+        }
         $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->where('atasan_id',$request->atasan_id)
@@ -54,23 +71,24 @@ class SKPController extends Controller
         $daftarIntervensi = SKPIntervensi::with(['periode'])
             ->where('bawahan_id', $this->user->pegawai_id)
             ->get();
-        if(count($daftarSkp) !== 0){
-            $atasanId = Pegawai::Where('id',$daftarSkp[0]->atasan_id)->get();
-        }
-        if(count($daftarSkp) >= 1){
+
+        $statusSkp = null;
+        $atasanId = null;
+        if ($daftarSkp->isNotEmpty()) {
             $statusSkp = $daftarSkp[0]->status;
+            $atasanId = Pegawai::find($daftarSkp[0]->atasan_id);
         }
         return view('skp.index',[
             'title'=> $title,
-            'periode'=> $request->periode_id ?? '',
+            'periode'=> $request->periode_id ?? null,
             'atasan_id'=> $request->atasan_id,
             'user'=> $this->user,
             'daftarAtasan' => $daftarAtasan,
-            'atasanId'=> $atasanId ?? '',
+            'atasanId'=> $atasanId,
             'SKPPeriode' => $SKPPeriode,
             'daftarSkp' => $daftarSkp,
             'daftarIntervensi' => $daftarIntervensi,
-            'statusSkp' => $statusSkp ?? '',
+            'statusSkp' => $statusSkp,
         ]);
     }
     public function skpAdd(Request $request)
