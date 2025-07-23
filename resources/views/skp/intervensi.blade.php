@@ -10,14 +10,13 @@
     <div class="card mb-4 bg-opacity-10 border">
         <div class="card-body">
             <form action="{{ route('periodeIntervensi') }}" method="GET">
-                @csrf
                 <div class="row align-items-end">
                     <div class="col-md-6">
-                        <label for="status_kepegawaian" class="form-label fw-semibold">Periode SKP</label>
-                        <select name="periode_id" id="status_kepegawaian" class="form-select" onchange="this.form.submit()" required>
-                            <option value="" disabled {{ empty($periode) ? 'selected' : '' }}>-- Pilih Periode --</option>
+                        <label for="periode_id" class="form-label fw-semibold">Periode SKP</label>
+                        <select name="periode_id" id="periode_id" class="form-select" onchange="this.form.submit()" required>
+                            <option value="" disabled {{ empty($periode ?? null) ? 'selected' : '' }}>-- Pilih Periode --</option>
                             @foreach($SKPPeriode as $item)
-                                <option value="{{ $item->id }}">
+                                <option value="{{ $item->id }}" {{ ($periode ?? '') == $item->id ? 'selected' : '' }}>
                                     {{ \Carbon\Carbon::parse($item->tanggal_mulai)->translatedFormat('d-M-Y') }}
                                     s/d
                                     {{ \Carbon\Carbon::parse($item->tanggal_selesai)->translatedFormat('d-M-Y') }}
@@ -172,7 +171,7 @@
 @endif
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
-        const periodeSelect = document.getElementById('status_kepegawaian');
+        const periodeSelect = document.getElementById('periode_id');
         const hiddenPeriodeInput = document.getElementById('periode_id_hidden');
 
         if (periodeSelect && hiddenPeriodeInput) {

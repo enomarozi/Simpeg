@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIntervensi};
+use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIntervensi, SKPAtasanPegawai};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -30,17 +30,28 @@ class IntervensiSKPController extends Controller
         ]);
     }
     public function periode(Request $request){
+        if($this->user->pegawai->atasan_id === null){
+            return redirect()->back()->with('error', 'Atasan anda belum ada.');
+        }
+        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
+            $SKPPeriode = SKPPeriode::all();
+        }
         $title = "Intervensi";
-        $periode = $request->periode_id;
-        $SKPPeriode = SKPPeriode::all();
-        $daftarSkp = Skp::with(['periode'])
+        $checkAtasan = SKPAtasanPegawai::Where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $this->user->pegawai->atasan_id)
+            ->where('periode_id', $request->periode_id)
+            ->first();
+        if($checkAtasan == null){
+            return redirect()->back()->with('error', 'Tidak ditemukan atasan untuk periode yang dipilih.');
+        }
+        $daftarBawahan = Pegawai::where('atasan_id', $this->user->pegawai_id)->get();
+        $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id',$this->user->pegawai->atasan_id)
+            ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
             ->get();
-        $daftarBawahan = Pegawai::where('atasan_id', $this->user->pegawai_id)->get();
-        if(count($daftarBawahan) == 0){
-            return redirect()->back()->with('error', 'Belum ada bawahan.');
-        }
+
         $daftarIntervensi = SKPIntervensi::with(['periode'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->orderBy('created_at', 'desc')
@@ -59,8 +70,9 @@ class IntervensiSKPController extends Controller
             });
         return view('skp.intervensi',[
             'title'=>$title,
+            'periode'=>$request->periode_id ?? null,
+            'atasan_id'=> $request->atasan_id,
             'user'=>$this->user,
-            'periode'=>$periode,
             'SKPPeriode'=>$SKPPeriode,
             'daftarSkp'=>$daftarSkp,
             'daftarBawahan'=>$daftarBawahan,
@@ -83,6 +95,7 @@ class IntervensiSKPController extends Controller
             ],
             'skp_intervensi'=>'required|string',
         ]);
+
         $daftarIntervensi = SKPIntervensi::Where('skp_id',$request->skp_intervensi)
                 ->Where('bawahan_id',$request->bawahan_id)
                 ->first();

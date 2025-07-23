@@ -49,7 +49,7 @@ class SKPController extends Controller
             if ($daftarAtasan->count() >= 1) {
                 return redirect()->route('periode', [
                     'periode_id' => $request->periode_id,
-                    'atasan_id' => $daftarAtasan[0]->atasan_id
+                    'atasan_id' => $daftarAtasan[count($daftarAtasan)-1]->atasan_id
                 ]);
             } else {
                 return redirect()->back()->with('error', 'Tidak ditemukan atasan untuk periode yang dipilih.');

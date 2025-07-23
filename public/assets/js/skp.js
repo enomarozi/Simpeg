@@ -1,6 +1,6 @@
 function skp(){
     document.addEventListener('DOMContentLoaded', function () {
-        const periodeSelect = document.getElementById('status_kepegawaian');
+        const periodeSelect = document.getElementById('periode_id');
         const hiddenPeriodeInput = document.getElementById('periode_id_hidden');
 
         if (periodeSelect && hiddenPeriodeInput) {
