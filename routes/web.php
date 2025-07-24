@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController, ManagemenUserController, PeriodeController};
+use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController, ManagemenUserController, PeriodeController, SKPEvaluasi};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -59,6 +59,11 @@ Route::group(['prefix'=> 'intervensi'], function(){
 	Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periodeIntervensi');
 	Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
 	Route::POST('/intervensiDelete', [IntervensiSKPController::class, 'intervensiDelete'])->name('intervensiDelete');
+});
+
+Route::group(['prefix'=> 'evaluasi'], function(){
+	Route::GET('/evaluasi_skp', [SKPEvaluasi::class, 'index'])->name('evaluasi_skp');
+	Route::GET('/evaluasi_skp_selected', [SKPEvaluasi::class, 'periode'])->name('periodeEvaluasi');
 });
 
 

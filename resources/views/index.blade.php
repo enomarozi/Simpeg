@@ -128,7 +128,7 @@
                        aria-controls="submenu2">
                        SKP Tahunan
                     </a>
-                    <div class="collapse {{ Request::routeIs('rencana_skp', 'intervensi_skp') ? 'show' : '' }}" id="submenu2">
+                    <div class="collapse {{ Request::routeIs('rencana_skp', 'intervensi_skp','evaluasi_skp') ? 'show' : '' }}" id="submenu2">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
                                 <a class="nav-link {{ Request::routeIs('rencana_skp') ? 'active' : '' }}" href="{{ route('rencana_skp') }}">Rencana SKP</a>
@@ -137,7 +137,8 @@
                                 <a class="nav-link {{ Request::routeIs('intervensi_skp') ? 'active' : '' }}" href="{{ route('intervensi_skp') }}">Matriks Peran Hasil</a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="#">Evaluasi SKP</a>
+                                <a class="nav-link {{ Request::routeIs('evaluasi_skp') ? 'active' : '' }}" href="{{ route('evaluasi_skp') }}">
+                                Evaluasi SKP</a>
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link" href="#">Arsip SKP</a>
