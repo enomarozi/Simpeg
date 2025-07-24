@@ -10,8 +10,8 @@ class SKPIntervensi extends Model
     protected $table = 'skp_intervensi';
 
     protected $fillable = [
+        'atasan_id',
         'pegawai_id',
-        'bawahan_id',
         'periode_id',
         'skp_id',
         'status',
@@ -22,7 +22,7 @@ class SKPIntervensi extends Model
      */
     public function bawahan()
     {
-        return $this->belongsTo(Pegawai::class, 'bawahan_id');
+        return $this->belongsTo(Pegawai::class, 'atasan_id');
     }
 
     public function skp()

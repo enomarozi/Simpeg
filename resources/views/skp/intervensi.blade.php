@@ -160,10 +160,10 @@
 	<div class="modal fade" id="modalIndikatorIntervensi" tabindex="-1" aria-labelledby="modalIndikatorIntervensi" aria-hidden="true">
 	    <div class="modal-dialog modal-custom-width">
 	        <div class="modal-content">
-	            <form id="formIndikatorPoin" action="{{ route('intervensiDelete') }}" method="POST">
+	            <form id="formIndikatorPoin" action="{{ route('intervensiSetuju') }}" method="POST">
 	                @csrf
-	                <input type="hidden" name="indikator_id" id="IndikatorId">
-	                <input type="hidden" name="intervensi_id" id="hapusIntervensiId">
+	                <input type="hidden" name="skp_setuju" id="skpIdIndikator">
+	                <input type="hidden" name="skpIndikator_setuju" id="intervensiIdIndikator">
 	                <div class="modal-header bg-primary text-white">
 	                    <h5 class="modal-title" id="modalIndikatorIntervensi">Indikator</h5>
 	                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -174,8 +174,8 @@
            				</ul>
 	                </div>
 	                <div class="modal-footer">
-	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-	                    <button type="submit" class="btn btn-primary">Setuju</button>
+	                    <button type="submit" class="btn btn-danger" name="status" value="tolak">Tolak</button>
+	                    <button type="submit" class="btn btn-primary" name="status" value="setuju">Setuju</button>
 	                </div>
 	            </form>
 	        </div>
@@ -236,18 +236,20 @@
         }
 
         const indikatorButtons = document.querySelectorAll('.btn-indikator');
-        const indikatorId = document.getElementById('IndikatorId');
+        const skpIdIndikator = document.getElementById('skpIdIndikator');
+        const intervensiIdIndikator = document.getElementById('intervensiIdIndikator');
         const indikatorSetuju = document.getElementById('indikatorSetuju');
         const formIndikator = document.getElementById('formIndikatorPoin');
         const modalIndikatorEl = document.getElementById('modalIndikatorIntervensi');
 
-        if (indikatorButtons.length && indikatorId && indikatorSetuju && formIndikator && modalIndikatorEl) {
+        if (indikatorButtons.length && skpIdIndikator && intervensiIdIndikator && indikatorSetuju && formIndikator && modalIndikatorEl) {
             indikatorButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     const skpId = this.getAttribute('data-skp-id');
-                    indikatorId.value = skpId;
+                    skpIdIndikator.value = skpId;
+                    const intervensiId = this.getAttribute('data-intervensi-id');
+                    intervensiIdIndikator.value = intervensiId;
                     formIndikator.setAttribute('action', `/intervensi/intervensiSetuju`);
-
                     indikatorSetuju.innerHTML = '';
 
                     fetch(`/intervensi/indikatorGet/${skpId}`)

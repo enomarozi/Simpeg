@@ -112,6 +112,31 @@ class IntervensiSKPController extends Controller
         ]);
         return redirect()->back()->with('success', 'Intervensi SKP berhasil ditambahkan.');
     }
+    public function intervensiSetuju(Request $request){
+        $status = null;
+        if($request->status === "setuju"){
+            $status = "diterima";
+        }elseif($request->status === "tolak"){
+            $status = "ditolak";
+        }
+        if (!$status) {
+            return back()->with('error', 'Status tidak valid.');
+        }
+        $indikator = SKPIntervensi::where('skp_id', $request->skp_setuju)
+                ->where('id', $request->skpIndikator_setuju)
+                ->where('pegawai_id', $this->user->pegawai_id)
+                ->first();
+        $skp = SKP::where('pegawai_id',$indikator->bawahan_id)
+                ->where('bawahan_id',$indikator->pegawai_id)
+                ->get();
+        if ($indikator) {
+            $indikator->status = $status;
+            $indikator->save();
+            return back()->with('success', 'Status intervensi berhasil diupdate.');
+        } else {
+            return back()->with('error', 'Indikator tidak ditemukan atau tidak valid.');
+        }
+    }
     public function intervensiDelete(Request $request){
         $intervensiDel = SKPIntervensi::where('id', $request->intervensi_id)
             ->where('skp_id', $request->skp_id)

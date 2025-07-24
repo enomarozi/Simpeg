@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('skp_intervensi', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('atasan_id')->constrained('pegawai')->onDelete('cascade');
             $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
-            $table->foreignId('bawahan_id')->constrained('pegawai')->onDelete('cascade');
             $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
             $table->foreignId('skp_id')->constrained('skp')->onDelete('cascade');
             $table->enum('status', ['diintervensi', 'diajukan', 'diterima', 'ditolak'])->default('diintervensi');
