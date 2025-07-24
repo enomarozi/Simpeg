@@ -44,7 +44,7 @@ Route::group(['prefix'=> 'admin'], function(){
 
 Route::group(['prefix'=> 'skp'], function(){
 	Route::GET('/rencana_skp', [SKPController::class, 'index'])->name('rencana_skp');
-	Route::GET('/rencana_skp_selected', [SKPController::class, 'periode'])->name('periode');
+	Route::GET('/rencana_skp_selected', [SKPController::class, 'periode'])->name('periodeSkp');
 	Route::POST('/skpAdd', [SKPController::class, 'skpAdd'])->name('skpAdd');
 	Route::PUT('/skpEdit/{id}', [SKPController::class, 'skpEdit'])->name('skpEdit');
 	Route::DELETE('/skpDelete/{id}', [SKPController::class, 'skpDelete'])->name('skpDelete');
@@ -59,6 +59,8 @@ Route::group(['prefix'=> 'intervensi'], function(){
 	Route::GET('/intervensi_skp_selected', [IntervensiSKPController::class, 'periode'])->name('periodeIntervensi');
 	Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
 	Route::POST('/intervensiDelete', [IntervensiSKPController::class, 'intervensiDelete'])->name('intervensiDelete');
+	Route::POST('/intervensiSetuju',[IntervensiSKPController::class, 'intervensiSetuju'])->name('intervensiSetuju');
+	Route::GET('/indikatorGet/{id}', [IntervensiSKPController::class, 'indikatorGet'])->name('indikatorGet');
 });
 
 Route::group(['prefix'=> 'evaluasi'], function(){

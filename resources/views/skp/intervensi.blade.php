@@ -80,6 +80,15 @@
 					                <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
 					            </td>
 					            <td>
+					            	<button 
+								    	type="button" 
+								    	class="btn btn-sm btn-primary btn-indikator" 
+								    	data-skp-id="{{ $intervensi->skp_id }}" 
+								    	data-intervensi-id="{{ $intervensi->id }}" 
+								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}" 
+								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
+								    	Indikator
+									</button>
 								    <button 
 								    	type="button" 
 								    	class="btn btn-sm btn-danger" 
@@ -102,8 +111,9 @@
     </div>
 </div>
 
-{{-- Modal Tambah Intervensi SKP --}}
+
 @if(!empty($periode))
+	{{-- Modal Tambah Intervensi SKP --}}
 	<div class="modal fade" id="modalTambahIntervensiSKP" tabindex="-1" aria-labelledby="modalTambahIntervensiLabel" aria-hidden="true">
 	    <div class="modal-dialog modal-custom-width">
 	        <form action="{{ route('intervensiAdd') }}" method="POST">
@@ -129,7 +139,7 @@
 	                    <div class="mb-3">
 	                        <label for="bawahan_id" class="form-label">Bawahan</label>
 	                        <select name="bawahan_id" id="bawahan_id" class="form-select" required>
-	                            <option value="" disabled selected>-- Pilih SKP diIntervensi --</option>
+	                            <option value="" disabled selected>-- Pilih Bawahan --</option>
 	                                @foreach($daftarBawahan as $item)
 	                                    <option value="{{ $item->id }}">
 	                 						{{ $item->nama }}
@@ -146,6 +156,32 @@
 	        </form>
 	    </div>
 	</div>
+	{{-- Modal Indikator Intervensi SKP --}}
+	<div class="modal fade" id="modalIndikatorIntervensi" tabindex="-1" aria-labelledby="modalIndikatorIntervensi" aria-hidden="true">
+	    <div class="modal-dialog modal-custom-width">
+	        <div class="modal-content">
+	            <form id="formIndikatorPoin" action="{{ route('intervensiDelete') }}" method="POST">
+	                @csrf
+	                <input type="hidden" name="indikator_id" id="IndikatorId">
+	                <input type="hidden" name="intervensi_id" id="hapusIntervensiId">
+	                <div class="modal-header bg-primary text-white">
+	                    <h5 class="modal-title" id="modalIndikatorIntervensi">Indikator</h5>
+	                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+	                </div>
+	                <div class="modal-body">
+	                    <ul id="indikatorSetuju">
+	                    	<li></li>
+           				</ul>
+	                </div>
+	                <div class="modal-footer">
+	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+	                    <button type="submit" class="btn btn-primary">Setuju</button>
+	                </div>
+	            </form>
+	        </div>
+	    </div>
+	</div>
+	{{-- Modal Hapus Intervensi SKP --}}
 	<div class="modal fade" id="modalHapusIntervensi" tabindex="-1" aria-labelledby="modalHapusIntervensi" aria-hidden="true">
 	    <div class="modal-dialog modal-custom-width">
 	        <div class="modal-content">
@@ -154,7 +190,7 @@
 	                <input type="hidden" name="skp_id" id="hapusSkpId">
 	                <input type="hidden" name="intervensi_id" id="hapusIntervensiId">
 	                <div class="modal-header bg-danger text-white">
-	                    <h5 class="modal-title" id="modalHapusIntervensi">Hapus Indikator</h5>
+	                    <h5 class="modal-title" id="modalHapusIntervensi">Hapus Intervensi</h5>
 	                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
 	                </div>
 	                <div class="modal-body">
@@ -173,7 +209,6 @@
 	document.addEventListener('DOMContentLoaded', function () {
         const periodeSelect = document.getElementById('periode_id');
         const hiddenPeriodeInput = document.getElementById('periode_id_hidden');
-
         if (periodeSelect && hiddenPeriodeInput) {
             periodeSelect.addEventListener('change', function () {
                 hiddenPeriodeInput.value = this.value;
@@ -181,20 +216,61 @@
             hiddenPeriodeInput.value = periodeSelect.value;
         }
 
-        const modal = document.getElementById('modalHapusIntervensi');
-	    modal.addEventListener('show.bs.modal', function (event) {
-	        const button = event.relatedTarget;
-	        const skpId = button.getAttribute('data-skp-id');
-	        const intervensiId = button.getAttribute('data-intervensi-id');
-	        const nama = button.getAttribute('data-nama');
-	        const intervensi = button.getAttribute('data-intervensi');
+        const modalHapus = document.getElementById('modalHapusIntervensi');
+        if (modalHapus) {
+            modalHapus.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                if (!button) return;
 
-	        modal.querySelector('#hapusSkpId').value = skpId;
-	        modal.querySelector('#hapusIntervensiId').value = intervensiId;
+                const skpId = button.getAttribute('data-skp-id');
+                const intervensiId = button.getAttribute('data-intervensi-id');
+                const nama = button.getAttribute('data-nama');
+                const intervensi = button.getAttribute('data-intervensi');
 
-	        const pesan = `Hapus intervensi <strong>${nama}</strong> (SKP: <em>${intervensi}</em>)?`
-	        modal.querySelector('#pesanKonfirmasi').innerHTML = pesan;
-	    });
+                modalHapus.querySelector('#hapusSkpId').value = skpId;
+                modalHapus.querySelector('#hapusIntervensiId').value = intervensiId;
+
+                const pesan = `Hapus intervensi <strong>${nama}</strong> (SKP: <em>${intervensi}</em>)?`;
+                modalHapus.querySelector('#pesanKonfirmasi').innerHTML = pesan;
+            });
+        }
+
+        const indikatorButtons = document.querySelectorAll('.btn-indikator');
+        const indikatorId = document.getElementById('IndikatorId');
+        const indikatorSetuju = document.getElementById('indikatorSetuju');
+        const formIndikator = document.getElementById('formIndikatorPoin');
+        const modalIndikatorEl = document.getElementById('modalIndikatorIntervensi');
+
+        if (indikatorButtons.length && indikatorId && indikatorSetuju && formIndikator && modalIndikatorEl) {
+            indikatorButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const skpId = this.getAttribute('data-skp-id');
+                    indikatorId.value = skpId;
+                    formIndikator.setAttribute('action', `/intervensi/intervensiSetuju`);
+
+                    indikatorSetuju.innerHTML = '';
+
+                    fetch(`/intervensi/indikatorGet/${skpId}`)
+                        .then(response => {
+                            if (!response.ok) throw new Error('Gagal mengambil data indikator.');
+                            return response.json();
+                        })
+                        .then(data => {
+                            data.forEach(indikator => {
+                                const li = document.createElement('li');
+                                li.textContent = indikator.indikator;
+                                indikatorSetuju.appendChild(li);
+                            });
+
+                            const modal = new bootstrap.Modal(modalIndikatorEl);
+                            modal.show();
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                        });
+                });
+            });
+        }
     });
 </script>
 @endsection

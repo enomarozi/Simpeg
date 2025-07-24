@@ -8,7 +8,7 @@
     </div>
     <div class="card mb-4 bg-opacity-10 border">
         <div class="card-body">
-            <form action="{{ route('periode') }}" method="GET">
+            <form action="{{ route('periodeSkp') }}" method="GET">
                 <div class="row align-items-end">
                     <div class="col-md-6">
                         <label for="periode_id" class="form-label fw-semibold">Periode SKP</label>

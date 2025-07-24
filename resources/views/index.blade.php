@@ -128,7 +128,7 @@
                        aria-controls="submenu2">
                        SKP Tahunan
                     </a>
-                    <div class="collapse {{ Request::routeIs('rencana_skp', 'intervensi_skp','evaluasi_skp') ? 'show' : '' }}" id="submenu2">
+                    <div class="collapse {{ Request::routeIs('rencana_skp', 'periodeSkp', 'intervensi_skp', 'periodeIntervensi', 'evaluasi_skp','periodeEvaluasi') ? 'show' : '' }}" id="submenu2">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
                                 <a class="nav-link {{ Request::routeIs('rencana_skp') ? 'active' : '' }}" href="{{ route('rencana_skp') }}">Rencana SKP</a>

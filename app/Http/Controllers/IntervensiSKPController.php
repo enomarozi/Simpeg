@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIntervensi, SKPAtasanPegawai};
+use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIntervensi, SKPAtasanPegawai, SKPIndikator};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -17,12 +17,22 @@ class IntervensiSKPController extends Controller
             if (!$this->user->hasRole('pegawai') && !$this->user->hasRole('atasan')) {
                 abort(403, 'Unauthorized');
             }
-            return $next($request);
+            $_periode = SKPPeriode::where('tahun',date('Y'))->first();
+            if($_periode !== null){
+                return $next($request);
+            }
+            else{
+                return redirect()->route('index')->with('error', 'Periode Sekarang belum ada...');
+            }
         });
     }
-    public function index(){
+    public function index()
+    {
         $title = "Intervensi";
-        $SKPPeriode = SKPPeriode::all();
+        $SKPPeriode = [];
+        if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
+            $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
+        }
         return view('skp.intervensi',[
             'title'=>$title,
             'user'=>$this->user,
@@ -34,16 +44,9 @@ class IntervensiSKPController extends Controller
             return redirect()->back()->with('error', 'Atasan anda belum ada.');
         }
         if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
-            $SKPPeriode = SKPPeriode::all();
+            $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
         }
         $title = "Intervensi";
-        $checkAtasan = SKPAtasanPegawai::Where('pegawai_id', $this->user->pegawai_id)
-            ->where('atasan_id', $this->user->pegawai->atasan_id)
-            ->where('periode_id', $request->periode_id)
-            ->first();
-        if($checkAtasan == null){
-            return redirect()->back()->with('error', 'Tidak ditemukan atasan untuk periode yang dipilih.');
-        }
         $daftarBawahan = Pegawai::where('atasan_id', $this->user->pegawai_id)->get();
         $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $this->user->pegawai_id)
@@ -56,7 +59,7 @@ class IntervensiSKPController extends Controller
             ->where('pegawai_id', $this->user->pegawai_id)
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function($intervensi){
+            ->map(function($intervensi){                
                 $adaSKP = SKP::where("pelaksanaan_skp",$intervensi->id)
                     ->where('atasan_id',$intervensi->pegawai_id)
                     ->exists();
@@ -71,7 +74,6 @@ class IntervensiSKPController extends Controller
         return view('skp.intervensi',[
             'title'=>$title,
             'periode'=>$request->periode_id ?? null,
-            'atasan_id'=> $request->atasan_id,
             'user'=>$this->user,
             'SKPPeriode'=>$SKPPeriode,
             'daftarSkp'=>$daftarSkp,
@@ -119,6 +121,16 @@ class IntervensiSKPController extends Controller
             return redirect()->back()->with('success', 'Intervensi berhasil dihapus.');
         } else {
             return redirect()->back()->with('error', 'Intervensi tidak ditemukan atau gagal dihapus.');
+        }
+    }
+    public function indikatorGet($id)
+    {
+        $skp = SKP::where('id', $id)
+              ->where('pegawai_id', $this->user->pegawai_id)
+              ->firstOrFail();
+        if($skp){
+            $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
+            return response()->json($indikators);
         }
     }
 }
