@@ -123,9 +123,9 @@
                         @php $no = 1;@endphp
                         @foreach($daftarSkp->where('jenis_skp', 1) as $skp)  
                         @php
-                            if($skp->pelaksanaan_skp == 1){
+                            if($skp->pelaksanaan_skp == 0){
                                 $skpText = $skp->skp;
-                            } elseif($skp->pelaksanaan_skp > 1 && $skp->intervensi && $skp->intervensi->skp) {
+                            } elseif($skp->pelaksanaan_skp > 0 && $skp->intervensi && $skp->intervensi->skp) {
                                 $skpText = $skp->intervensi->skp->skp;
                             } else {
                                 $skpText = 'SKP Atasan tidak ditemukan';
@@ -134,9 +134,9 @@
                         <tr>
                             <td class="text-center align-top">{{ $no++ }}.</td>
                             <td class="align-top">
-                                @if($skp->pelaksanaan_skp == 1)
+                                @if($skp->pelaksanaan_skp == 0)
                                     (Mandiri) | {{ $skpText }}
-                                @elseif($skp->pelaksanaan_skp > 1)
+                                @elseif($skp->pelaksanaan_skp > 0)
                                     (Intervensi) | {{ $skpText }}
                                 @endif
                             </td>
@@ -163,7 +163,7 @@
                                 </div>
                             </td>
                             <td class="text-center align-top">
-                                @if($skp->pelaksanaan_skp == 1)
+                                @if($skp->pelaksanaan_skp == 0)
                                     <button type="button" 
                                         class="btn btn-sm btn-outline-primary me-1" 
                                         data-bs-toggle="modal" 
@@ -195,9 +195,9 @@
                         @php $no = 1; @endphp
                         @foreach($daftarSkp->where('jenis_skp', 2) as $skp)
                         @php
-                            if($skp->pelaksanaan_skp == 1){
+                            if($skp->pelaksanaan_skp == 0){
                                 $skpText = $skp->skp;
-                            } elseif($skp->pelaksanaan_skp > 1 && $skp->intervensi && $skp->intervensi->skp) {
+                            } elseif($skp->pelaksanaan_skp > 0 && $skp->intervensi && $skp->intervensi->skp) {
                                 $skpText = $skp->intervensi->skp->skp;
                             } else {
                                 $skpText = 'SKP Atasan tidak ditemukan';
@@ -206,9 +206,9 @@
                         <tr>
                             <td class="text-center align-top">{{ $no++ }}.</td>
                             <td class="align-top">
-                                @if($skp->pelaksanaan_skp == 1)
+                                @if($skp->pelaksanaan_skp == 0)
                                     (Mandiri) | {{ $skpText }}
-                                @elseif($skp->pelaksanaan_skp > 1)
+                                @elseif($skp->pelaksanaan_skp > 0)
                                     (Intervensi) | {{ $skpText }}
                                 @endif
                             </td>
@@ -235,7 +235,7 @@
                                 </div>
                             </td>
                             <td class="text-center align-top">
-                                @if($skp->pelaksanaan_skp == 1)
+                                @if($skp->pelaksanaan_skp == 0)
                                     <button type="button" 
                                         class="btn btn-sm btn-outline-primary me-1" 
                                         data-bs-toggle="modal" 
@@ -278,8 +278,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="{{ $periode }}">                                 
-                    
+                    <input type="hidden" name="periode_id" id="periode_id_hidden" value="{{ $periode }}">
                     <div class="mb-3">
                         @if($user->hasRole('atasan'))
                             <label for="pelaksanaan_skp" class="form-label">SKP Atasan yang Diintervensi (Opsional)</label>
@@ -289,7 +288,7 @@
                         <select name="pelaksanaan_skp" id="pelaksanaan_skp" class="form-select">
                             <option value="" disabled selected>-- Pilih SKP --</option>
                             @if($user->hasRole('atasan'))
-                                <option value="1">Mandiri</option>
+                                <option value="0">Mandiri</option>
                             @endif
                             @foreach($daftarIntervensi as $item)
                                 <option value="{{ $item->id }}">
@@ -308,11 +307,10 @@
                     </div>
                     @if($user->hasRole('atasan'))
                     <div class="mb-3">
-                        <label for="skp" class="form-label">Sasaran Hasil Kerja</label>
-                        <textarea name="skp" id="skp" class="form-control" rows="3" required></textarea>
+                        <label for="skp" id="skp-label" class="form-label">Sasaran Hasil Kerja</label>
+                        <textarea name="skp" id="skp" class="form-control" rows="3"></textarea>
                     </div>
                     @endif
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -474,5 +472,30 @@
 </div>
 
 <script src="{{ asset('assets/js/skp.js') }}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const pelaksanaanSelect = document.getElementById("pelaksanaan_skp");
+    const sasaranLabel = document.getElementById("skp-label");
+    const sasaranField = document.getElementById("skp");
+
+    function toggleSasaranField() {
+        if (!sasaranField || !sasaranLabel) return; // Cegah error jika elemen tidak ada
+
+        const selectedValue = pelaksanaanSelect.value;
+        if (selectedValue === "0" || selectedValue === "") {
+            sasaranField.style.display = "block";
+            sasaranLabel.style.display = "block";
+        } else {
+            sasaranField.style.display = "none";
+            sasaranLabel.style.display = "none";
+        }
+    }
+
+    if (pelaksanaanSelect) {
+        pelaksanaanSelect.addEventListener("change", toggleSasaranField);
+        toggleSasaranField();
+    }
+});
+</script>
 @endif
 @endsection

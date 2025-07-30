@@ -22,7 +22,7 @@ class SKPIntervensi extends Model
      */
     public function bawahan()
     {
-        return $this->belongsTo(Pegawai::class, 'atasan_id');
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
 
     public function skp()

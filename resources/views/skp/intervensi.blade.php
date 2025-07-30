@@ -86,6 +86,7 @@
 								    	data-skp-id="{{ $intervensi->skp_id }}" 
 								    	data-intervensi-id="{{ $intervensi->id }}" 
 								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}" 
+								    	data-pegawai-id="{{ $intervensi->bawahan->id ?? '-' }}" 
 								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
 								    	Indikator
 									</button>
@@ -96,7 +97,8 @@
 								    	data-bs-target="#modalHapusIntervensi" 
 								    	data-skp-id="{{ $intervensi->skp_id }}" 
 								    	data-intervensi-id="{{ $intervensi->id }}" 
-								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}" 
+								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}"
+								    	data-pegawai-id="{{ $intervensi->bawahan->id ?? '-' }}" 
 								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
 								    	Hapus
 									</button>
@@ -130,10 +132,10 @@
 	                        <select name="skp_intervensi" id="skp_intervensi" class="form-select" required>
 	                            <option value="" disabled selected>-- Pilih SKP diIntervensi --</option>
 	                                @foreach($daftarSkp as $item)
-	                                    <option value="{{ $item->id }}">
-	                 						{{ $item->skp }}
-	                                    </option>
-	                                @endforeach
+									    <option value="{{ $item->id }}">
+									        {{ $item->skp ?? $item->skp_display }}
+									    </option>
+									@endforeach
 	                        </select>
 	                    </div>
 	                    <div class="mb-3">
@@ -164,6 +166,7 @@
 	                @csrf
 	                <input type="hidden" name="skp_setuju" id="skpIdIndikator">
 	                <input type="hidden" name="skpIndikator_setuju" id="intervensiIdIndikator">
+	                <input type="hidden" name="pegawai_id" id="pegawai_id">
 	                <div class="modal-header bg-primary text-white">
 	                    <h5 class="modal-title" id="modalIndikatorIntervensi">Indikator</h5>
 	                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
@@ -238,6 +241,7 @@
         const indikatorButtons = document.querySelectorAll('.btn-indikator');
         const skpIdIndikator = document.getElementById('skpIdIndikator');
         const intervensiIdIndikator = document.getElementById('intervensiIdIndikator');
+        const pegawaiIdIndikator = document.getElementById('pegawai_id')
         const indikatorSetuju = document.getElementById('indikatorSetuju');
         const formIndikator = document.getElementById('formIndikatorPoin');
         const modalIndikatorEl = document.getElementById('modalIndikatorIntervensi');
@@ -249,10 +253,12 @@
                     skpIdIndikator.value = skpId;
                     const intervensiId = this.getAttribute('data-intervensi-id');
                     intervensiIdIndikator.value = intervensiId;
+                    const pegawaiId = this.getAttribute('data-pegawai-id');
+                    pegawaiIdIndikator.value = pegawaiId;
                     formIndikator.setAttribute('action', `/intervensi/intervensiSetuju`);
                     indikatorSetuju.innerHTML = '';
 
-                    fetch(`/intervensi/indikatorGet/${skpId}`)
+                    fetch(`/intervensi/indikatorGet/${pegawaiId}/${intervensiId}`)
                         .then(response => {
                             if (!response.ok) throw new Error('Gagal mengambil data indikator.');
                             return response.json();

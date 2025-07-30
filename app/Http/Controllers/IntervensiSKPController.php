@@ -50,20 +50,29 @@ class IntervensiSKPController extends Controller
         $daftarBawahan = Pegawai::where('atasan_id', $this->user->pegawai_id)->get();
         $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $this->user->pegawai_id)
-            ->where('atasan_id',$this->user->pegawai->atasan_id)
+            ->where('atasan_id', $this->user->pegawai->atasan_id)
             ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->map(function($item){
+                if ($item->skp === null && $item->pelaksanaan_skp) {
+                    $check = SKPIntervensi::where('id', $item->pelaksanaan_skp)->first();
+                    if ($check) {
+                        $item->skp_display = SKP::where('id', $check->skp_id)->value('skp') ?? 'SKP Tidak Ditemukan';
+                    }
+                }
+                return $item;
+            });
 
         $daftarIntervensi = SKPIntervensi::with(['periode'])
-            ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $this->user->pegawai_id)
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function($intervensi){                
                 $adaSKP = SKP::where("pelaksanaan_skp",$intervensi->id)
-                    ->where('atasan_id',$intervensi->pegawai_id)
+                    ->where('pegawai_id',$intervensi->pegawai_id)
+                    ->where('atasan_id',$this->user->pegawai_id)
                     ->exists();
-
                 if($adaSKP){
                     $intervensi->status_display = "intervensi diterima";
                 }else{
@@ -99,14 +108,15 @@ class IntervensiSKPController extends Controller
         ]);
 
         $daftarIntervensi = SKPIntervensi::Where('skp_id',$request->skp_intervensi)
-                ->Where('bawahan_id',$request->bawahan_id)
+                ->Where('pegawai_id',$request->bawahan_id)
+                ->Where('atasan_id',$this->user->pegawai_id)
                 ->first();
         if($daftarIntervensi !== null){
             return redirect()->back()->with('error', 'SKP sudah diintervensi.');
         }
         $intervensi = SkpIntervensi::create([
-            'pegawai_id' => $this->user->pegawai_id,
-            'bawahan_id' => $request->bawahan_id,
+            'atasan_id' => $this->user->pegawai_id,
+            'pegawai_id' => $request->bawahan_id,
             'periode_id' => $request->periode_id,
             'skp_id' => $request->skp_intervensi,
         ]);
@@ -140,7 +150,7 @@ class IntervensiSKPController extends Controller
     public function intervensiDelete(Request $request){
         $intervensiDel = SKPIntervensi::where('id', $request->intervensi_id)
             ->where('skp_id', $request->skp_id)
-            ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $this->user->pegawai_id)
             ->delete();
         if ($intervensiDel) {
             return redirect()->back()->with('success', 'Intervensi berhasil dihapus.');
@@ -148,13 +158,14 @@ class IntervensiSKPController extends Controller
             return redirect()->back()->with('error', 'Intervensi tidak ditemukan atau gagal dihapus.');
         }
     }
-    public function indikatorGet($id)
-    {
-        $skp = SKP::where('id', $id)
-              ->where('pegawai_id', $this->user->pegawai_id)
+    public function indikatorGet($pegawai_id, $intervensi_id)
+    {   
+        $skp = SKP::where('pelaksanaan_skp', $intervensi_id)
+              ->where('atasan_id', $this->user->pegawai_id)
+              ->where('pegawai_id', $pegawai_id)
               ->firstOrFail();
         if($skp){
-            $indikators = SKPIndikator::where('skp_id', $id)->get(['id', 'indikator']);
+            $indikators = SKPIndikator::where('skp_id', $skp->id)->get(['id', 'indikator']);
             return response()->json($indikators);
         }
     }

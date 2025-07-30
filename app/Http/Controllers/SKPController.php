@@ -55,9 +55,8 @@ class SKPController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         $daftarIntervensi = SKPIntervensi::with(['periode'])
-            ->where('bawahan_id', $this->user->pegawai_id)
+            ->where('pegawai_id', $this->user->pegawai_id)
             ->get();
-
         $statusSkp = null;
         if ($daftarSkp->isNotEmpty()) {
             $statusSkp = $daftarSkp[0]->status;
@@ -75,14 +74,14 @@ class SKPController extends Controller
     }
     public function skpAdd(Request $request)
     {
-        if($request->pelaksanaan_skp == 1){
+        if($request->pelaksanaan_skp == 0){
             $request->validate([
                 'periode_id'=>'required',
                 'pelaksanaan_skp'=>'required',
                 'jenis_skp'=>'required|min:1|max:2',
                 'skp'=>'required|string',
             ]);
-        }elseif($request->pelaksanaan_skp > 1){
+        }elseif($request->pelaksanaan_skp >= 1){
             $request->validate([
                 'periode_id'=>'required',
                 'pelaksanaan_skp'=>'required',
