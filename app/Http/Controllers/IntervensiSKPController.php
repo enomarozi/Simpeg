@@ -53,33 +53,11 @@ class IntervensiSKPController extends Controller
             ->where('atasan_id', $this->user->pegawai->atasan_id)
             ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($item){
-                if ($item->skp === null && $item->pelaksanaan_skp) {
-                    $check = SKPIntervensi::where('id', $item->pelaksanaan_skp)->first();
-                    if ($check) {
-                        $item->skp_display = SKP::where('id', $check->skp_id)->value('skp') ?? 'SKP Tidak Ditemukan';
-                    }
-                }
-                return $item;
-            });
-
+            ->get();
         $daftarIntervensi = SKPIntervensi::with(['periode'])
             ->where('atasan_id', $this->user->pegawai_id)
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($intervensi){                
-                $adaSKP = SKP::where("pelaksanaan_skp",$intervensi->id)
-                    ->where('pegawai_id',$intervensi->pegawai_id)
-                    ->where('atasan_id',$this->user->pegawai_id)
-                    ->exists();
-                if($adaSKP){
-                    $intervensi->status_display = "intervensi diterima";
-                }else{
-                    $intervensi->status_display = $intervensi->status;
-                }
-                return $intervensi;
-            });
+            ->get();
         return view('skp.intervensi',[
             'title'=>$title,
             'periode'=>$request->periode_id ?? null,

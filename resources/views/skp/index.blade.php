@@ -121,23 +121,14 @@
                             <td colspan="4">A. Utama</td>
                         </tr>
                         @php $no = 1;@endphp
-                        @foreach($daftarSkp->where('jenis_skp', 1) as $skp)  
-                        @php
-                            if($skp->pelaksanaan_skp == 0){
-                                $skpText = $skp->skp;
-                            } elseif($skp->pelaksanaan_skp > 0 && $skp->intervensi && $skp->intervensi->skp) {
-                                $skpText = $skp->intervensi->skp->skp;
-                            } else {
-                                $skpText = 'SKP Atasan tidak ditemukan';
-                            }
-                        @endphp                      
+                        @foreach($daftarSkp->where('jenis_skp', 1) as $skp)                    
                         <tr>
                             <td class="text-center align-top">{{ $no++ }}.</td>
                             <td class="align-top">
                                 @if($skp->pelaksanaan_skp == 0)
-                                    (Mandiri) | {{ $skpText }}
+                                    (Mandiri) | {{ $skp->skp }}
                                 @elseif($skp->pelaksanaan_skp > 0)
-                                    (Intervensi) | {{ $skpText }}
+                                    (Intervensi) | {{ $skp->skp }}
                                 @endif
                             </td>
                             <td>
@@ -169,7 +160,7 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#modalEditSkp" 
                                         data-skp-id="{{ $skp->id }}" 
-                                        data-skp="{{ $skpText }}" 
+                                        data-skp="{{ $skp->skp }}" 
                                         data-jenis-skp="{{ $skp->jenis_skp }}" 
                                         title="Edit SKP"> 
                                         <i class="bi bi-pencil-square"></i> 
@@ -180,7 +171,7 @@
                                     data-bs-toggle="modal" 
                                     data-bs-target="#modalHapusSkp" 
                                     data-skp-id="{{ $skp->id }}" 
-                                    data-skp="{{ $skpText }}"
+                                    data-skp="{{ $skp->skp }}"
                                     title="Hapus SKP">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -194,22 +185,13 @@
                         </tr>
                         @php $no = 1; @endphp
                         @foreach($daftarSkp->where('jenis_skp', 2) as $skp)
-                        @php
-                            if($skp->pelaksanaan_skp == 0){
-                                $skpText = $skp->skp;
-                            } elseif($skp->pelaksanaan_skp > 0 && $skp->intervensi && $skp->intervensi->skp) {
-                                $skpText = $skp->intervensi->skp->skp;
-                            } else {
-                                $skpText = 'SKP Atasan tidak ditemukan';
-                            }
-                        @endphp 
                         <tr>
                             <td class="text-center align-top">{{ $no++ }}.</td>
                             <td class="align-top">
                                 @if($skp->pelaksanaan_skp == 0)
-                                    (Mandiri) | {{ $skpText }}
+                                    (Mandiri) | {{ $skp->skp }}
                                 @elseif($skp->pelaksanaan_skp > 0)
-                                    (Intervensi) | {{ $skpText }}
+                                    (Intervensi) | {{ $skp->skp }}
                                 @endif
                             </td>
                             <td>
@@ -241,7 +223,7 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#modalEditSkp" 
                                         data-skp-id="{{ $skp->id }}" 
-                                        data-skp="{{ $skpText }}" 
+                                        data-skp="{{ $skp->skp }}" 
                                         data-jenis-skp="{{ $skp->jenis_skp }}" 
                                         title="Edit SKP"> 
                                         <i class="bi bi-pencil-square"></i> 
@@ -252,7 +234,7 @@
                                     data-bs-toggle="modal" 
                                     data-bs-target="#modalHapusSkp" 
                                     data-skp-id="{{ $skp->id }}" 
-                                    data-skp="{{ $skpText }}"
+                                    data-skp="{{ $skp->skp }}"
                                     title="Hapus SKP">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -291,7 +273,7 @@
                                 <option value="0">Mandiri</option>
                             @endif
                             @foreach($daftarIntervensi as $item)
-                                <option value="{{ $item->id }}">
+                                <option value="{{ $item->skp_id }}">
                                     Intervensi | {{ $item->skp->skp }}
                                 </option>
                             @endforeach

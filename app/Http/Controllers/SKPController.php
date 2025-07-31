@@ -87,23 +87,34 @@ class SKPController extends Controller
                 'pelaksanaan_skp'=>'required',
                 'jenis_skp'=>'required|min:1|max:2',
             ]);
-            $check = SKP::Where('pegawai_id',$this->user->pegawai_id)
-                    ->Where('atasan_id',$this->user->pegawai->atasan->id)
-                    ->Where('pelaksanaan_skp',$request->pelaksanaan_skp)
-                    ->first();
-            if($check !== null){
+            $check_exist = SKP::with(['periode'])
+                ->Where('pegawai_id',$this->user->pegawai_id)
+                ->Where('atasan_id',$this->user->pegawai->atasan_id)
+                ->Where('pelaksanaan_skp',$request->pelaksanaan_skp)
+                ->first();
+            if($check_exist){
                 return redirect()->back()->with('error', 'SKP sudah ada.');
             }
-
+            $check_val = SKPIntervensi::with(['periode'])
+                ->Where('pegawai_id',$this->user->pegawai_id)
+                ->Where('atasan_id',$this->user->pegawai->atasan_id)
+                ->Where('skp_id',$request->pelaksanaan_skp)
+                ->first();
+            if($check_val === null){
+                return redirect()->back()->with('error', 'SKP tidak diintervensi.');
+            }
+            $skp_intervensi = SKP::with(['periode'])
+                    ->Where('pegawai_id',$this->user->pegawai->atasan_id)
+                    ->Where('id',$request->pelaksanaan_skp)
+                    ->value('skp');
         }
-
         SKP::create([
             'pegawai_id' => $this->user->pegawai_id,
             'atasan_id'=> $this->user->pegawai->atasan_id,
             'periode_id' => $request->periode_id,
             'pelaksanaan_skp' => $request->pelaksanaan_skp,
             'jenis_skp' => $request->jenis_skp,
-            'skp' => $request->skp,
+            'skp' => $request->skp ?? $skp_intervensi,
         ]);
         return redirect()->back()->with('success', 'SKP berhasil ditambah.');
     }

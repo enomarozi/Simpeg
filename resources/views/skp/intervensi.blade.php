@@ -71,10 +71,10 @@
 					            <td>{{ $intervensi->skp->skp ?? '-' }}</td> {{-- isi SKP --}}
 					            <td>
 					                @php
-					                    $status = $intervensi->status_display;
+					                    $status = $intervensi->status;
 					                    $statusClass = match($status) {
 					                        'diintervensi' => 'badge bg-warning',
-					                        'intervensi diterima' => 'badge bg-success',
+					                        'diterima' => 'badge bg-success',
 					                    };
 					                @endphp
 					                <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
