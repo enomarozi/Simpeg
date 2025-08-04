@@ -136,15 +136,15 @@ class IntervensiSKPController extends Controller
             return redirect()->back()->with('error', 'Intervensi tidak ditemukan atau gagal dihapus.');
         }
     }
-    public function indikatorGet($pegawai_id, $intervensi_id)
+    public function indikatorGet($pegawai_id)
     {   
-        $skp = SKP::where('pelaksanaan_skp', $intervensi_id)
-              ->where('atasan_id', $this->user->pegawai_id)
+        $skp = SKP::where('atasan_id', $this->user->pegawai_id)
               ->where('pegawai_id', $pegawai_id)
-              ->firstOrFail();
+              ->first();
         if($skp){
             $indikators = SKPIndikator::where('skp_id', $skp->id)->get(['id', 'indikator']);
             return response()->json($indikators);
         }
+        return response()->json([]);
     }
 }

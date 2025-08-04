@@ -81,6 +81,7 @@ class SKPController extends Controller
                 'jenis_skp'=>'required|min:1|max:2',
                 'skp'=>'required|string',
             ]);
+            $skp = $this->user->pegawai_id;
         }elseif($request->pelaksanaan_skp >= 1){
             $request->validate([
                 'periode_id'=>'required',
@@ -106,15 +107,17 @@ class SKPController extends Controller
             $skp_intervensi = SKP::with(['periode'])
                     ->Where('pegawai_id',$this->user->pegawai->atasan_id)
                     ->Where('id',$request->pelaksanaan_skp)
-                    ->value('skp');
+                    ->select('skp', 'intervensi_skp')
+                    ->first();
         }
         SKP::create([
             'pegawai_id' => $this->user->pegawai_id,
             'atasan_id'=> $this->user->pegawai->atasan_id,
             'periode_id' => $request->periode_id,
             'pelaksanaan_skp' => $request->pelaksanaan_skp,
+            'intervensi_skp' => $skp ?? $skp_intervensi->intervensi_skp,
             'jenis_skp' => $request->jenis_skp,
-            'skp' => $request->skp ?? $skp_intervensi,
+            'skp' => $request->skp ?? $skp_intervensi->skp,
         ]);
         return redirect()->back()->with('success', 'SKP berhasil ditambah.');
     }
@@ -133,8 +136,14 @@ class SKPController extends Controller
     {
         $skp = SKP::where('id', $id)
             ->where('pegawai_id', $this->user->pegawai_id)
-            ->firstOrFail();
-        $skp->delete();
+            ->select('skp', 'intervensi_skp')
+            ->first();
+        if($skp === null){
+            return redirect()->back()->with('error', 'SKP tidak ditemukan.');
+        }
+        $delete_skp = SKP::where('intervensi_skp',$skp->intervensi_skp)
+            ->where('skp',$skp->skp)
+            ->delete();
         return redirect()->back()->with('success', 'SKP berhasil dihapus.');
     }
     public function skpIndikatorAdd(Request $request)

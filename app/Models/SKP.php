@@ -13,6 +13,7 @@ class Skp extends Model
         'atasan_id',
         'periode_id',
         'pelaksanaan_skp',
+        'intervensi_skp',
         'jenis_skp',
         'skp',
         'status',

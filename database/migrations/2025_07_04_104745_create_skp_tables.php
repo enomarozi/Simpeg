@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('atasan_id')->constrained('pegawai')->onDelete('cascade');
             $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
             $table->unsignedBigInteger('pelaksanaan_skp');
+            $table->unsignedBigInteger('intervensi_skp');
             $table->unsignedTinyInteger('jenis_skp');
             $table->text('skp')->nullable();
             $table->enum('status', ['draft', 'disetujui', 'ditolak'])->default('draft');

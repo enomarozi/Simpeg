@@ -258,7 +258,7 @@
                     formIndikator.setAttribute('action', `/intervensi/intervensiSetuju`);
                     indikatorSetuju.innerHTML = '';
 
-                    fetch(`/intervensi/indikatorGet/${pegawaiId}/${intervensiId}`)
+                    fetch(`/intervensi/indikatorGet/${pegawaiId}`)
                         .then(response => {
                             if (!response.ok) throw new Error('Gagal mengambil data indikator.');
                             return response.json();
