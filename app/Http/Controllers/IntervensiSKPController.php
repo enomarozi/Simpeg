@@ -103,7 +103,7 @@ class IntervensiSKPController extends Controller
     public function intervensiSetuju(Request $request){
         $status = null;
         if($request->status === "setuju"){
-            $status = "diterima";
+            $status = "disetujui";
         }elseif($request->status === "tolak"){
             $status = "ditolak";
         }
@@ -112,12 +112,14 @@ class IntervensiSKPController extends Controller
         }
         $indikator = SKPIntervensi::where('skp_id', $request->skp_setuju)
                 ->where('id', $request->skpIndikator_setuju)
-                ->where('pegawai_id', $this->user->pegawai_id)
+                ->where('atasan_id', $this->user->pegawai_id)
                 ->first();
-        $skp = SKP::where('pegawai_id',$indikator->bawahan_id)
-                ->where('bawahan_id',$indikator->pegawai_id)
-                ->get();
-        if ($indikator) {
+        $skp = SKP::where('atasan_id',$this->user->pegawai_id)
+                ->where('pegawai_id',$indikator->pegawai_id)
+                ->first();
+        if ($skp && $indikator) {
+            $skp->status = $status;
+            $skp->save();
             $indikator->status = $status;
             $indikator->save();
             return back()->with('success', 'Status intervensi berhasil diupdate.');

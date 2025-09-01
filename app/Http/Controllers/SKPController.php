@@ -136,14 +136,20 @@ class SKPController extends Controller
     {
         $skp = SKP::where('id', $id)
             ->where('pegawai_id', $this->user->pegawai_id)
-            ->select('skp', 'intervensi_skp')
+            ->select('skp', 'intervensi_skp','pelaksanaan_skp')
             ->first();
         if($skp === null){
             return redirect()->back()->with('error', 'SKP tidak ditemukan.');
         }
-        $delete_skp = SKP::where('intervensi_skp',$skp->intervensi_skp)
-            ->where('skp',$skp->skp)
-            ->delete();
+        if($skp->pelaksanaan_skp == 0){
+            $delete_skp = SKP::where('intervensi_skp',$skp->intervensi_skp)
+                ->where('skp',$skp->skp)
+                ->delete();
+        }else{
+            $delete_skp = SKP::where('id',$id)
+                ->Where('pelaksanaan_skp',$skp->pelaksanaan_skp)
+                ->delete();
+        }
         return redirect()->back()->with('success', 'SKP berhasil dihapus.');
     }
     public function skpIndikatorAdd(Request $request)

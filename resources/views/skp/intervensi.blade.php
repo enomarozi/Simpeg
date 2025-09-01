@@ -73,8 +73,9 @@
 					                @php
 					                    $status = $intervensi->status;
 					                    $statusClass = match($status) {
-					                        'diintervensi' => 'badge bg-warning',
-					                        'diterima' => 'badge bg-success',
+					                        'draft' => 'badge bg-warning',
+					                        'disetujui' => 'badge bg-success',
+					                        'ditolak' => 'badge bg-danger',
 					                    };
 					                @endphp
 					                <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
