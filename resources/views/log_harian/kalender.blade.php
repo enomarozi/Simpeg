@@ -10,7 +10,7 @@
         <div class="card-body">
             <form action="{{ route('periodeKalender') }}" method="GET">
                 <div class="row align-items-end">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="periode_id" class="form-label fw-semibold">Periode SKP</label>
                         <select name="periode_id" id="periode_id" class="form-select" onchange="this.form.submit()" required>
                             <option value="" disabled {{ empty($periode ?? null) ? 'selected' : '' }}>-- Pilih Periode --</option>
@@ -23,7 +23,25 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label for="periode_id" class="form-label fw-semibold">Bulan</label>
+                        <select name="bulan" id="bulan" class="form-select" onchange="this.form.submit()" required>
+                            <option value="" disabled {{ empty($bulan ?? null) ? 'selected' : '' }}>-- Pilih Bulan --</option>
+                            <option value="1" {{ $bulan == 1 ? 'selected' : '' }}>Januari</option>
+                            <option value="2" {{ $bulan == 2 ? 'selected' : '' }}>Februari</option>
+                            <option value="3" {{ $bulan == 3 ? 'selected' : '' }}>Maret</option>
+                            <option value="4" {{ $bulan == 4 ? 'selected' : '' }}>April</option>
+                            <option value="5" {{ $bulan == 5 ? 'selected' : '' }}>Mei</option>
+                            <option value="6" {{ $bulan == 6 ? 'selected' : '' }}>Juni</option>
+                            <option value="7" {{ $bulan == 7 ? 'selected' : '' }}>Juli</option>
+                            <option value="8" {{ $bulan == 8 ? 'selected' : '' }}>Agustus</option>
+                            <option value="9" {{ $bulan == 9 ? 'selected' : '' }}>September</option>
+                            <option value="10" {{ $bulan == 10 ? 'selected' : '' }}>Oktober</option>
+                            <option value="11" {{ $bulan == 11 ? 'selected' : '' }}>November</option>
+                            <option value="12" {{ $bulan == 12 ? 'selected' : '' }}>Desember</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
                         <label for="unit_kerja" class="form-label fw-semibold">Unit Kerja</label>
                         <input type="text" id="unit_kerja" name="unit_kerja" class="form-control" value="Universitas Andalas" readonly>
                     </div>
@@ -34,16 +52,12 @@
     <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mb-3">
         <div class="d-flex align-items-center gap-3">
             <div class="d-flex align-items-center">
-                <span class="badge rounded-circle me-1" style="width:10px; height:10px; background-color: #f87171;"></span>
-                <span>Libur / Cuti</span>
-            </div>
-            <div class="d-flex align-items-center">
                 <span class="badge rounded-circle me-1" style="width:10px; height:10px; background-color: #34d399;"></span>
-                <span>Terisi (<span id="jumlah-terisi">0</span>)</span>
+                <span>Terisi (<span id="jumlah-terisi">{{ $terisi }}</span>)</span>
             </div>
             <div class="d-flex align-items-center">
                 <span class="badge rounded-circle me-1" style="width:10px; height:10px; background-color: #facc15;"></span>
-                <span>Belum Terisi (<span id="jumlah-belum">21</span>)</span>
+                <span>Belum Terisi (<span id="jumlah-belum">{{ $belum_terisi }}</span>)</span>
             </div>
         </div>
         <div class="d-flex gap-2">
@@ -53,27 +67,66 @@
                 </button>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalCetakLog">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCetakLog">
                     Cetak
                 </button>
             </div>
         </div>
     </div>
-    <table id="menus-table" class="table table-hover align-middle mb-0">
-        <thead class="table-secondary text-center">
-            <tr>
-                <th>#</th>
-                <th>Tanggal</th>
-                <th>SKP</th>
-                <th>Link / Tautan</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-            <tbody id="menus-tbody">
-        </tbody>
-    </table>
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+            <table id="menus-table" class="table table-hover align-middle mb-0">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Tanggal</th>
+                        <th>Aktivitas</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if(!empty($logHarian))
+                @foreach($logHarian as $index => $log)
+                    <tr>
+                        <td class="text-center align-top">{{ $index + 1 }}</td>
+                        <td class="text-center align-top">{{ $log->tanggal }}</td>
+                        <td class="text-center align-top">{{ $log->nama_aktivitas }}</td>
+                        <td class="text-center align-top">
+                            <div>
+                                <button 
+                                    type="button" 
+                                    class="btn btn-sm btn-outline-success btn-detail-log" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modelDetailLog" 
+                                    data-id="{{ $log->id }}"
+                                    data-pegawai_id="{{ $log->pegawai_id}} "
+                                    data-tanggal="{{ $log->tanggal }}"
+                                    data-nama_aktivitas="{{ $log->nama_aktivitas }}"
+                                    data-deskripsi="{{ $log->deskripsi }}"
+                                    data-skp="{{ $log->skp }}"
+                                    data-link="{{ $log->link }}"> 
+                                    <i class="bi bi-pencil-square me-1"></i> Detail 
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-primary btn-edit-log" data-bs-toggle="modal" data-bs-target="#modalEditLog" data-skp-id="{{ $log->id }}"> 
+                                    <i class="bi bi-pencil-square me-1"></i> Edit 
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-log" data-bs-toggle="modal" data-bs-target="#modalHapusLog" data-skp-id="{{ $log->id }}"> 
+                                    <i class="bi bi-trash3 me-1"></i> Hapus 
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+                @endif
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
 </div>
 @if(!empty($periode))
+<script src="{{ asset('assets/js/kalender.js') }}"></script>
 {{-- Modal Tambah Log --}}
 <div class="modal fade" id="modalTambahLog" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width-lx">
@@ -126,6 +179,86 @@
         </div>
         </div>
     </div>
-</div>  
+</div>
+{{-- Modal Detail Log --}}
+<div class="modal fade" id="modelDetailLog" tabindex="-1" aria-labelledby="modalDetailLogLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width-lx">
+    <div class="modal-content border border-success rounded-3">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalDetailLogLabel">Detail Log Aktivitas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+            <div class="mb-3">
+                <label for="modal-pegawai_id" class="form-label">Pegawai</label>
+                <input type="text" class="form-control" id="modal-pegawai_id" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="modal-tanggal" class="form-label">Tanggal</label>
+                <input type="date" class="form-control" id="modal-tanggal" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="modal-nama_aktivitas" class="form-label">Nama Aktivitas</label>
+                <input type="text" class="form-control" id="modal-nama_aktivitas" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="modal-deskripsi" class="form-label">Deskripsi</label>
+                <textarea class="form-control" id="modal-deskripsi" rows="3" readonly></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="modal-skp" class="form-label">SKP</label>
+                <input type="text" class="form-control" id="modal-skp" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="modal-link" class="form-label">Link</label>
+                <input type="url" class="form-control" id="modal-link" readonly>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        </div>
+    </div>
+    </div>
+</div>
+{{-- Modal Edit Log --}}
+<div class="modal fade" id="modelEditLog" tabindex="-1" aria-labelledby="modalEditLogLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width-lx">
+    <div class="modal-content border border-success rounded-3">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalEditLogLabel">Detail Edit Aktivitas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+            <div class="mb-3">
+                <label for="modal-tanggal" class="form-label">Tanggal</label>
+                <input type="date" class="form-control" id="modal-tanggal">
+            </div>
+            <div class="mb-3">
+                <label for="modal-nama_aktivitas" class="form-label">Nama Aktivitas</label>
+                <input type="text" class="form-control" id="modal-nama_aktivitas">
+            </div>
+            <div class="mb-3">
+                <label for="modal-deskripsi" class="form-label">Deskripsi</label>
+                <textarea class="form-control" id="modal-deskripsi" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="modal-skp" class="form-label">SKP</label>
+                <input type="text" class="form-control" id="modal-skp">
+            </div>
+            <div class="mb-3">
+                <label for="modal-link" class="form-label">Link</label>
+                <input type="url" class="form-control" id="modal-link">
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        </div>
+    </div>
+    </div>
+</div>
 @endif  
 @endsection

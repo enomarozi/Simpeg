@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{ SKPPeriode, SKP };
+use App\Models\{ SKPPeriode, SKP, Kalender};
+use Carbon\Carbon;
 
 class KalenderController extends Controller
 {
@@ -34,6 +35,7 @@ class KalenderController extends Controller
         return view("log_harian.kalender",[
             'title'=> $title,
             'user'=> $this->user,
+            'bulan'=>$request->bulan ?? null,
             'SKPPeriode'=> $SKPPeriode,
             'periode'=> $request->periode_id ?? null,
         ]);
@@ -47,22 +49,36 @@ class KalenderController extends Controller
             $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
         }
         $title = "SKP";
+        $bulanIni = $request->bulan;
+        $tanggal = Carbon::createFromDate($request->tahun, $bulanIni, 1);
         $daftarSkp = SKP::with(['periode'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->where('atasan_id',$this->user->pegawai->atasan_id)
             ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
             ->get();
+        $logHarian = Kalender::with(['periode'])
+            ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id',$this->user->pegawai->atasan_id)
+            ->where('periode_id', $request->periode_id)
+            ->whereMonth('tanggal', $bulanIni)
+            ->get();
+        $terisi = count($logHarian);
+        $belum_terisi = $tanggal->daysInMonth - $terisi;
         return view('log_harian.kalender',[
             'title'=> $title,
             'periode'=> $request->periode_id ?? null,
+            'bulan'=>$request->bulan ?? null,
+            'logHarian'=> $logHarian,
             'daftarSkp'=> $daftarSkp,
             'user'=> $this->user,
+            'terisi'=> $terisi ?? null,
+            'belum_terisi'=> $belum_terisi ?? null,
             'SKPPeriode' => $SKPPeriode,
         ]);
     }
     public function kalenderAdd(request $request)
-    {
+    { 
         $request->validate([
             'periode_id'=>'required',
             'tanggal'=>'required|date',
@@ -71,14 +87,23 @@ class KalenderController extends Controller
             'skp'=>'nullable|string',
             'link'=>'nullable|url',
         ]);
-        KalenderLog::create([
+        $exists = Kalender::where('tanggal', $request->tanggal)
+                  ->where('periode_id', $request->periode_id)
+                  ->where('pegawai_id', $this->user->pegawai_id)
+                  ->exists();
+        if($exists){
+            return redirect()->back()->with('error', 'Log Harian sudah ada.');
+        }
+        Kalender::create([
             'pegawai_id' => $this->user->pegawai_id,
             'atasan_id'=> $this->user->pegawai->atasan_id,
             'periode_id' => $request->periode_id,
-            'pelaksanaan_skp' => $request->pelaksanaan_skp,
-            'intervensi_skp' => $skp ?? $skp_intervensi->intervensi_skp,
-            'jenis_skp' => $request->jenis_skp,
-            'skp' => $request->skp ?? $skp_intervensi->skp,
+            'tanggal'=>$request->tanggal,
+            'nama_aktivitas'=>$request->nama_aktivitas,
+            'deskripsi' => $request->deskripsi,
+            'skp' => $request->skp,
+            'link' => $request->link,
         ]);
+        return redirect()->back()->with('success', 'Log Harian berhasil ditambah.');
     }
 }

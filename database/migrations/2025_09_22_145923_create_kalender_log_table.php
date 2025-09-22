@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('logs_harian', function (Blueprint $table) {
+        Schema::create('kalender_log', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
             $table->string('nama_aktivitas');
             $table->text('deskripsi');
             $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
+            $table->foreignId('atasan_id')->constrained('pegawai')->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
             $table->string('skp')->nullable();
             $table->string('link')->nullable();
             $table->timestamps();

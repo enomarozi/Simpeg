@@ -12,11 +12,17 @@ class Kalender extends Model
     protected $table = 'kalender_log';
 
     protected $fillable = [
+        'pegawai_id',
+        'atasan_id',
+        'periode_id',
         'tanggal',
         'nama_aktivitas',
         'deskripsi',
-        'periode_id',
         'skp',
         'link',
     ];
+    public function periode()
+    {
+        return $this->belongsTo(SkpPeriode::class, 'periode_id');
+    }
 }
