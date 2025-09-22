@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController, ManagemenUserController, PeriodeController, SKPEvaluasi};
+use App\Http\Controllers\{KalenderController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -66,6 +67,12 @@ Route::group(['prefix'=> 'intervensi'], function(){
 Route::group(['prefix'=> 'evaluasi'], function(){
 	Route::GET('/evaluasi_skp', [SKPEvaluasi::class, 'index'])->name('evaluasi_skp');
 	Route::GET('/evaluasi_skp_selected', [SKPEvaluasi::class, 'periode'])->name('periodeEvaluasi');
+});
+
+Route::group(['prefix'=> 'log'], function(){
+	Route::GET('/kalender', [KalenderController::class, 'index'])->name('kalender');
+	Route::GET('/kalender_selected',[KalenderController::class, 'periode'])->name('periodeKalender');
+	Route::POST('/kalenderAdd',[KalenderController::class, 'kalenderAdd'])->name('kalenderAdd');
 });
 
 

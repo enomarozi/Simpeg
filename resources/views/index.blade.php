@@ -81,6 +81,10 @@
     .modal-custom-width {
         max-width: 90% !important; /* atau nilai lain sesuai kebutuhan */
     }
+    .modal-custom-width-lx {
+        margin-top: -200px;
+        max-width: 100% !important; /* atau nilai lain sesuai kebutuhan */
+    }
 </style>
 <body>
 
@@ -155,10 +159,10 @@
                        aria-controls="submenu3">
                        Log Harian
                     </a>
-                    <div class="collapse" id="submenu3">
+                    <div class="collapse {{ Request::routeIs('kalender') ? 'show' : '' }}" id="submenu3">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="#">Kalender</a>
+                                <a class="nav-link {{ Request::routeIs('kalender') ? 'active' : '' }}" href="{{ route('kalender') }}">Kalender</a>
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link" href="#">Rekap & Capaian</a>
