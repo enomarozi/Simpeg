@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   modalDetailLog();
   modalEditLog();
+  modalHapusLog();
 });
 
 function modalDetailLog(){
@@ -48,6 +49,8 @@ function modalHapusLog(){
   modelHapusLog.addEventListener('show.bs.modal', function (event) {
     const button = event.relatedTarget;
     const log_id = button.getAttribute('data-hapus_id');
-    modelEditLog.querySelector('#modal_hapus_id').value = log_id;
+    const tanggal = button.getAttribute('data-hapus_tanggal');
+    modelHapusLog.querySelector('#modal_hapus_id').value = log_id;
+    modelHapusLog.querySelector('#modal-hapus_tanggal').innerText = `Apa anda yakin untuk menghapus Log Tanggal ${tanggal}`;
   });
 }

@@ -37,6 +37,8 @@ class KalenderController extends Controller
             'user'=> $this->user,
             'bulan'=>$request->bulan ?? null,
             'SKPPeriode'=> $SKPPeriode,
+            'terisi'=> null,
+            'belum_terisi' => null,
             'periode'=> $request->periode_id ?? null,
         ]);
     }
@@ -48,7 +50,7 @@ class KalenderController extends Controller
         if ($this->user->hasRole('pegawai') || $this->user->hasRole('atasan')){
             $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
         }
-        $title = "SKP";
+        $title = "Kalender";
         $bulanIni = $request->bulan;
         $tanggal = Carbon::createFromDate($request->tahun, $bulanIni, 1);
         $daftarSkp = SKP::with(['periode'])
@@ -151,6 +153,14 @@ class KalenderController extends Controller
         return redirect()->back()->with('success', 'Log Harian berhasil diupdate.');
     }
     public function kalenderHapus(request $request){
-        dd(123);
+        $kalender_exists = Kalender::where('id',$request->id)
+            ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $this->user->pegawai->atasan_id)
+            ->exists();
+        if($kalender_exists){
+            Kalender::destroy($request->id);
+            return redirect()->back()->with('success', 'Log Harian berhasil dihapus.');
+        }
+        return redirect()->back()->with('error', 'Log Harian gagal dihapus.');
     }
 }

@@ -158,13 +158,13 @@
                        aria-controls="submenu3">
                        Log Harian
                     </a>
-                    <div class="collapse {{ Request::routeIs('kalender') ? 'show' : '' }}" id="submenu3">
+                    <div class="collapse {{ Request::routeIs('kalender','periodeKalender','rekap','periodeRekap') ? 'show' : '' }}" id="submenu3">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
                                 <a class="nav-link {{ Request::routeIs('kalender') ? 'active' : '' }}" href="{{ route('kalender') }}">Kalender</a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a class="nav-link" href="#">Rekap & Capaian</a>
+                                <a class="nav-link {{ Request::routeIs('rekap') ? 'active' : '' }}" href="{{ route('rekap') }}">Rekap & Capaian</a>
                             </li>
                         </ul>
                     </div>

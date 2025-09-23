@@ -3,7 +3,7 @@
 <div class="container-fluid">
 	<div class="card mb-5 shadow-sm border-0">
         <div class="card-body">
-            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>Kalender</h4>
+            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>{{ $title }}</h4>
         </div>
     </div>
     <div class="card mb-4 bg-opacity-10 border">
@@ -126,7 +126,8 @@
                                     class="btn btn-sm btn-outline-danger btn-hapus-log" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#modelHapusLog" 
-                                    data-hapus_id="{{ $log->id }}"> 
+                                    data-hapus_id="{{ $log->id }}"
+                                    data-hapus_tanggal="{{ $log->tanggal }}"> 
                                     <i class="bi bi-trash3 me-1"></i> Hapus 
                                 </button>
                             </div>
@@ -196,7 +197,7 @@
 </div>
 {{-- Modal Detail Log --}}
 <div class="modal fade" id="modelDetailLog" tabindex="-1" aria-labelledby="modalDetailLogLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-custom-width-lx">
         <div class="modal-content border border-success rounded-3">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalDetailLogLabel">Detail Log Aktivitas</h5>
@@ -236,7 +237,7 @@
 </div>
 {{-- Modal Edit Log --}}
 <div class="modal fade" id="modelEditLog" tabindex="-1" aria-labelledby="modalEditLogLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-custom-width-lx">
         <div class="modal-content border border-success rounded-3">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalEditLogLabel">Detail Edit Aktivitas</h5>
@@ -288,6 +289,7 @@
                     <h5 class="modal-title" id="modalHapusLogLabel">Hapus Log Harian</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
+                <p id="modal-hapus_tanggal" class="mb-0 px-3 py-2 rounded text-center small"></p>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-danger">Hapus</button>
