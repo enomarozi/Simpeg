@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+  modalDetailLog();
+  modalEditLog();
+});
+
+function modalDetailLog(){
   const modelDetailLog = document.getElementById('modelDetailLog');
 
   modelDetailLog.addEventListener('show.bs.modal', function (event) {
@@ -17,4 +22,32 @@ document.addEventListener('DOMContentLoaded', function () {
     modelDetailLog.querySelector('#modal-skp').value = skp;
     modelDetailLog.querySelector('#modal-link').value = link;
   });
-});
+}
+
+function modalEditLog(){
+  const modelEditLog = document.getElementById('modelEditLog');
+
+  modelEditLog.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const log_id = button.getAttribute('data-edit_id');
+    const edit_nama_aktivitas = button.getAttribute('data-edit_nama_aktivitas');
+    const edit_deskripsi = button.getAttribute('data-edit_deskripsi');
+    const edit_skp = button.getAttribute('data-edit_skp');
+    const edit_link = button.getAttribute('data-edit_link');
+
+    modelEditLog.querySelector('#modal_edit_id').value = log_id;
+    modelEditLog.querySelector('#modal-edit_nama_aktivitas').value = edit_nama_aktivitas;
+    modelEditLog.querySelector('#modal-edit_deskripsi').value = edit_deskripsi;
+    modelEditLog.querySelector('#modal-edit_skp').value = edit_skp;
+    modelEditLog.querySelector('#modal-edit_link').value = edit_link;
+  });
+}
+
+function modalHapusLog(){
+  const modelHapusLog = document.getElementById('modelHapusLog');
+  modelHapusLog.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const log_id = button.getAttribute('data-hapus_id');
+    modelEditLog.querySelector('#modal_hapus_id').value = log_id;
+  });
+}

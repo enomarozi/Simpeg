@@ -26,11 +26,11 @@ class Skp extends Model
     }
     public function indikatorList()
     {
-        return $this->hasMany(\App\Models\SKPIndikator::class, 'skp_id');
+        return $this->hasMany(SKPIndikator::class, 'skp_id');
     }
     public function intervensi()
     {
-        return $this->belongsTo(\App\Models\SKPIntervensi::class, 'pelaksanaan_skp');
+        return $this->belongsTo(SKPIntervensi::class, 'pelaksanaan_skp');
     }
 }
 

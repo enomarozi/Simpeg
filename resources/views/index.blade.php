@@ -30,7 +30,7 @@
     .modal-content {
         background-color: #fefefe;
         width: 30%;
-        margin: 15% 35% 35%;
+        margin: 5% 35% 0% 35%;
         padding: 15px;
         border: 1px solid #888;
     }
@@ -79,11 +79,10 @@
         justify-content: center; 
     }
     .modal-custom-width {
-        max-width: 90% !important; /* atau nilai lain sesuai kebutuhan */
+        max-width: 90% !important;
     }
     .modal-custom-width-lx {
-        margin-top: -200px;
-        max-width: 100% !important; /* atau nilai lain sesuai kebutuhan */
+        max-width: 100% !important;
     }
 </style>
 <body>

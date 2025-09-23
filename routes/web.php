@@ -73,6 +73,8 @@ Route::group(['prefix'=> 'log'], function(){
 	Route::GET('/kalender', [KalenderController::class, 'index'])->name('kalender');
 	Route::GET('/kalender_selected',[KalenderController::class, 'periode'])->name('periodeKalender');
 	Route::POST('/kalenderAdd',[KalenderController::class, 'kalenderAdd'])->name('kalenderAdd');
+	Route::POST('/kalenderEdit',[KalenderController::class, 'kalenderEdit'])->name('kalenderEdit');
+	Route::POST('/kalenderHapus',[KalenderController::class, 'kalenderHapus'])->name('kalenderHapus');
 });
 
 

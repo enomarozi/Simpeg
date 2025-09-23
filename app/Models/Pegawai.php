@@ -40,4 +40,8 @@ class Pegawai extends Model
     {
         return $this->belongsTo(Pegawai::class, 'atasan_id');
     }
+    public function kalender()
+    {
+        return $this->hasMany(Kalender::class);
+    }
 }

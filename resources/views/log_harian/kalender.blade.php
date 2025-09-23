@@ -100,18 +100,33 @@
                                     data-bs-toggle="modal" 
                                     data-bs-target="#modelDetailLog" 
                                     data-id="{{ $log->id }}"
-                                    data-pegawai_id="{{ $log->pegawai_id}} "
+                                    data-pegawai_id="{{ $log->pegawai->nama }} "
                                     data-tanggal="{{ $log->tanggal }}"
                                     data-nama_aktivitas="{{ $log->nama_aktivitas }}"
                                     data-deskripsi="{{ $log->deskripsi }}"
-                                    data-skp="{{ $log->skp }}"
+                                    data-skp="{{ $log->skpRelasi->skp }}"
                                     data-link="{{ $log->link }}"> 
                                     <i class="bi bi-pencil-square me-1"></i> Detail 
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-primary btn-edit-log" data-bs-toggle="modal" data-bs-target="#modalEditLog" data-skp-id="{{ $log->id }}"> 
-                                    <i class="bi bi-pencil-square me-1"></i> Edit 
+                                <button 
+                                    type="button" 
+                                    class="btn btn-sm btn-outline-primary btn-edit-log" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modelEditLog" 
+                                    data-edit_id="{{ $log->id }}"
+                                    data-edit_tanggal="{{ $log->tanggal }}"
+                                    data-edit_nama_aktivitas="{{ $log->nama_aktivitas }}"
+                                    data-edit_deskripsi="{{ $log->deskripsi }}"
+                                    data-edit_skp="{{ $log->skpRelasi->id }}"
+                                    data-edit_link="{{ $log->link }}"> 
+                                    <i class="bi bi-pencil-square me-1"></i> Edit > 
                                 </button>
-                                <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-log" data-bs-toggle="modal" data-bs-target="#modalHapusLog" data-skp-id="{{ $log->id }}"> 
+                                <button 
+                                    type="button"
+                                    class="btn btn-sm btn-outline-danger btn-hapus-log" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#modelHapusLog" 
+                                    data-hapus_id="{{ $log->id }}"> 
                                     <i class="bi bi-trash3 me-1"></i> Hapus 
                                 </button>
                             </div>
@@ -126,7 +141,6 @@
     </div>
 </div>
 @if(!empty($periode))
-<script src="{{ asset('assets/js/kalender.js') }}"></script>
 {{-- Modal Tambah Log --}}
 <div class="modal fade" id="modalTambahLog" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
     <div class="modal-dialog modal-custom-width-lx">
@@ -141,35 +155,35 @@
                 <input type="hidden" name="periode_id" id="periode_id_hidden" value="{{ $periode }}">
                 <fieldset class="mb-3">
                     <legend class="fs-6 fw-bold">Aktivitas (Wajib Diisi)</legend>
-                        <div class="mb-3">
-                            <label for="tanggal" class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" id="tanggal" name="tanggal" value="2025-09-22" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="namaAktivitas" class="form-label">Nama Aktivitas</label>
-                            <input type="text" class="form-control" id="namaAktivitas" name="nama_aktivitas" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="deskripsi" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" minlength="10" required></textarea>
-                        <div class="form-text">Deskripsi minimal 10 karakter.</div>
-                        </div>
+                    <div class="mb-3">
+                        <label for="tanggal" class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" id="tanggal" name="tanggal" value="2025-09-22" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="namaAktivitas" class="form-label">Nama Aktivitas</label>
+                        <input type="text" class="form-control" id="namaAktivitas" name="nama_aktivitas" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="deskripsi" class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" minlength="10" required></textarea>
+                    <div class="form-text">Deskripsi minimal 10 karakter.</div>
+                    </div>
                 </fieldset>
                 <fieldset>
                     <legend class="fs-6 fw-bold">Tautan SKP & Output (Opsional)</legend>
-                        <div class="mb-3">
-                            <label for="skp" class="form-label">SKP</label>
-                            <select class="form-select" id="skp" name="skp">
-                                <option selected>- Silakan Pilih -</option>
-                                @foreach($daftarSkp as $skp)  
-                                    <option selected>{{ $skp->skp }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="link" class="form-label">Link / Tautan</label>
-                            <input type="url" class="form-control" id="link" name="link">
-                        </div>
+                    <div class="mb-3">
+                        <label for="skp" class="form-label">SKP</label>
+                        <select class="form-select" id="skp" name="skp">
+                            <option selected>- Silakan Pilih -</option>
+                            @foreach($daftarSkp as $skp)  
+                                <option value="{{ $skp->id }}">{{ $skp->skp }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="link" class="form-label">Link / Tautan</label>
+                        <input type="url" class="form-control" id="link" name="link">
+                    </div>
                 </fieldset>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -182,83 +196,106 @@
 </div>
 {{-- Modal Detail Log --}}
 <div class="modal fade" id="modelDetailLog" tabindex="-1" aria-labelledby="modalDetailLogLabel" aria-hidden="true">
-    <div class="modal-dialog modal-custom-width-lx">
-    <div class="modal-content border border-success rounded-3">
-        <div class="modal-header">
-            <h5 class="modal-title" id="modalDetailLogLabel">Detail Log Aktivitas</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog">
+        <div class="modal-content border border-success rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLogLabel">Detail Log Aktivitas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="modal-pegawai_id" class="form-label">Pegawai</label>
+                    <input type="text" class="form-control" id="modal-pegawai_id" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="modal-tanggal" class="form-label">Tanggal</label>
+                    <input type="date" class="form-control" id="modal-tanggal" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="modal-nama_aktivitas" class="form-label">Nama Aktivitas</label>
+                    <input type="text" class="form-control" id="modal-nama_aktivitas" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="modal-deskripsi" class="form-label">Deskripsi</label>
+                    <textarea class="form-control" id="modal-deskripsi" rows="3" readonly></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="modal-skp" class="form-label">SKP</label>
+                    <input type="text" class="form-control" id="modal-skp" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="modal-link" class="form-label">Link</label>
+                    <input type="url" class="form-control" id="modal-link" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
         </div>
-        <div class="modal-body">
-            <form>
-            <div class="mb-3">
-                <label for="modal-pegawai_id" class="form-label">Pegawai</label>
-                <input type="text" class="form-control" id="modal-pegawai_id" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="modal-tanggal" class="form-label">Tanggal</label>
-                <input type="date" class="form-control" id="modal-tanggal" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="modal-nama_aktivitas" class="form-label">Nama Aktivitas</label>
-                <input type="text" class="form-control" id="modal-nama_aktivitas" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="modal-deskripsi" class="form-label">Deskripsi</label>
-                <textarea class="form-control" id="modal-deskripsi" rows="3" readonly></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="modal-skp" class="form-label">SKP</label>
-                <input type="text" class="form-control" id="modal-skp" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="modal-link" class="form-label">Link</label>
-                <input type="url" class="form-control" id="modal-link" readonly>
-            </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        </div>
-    </div>
     </div>
 </div>
 {{-- Modal Edit Log --}}
 <div class="modal fade" id="modelEditLog" tabindex="-1" aria-labelledby="modalEditLogLabel" aria-hidden="true">
-    <div class="modal-dialog modal-custom-width-lx">
-    <div class="modal-content border border-success rounded-3">
-        <div class="modal-header">
-            <h5 class="modal-title" id="modalEditLogLabel">Detail Edit Aktivitas</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog">
+        <div class="modal-content border border-success rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditLogLabel">Detail Edit Aktivitas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('kalenderEdit') }}" method="POST">
+                @csrf
+                    <input type="hidden" class="form-control" name="periode_id" value="{{ $periode }}">
+                    <input type="hidden" class="form-control" id="modal_edit_id" name="id">
+                    <div class="mb-3">
+                        <label for="modal-edit_nama_aktivitas" class="form-label">Nama Aktivitas</label>
+                        <input type="text" class="form-control" id="modal-edit_nama_aktivitas" name="nama_aktivitas">
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal-edit_deskripsi" class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="modal-edit_deskripsi" rows="3" name="deskripsi"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal-edit_skp" class="form-label">SKP</label>
+                        <select class="form-select" id="modal-edit_skp" name="skp">
+                            <option selected>- Silakan Pilih -</option>
+                            @foreach($daftarSkp as $skp)  
+                                <option value="{{ $skp->id }}">{{ $skp->skp }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modal-edit_link" class="form-label">Link</label>
+                        <input type="url" class="form-control" id="modal-edit_link" name="link">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-            <form>
-            <div class="mb-3">
-                <label for="modal-tanggal" class="form-label">Tanggal</label>
-                <input type="date" class="form-control" id="modal-tanggal">
-            </div>
-            <div class="mb-3">
-                <label for="modal-nama_aktivitas" class="form-label">Nama Aktivitas</label>
-                <input type="text" class="form-control" id="modal-nama_aktivitas">
-            </div>
-            <div class="mb-3">
-                <label for="modal-deskripsi" class="form-label">Deskripsi</label>
-                <textarea class="form-control" id="modal-deskripsi" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="modal-skp" class="form-label">SKP</label>
-                <input type="text" class="form-control" id="modal-skp">
-            </div>
-            <div class="mb-3">
-                <label for="modal-link" class="form-label">Link</label>
-                <input type="url" class="form-control" id="modal-link">
-            </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-        </div>
-    </div>
     </div>
 </div>
-@endif  
+{{-- Modal Delete Point SKP --}}
+<div class="modal fade" id="modelHapusLog" tabindex="-1" aria-labelledby="modalHapusLogLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-width">
+        <div class="modal-content">
+            <form id="formHapusPoin" action="{{ route('kalenderHapus') }}"method="POST">
+                @csrf
+                <input type="hidden" class="form-control" id="modal_hapus_id" name="id">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="modalHapusLogLabel">Hapus Log Harian</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{{ asset('assets/js/kalender.js') }}"></script>
+@endif
 @endsection

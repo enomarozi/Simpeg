@@ -57,7 +57,7 @@ class KalenderController extends Controller
             ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
             ->get();
-        $logHarian = Kalender::with(['periode'])
+        $logHarian = Kalender::with(['periode','skpRelasi'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->where('atasan_id',$this->user->pegawai->atasan_id)
             ->where('periode_id', $request->periode_id)
@@ -65,6 +65,8 @@ class KalenderController extends Controller
             ->get();
         $terisi = count($logHarian);
         $belum_terisi = $tanggal->daysInMonth - $terisi;
+        
+    
         return view('log_harian.kalender',[
             'title'=> $title,
             'periode'=> $request->periode_id ?? null,
@@ -84,14 +86,22 @@ class KalenderController extends Controller
             'tanggal'=>'required|date',
             'nama_aktivitas'=>'required|string|min:3|max:255',
             'deskripsi'=>'required|string|min:5',
-            'skp'=>'nullable|string',
+            'skp'=>'nullable|integer',
             'link'=>'nullable|url',
         ]);
-        $exists = Kalender::where('tanggal', $request->tanggal)
+        $skp_exist = SKP::with(['periode'])
+                ->Where('id',$request->skp)
+                ->Where('pegawai_id',$this->user->pegawai_id)
+                ->Where('atasan_id',$this->user->pegawai->atasan_id)
+                ->first();
+        if(!$skp_exist){
+            return redirect()->back()->with('error', 'Gagal Menambah Log Harian.');
+        }    
+        $kalender_exists = Kalender::where('tanggal', $request->tanggal)
                   ->where('periode_id', $request->periode_id)
                   ->where('pegawai_id', $this->user->pegawai_id)
                   ->exists();
-        if($exists){
+        if($kalender_exists){
             return redirect()->back()->with('error', 'Log Harian sudah ada.');
         }
         Kalender::create([
@@ -105,5 +115,42 @@ class KalenderController extends Controller
             'link' => $request->link,
         ]);
         return redirect()->back()->with('success', 'Log Harian berhasil ditambah.');
+    }
+    public function kalenderEdit(request $request){
+        $kalender = Kalender::find($request->id);
+        if (!$kalender) {
+            return back()->with('error', 'Data tidak ditemukan.');
+        }
+        $request->validate([
+            'nama_aktivitas'=>'required|string|min:3|max:255',
+            'deskripsi'=>'required|string|min:5',
+            'skp'=>'nullable|string',
+            'link'=>'nullable|url',
+        ]);
+        $skp_exist = SKP::with(['periode'])
+                ->Where('id',$request->skp)
+                ->Where('pegawai_id',$this->user->pegawai_id)
+                ->Where('atasan_id',$this->user->pegawai->atasan_id)
+                ->first();
+        if(!$skp_exist){
+            return redirect()->back()->with('error', 'Gagal Menambah Log Harian.');
+        }   
+        $kalender_exists = Kalender::where('periode_id', $request->periode_id)
+                  ->where('pegawai_id', $this->user->pegawai_id)
+                  ->where('atasan_id', $this->user->pegawai->atasan_id)
+                  ->exists();
+        if(!$kalender_exists){
+            return redirect()->back()->with('error', 'Log Harian gagal diupdate.');
+        }
+        $kalender->update([
+            'nama_aktivitas'=>$request->nama_aktivitas,
+            'deskripsi' => $request->deskripsi,
+            'skp' => $request->skp,
+            'link' => $request->link,
+        ]);
+        return redirect()->back()->with('success', 'Log Harian berhasil diupdate.');
+    }
+    public function kalenderHapus(request $request){
+        dd(123);
     }
 }
