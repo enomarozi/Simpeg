@@ -78,6 +78,7 @@ Route::group(['prefix'=> 'log'], function(){
 
 	Route::GET('/rekap', [RekapController::class, 'index'])->name('rekap');
 	Route::GET('/rekap_selected',[RekapController::class, 'periode'])->name('periodeRekap');
+	Route::GET('/log-detail/{bulan}', [RekapController::class, 'getLogDetail']);
 });
 
 

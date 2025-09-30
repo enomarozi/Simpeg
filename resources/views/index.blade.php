@@ -84,6 +84,11 @@
     .modal-custom-width-lx {
         max-width: 100% !important;
     }
+    .modal-custom-max{
+        max-width: 90vw;
+        width: 90vw;
+
+    }
 </style>
 <body>
 
