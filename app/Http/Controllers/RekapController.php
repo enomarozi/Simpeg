@@ -71,27 +71,41 @@ class RekapController extends Controller
     public function getLogDetail($bulan)
     {
         $bulanMap = [
-        'Januari' => 1,
-        'Februari' => 2,
-        'Maret' => 3,
-        'April' => 4,
-        'Mei' => 5,
-        'Juni' => 6,
-        'Juli' => 7,
-        'Agustus' => 8,
-        'September' => 9,
-        'Oktober' => 10,
-        'November' => 11,
-        'Desember' => 12,
+            'Januari' => 1,
+            'Februari' => 2,
+            'Maret' => 3,
+            'April' => 4,
+            'Mei' => 5,
+            'Juni' => 6,
+            'Juli' => 7,
+            'Agustus' => 8,
+            'September' => 9,
+            'Oktober' => 10,
+            'November' => 11,
+            'Desember' => 12,
         ];
         $bulanAngka = $bulanMap[$bulan] ?? null;
-
         if (!$bulanAngka) {
             return response()->json(['error' => 'Bulan tidak valid'], 400);
         }
-
-        $logHarian = Kalender::whereMonth('tanggal', $bulanAngka)->get();
-
+        $logHarian = Kalender::whereMonth('tanggal', $bulanAngka)
+            ->with('skpRelasi','atasan')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'tanggal' => $item->tanggal,
+                    'nama_aktivitas' => $item->nama_aktivitas,
+                    'deskripsi' => $item->deskripsi,
+                    'periode_id' => $item->periode_id,
+                    'atasan' => $item->atasan->nama,
+                    'pegawai_id' => $item->pegawai_id,
+                    'skp' => $item->skpRelasi->skp ?? null,
+                    'link' => $item->link,
+                    'created_at' => $item->created_at,
+                    'updated_at' => $item->updated_at,
+                ];
+            });
         return response()->json($logHarian);
     }
 }

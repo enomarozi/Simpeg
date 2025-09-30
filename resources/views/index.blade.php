@@ -87,7 +87,17 @@
     .modal-custom-max{
         max-width: 90vw;
         width: 90vw;
-
+    }
+    .modal-content-rekap {
+        width: 80%;
+        margin: 5% 10% 0% 10%;
+        background-color: #fefefe;        
+        padding: 15px;
+        border: 1px solid #888;
+    }
+    .modal-custom-80 {
+        max-width: 80vw !important;
+        width: 80vw !important;
     }
 </style>
 <body>
@@ -170,6 +180,29 @@
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link {{ Request::routeIs('rekap') ? 'active' : '' }}" href="{{ route('rekap') }}">Rekap & Capaian</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle bi bi-menu-button-wide collapsed" 
+                       data-bs-toggle="collapse" 
+                       href="#submenu4" 
+                       role="button" 
+                       aria-expanded="false" 
+                       aria-controls="submenu4">
+                       Penilaian Staff
+                    </a>
+                    <div class="collapse {{ Request::routeIs('persetujuan_skp',) ? 'show' : '' }}" id="submenu4">
+                        <ul class="nav flex-column ms-3">
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ Request::routeIs('persetujuan_skp') ? 'active' : '' }}" href="{{ route('persetujuan_skp') }}">Persetujuan SKP</a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link " href="#">Penilaian Bulanan</a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link " href="#">Evaluasi Triwulan</a>
                             </li>
                         </ul>
                     </div>

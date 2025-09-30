@@ -29,6 +29,10 @@ class Kalender extends Model
     {
         return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
+    public function atasan()
+    {
+        return $this->belongsTo(Pegawai::class, 'atasan_id');
+    }
     public function skpRelasi()
     {
         return $this->belongsTo(Skp::class, 'skp');
