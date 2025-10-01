@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             })
             .catch(error => {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Gagal memuat data: ${error.message}</td></tr>`;
+                displayArea.textContent = 'Gagal memuat data: ' + error.message;
             });
         });
     });

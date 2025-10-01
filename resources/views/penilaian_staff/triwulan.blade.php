@@ -88,7 +88,6 @@
     </div>
     @endif
 </div>
-@endsection
 @if(!empty($periode))
 {{-- Modal Detail --}}
 <div class="modal fade" id="modelDetailLog" tabindex="-1" aria-labelledby="modalDetailLogLabel" aria-hidden="true">
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const id = this.getAttribute('data-id');
             const periode = this.getAttribute('data-periode');
-            const triwulan = this.getAttribute('data-triwulan'); // <- tambahkan ini!
+            const triwulan = this.getAttribute('data-triwulan');
             const tbody = document.getElementById('log-detail-tbody');
             tbody.innerHTML = '<tr><td colspan="7" class="text-center">Loading...</td></tr>';
             fetch(`getTriwulan/${id}/${periode}/${triwulan}`)
@@ -169,5 +168,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
 @endif
+@endsection

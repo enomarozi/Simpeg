@@ -84,6 +84,7 @@ Route::group(['prefix'=> 'log'], function(){
 
 Route::group(['prefix'=>'staff'], function(){
 	Route::GET('/persetujuan_skp',[PersetujuanSKPController::class, 'index'])->name('persetujuan_skp');
+	Route::GET('/periodePersetujuan_skp',[PersetujuanSKPController::class, 'periode'])->name('periodePersetujuan_skp');
 	Route::GET('/triwulan',[TriwulanController::class, 'index'])->name('triwulan');
 	Route::GET('/periodeTriwulan',[TriwulanController::class,'periode'])->name('periodeTriwulan');
 	Route::GET('/getTriwulan/{id}/{periode}/{triwulan}',[TriwulanController::class,'getTriwulanData'])->name('getTriwulan');
