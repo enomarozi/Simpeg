@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AccountsController, PegawaiController, RequestController, SKPController, IntervensiSKPController, KelolaPegawaiController, ManagemenUserController, PeriodeController, SKPEvaluasi};
 use App\Http\Controllers\{KalenderController, RekapController};
-use App\Http\Controllers\PenilaianStaff\{PersetujuanSKPController, TriwulanController};
+use App\Http\Controllers\{PersetujuanSKPController, TriwulanController};
 
 Route::GET('/',[AccountsController::class,'index'])->middleware('auth')->name("index");
 
@@ -85,6 +85,8 @@ Route::group(['prefix'=> 'log'], function(){
 Route::group(['prefix'=>'staff'], function(){
 	Route::GET('/persetujuan_skp',[PersetujuanSKPController::class, 'index'])->name('persetujuan_skp');
 	Route::GET('/triwulan',[TriwulanController::class, 'index'])->name('triwulan');
+	Route::GET('/periodeTriwulan',[TriwulanController::class,'periode'])->name('periodeTriwulan');
+	Route::GET('/getTriwulan/{id}/{periode}/{triwulan}',[TriwulanController::class,'getTriwulanData'])->name('getTriwulan');
 });
 
 

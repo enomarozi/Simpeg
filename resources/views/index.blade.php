@@ -99,6 +99,10 @@
         max-width: 80vw !important;
         width: 80vw !important;
     }
+    .nav-link.active {
+        color: #0d6efd !important;
+        font-weight: 600;
+    }
 </style>
 <body>
 
@@ -193,7 +197,7 @@
                        aria-controls="submenu4">
                        Penilaian Staff
                     </a>
-                    <div class="collapse {{ Request::routeIs('persetujuan_skp',) ? 'show' : '' }}" id="submenu4">
+                    <div class="collapse {{ Request::routeIs('persetujuan_skp','triwulan') ? 'show' : '' }}" id="submenu4">
                         <ul class="nav flex-column ms-3">
                             <li class="nav-item mb-2">
                                 <a class="nav-link {{ Request::routeIs('persetujuan_skp') ? 'active' : '' }}" href="{{ route('persetujuan_skp') }}">Persetujuan SKP</a>
@@ -202,7 +206,7 @@
                                 <a class="nav-link " href="#">Penilaian Bulanan</a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a class="nav-link " href="#">Evaluasi Triwulan</a>
+                                <a class="nav-link {{ Request::routeIs('triwulan') ? 'active' : '' }}" href="{{ route('triwulan') }}">Evaluasi Triwulan</a>
                             </li>
                         </ul>
                     </div>

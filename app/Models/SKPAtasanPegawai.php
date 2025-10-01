@@ -18,14 +18,10 @@ class SKPAtasanPegawai extends Model
     {
         return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
-
-    // Relasi ke atasan
     public function atasan()
     {
         return $this->belongsTo(Pegawai::class, 'atasan_id');
     }
-
-    // Relasi ke periode
     public function periode()
     {
         return $this->belongsTo(SkpPeriode::class, 'periode_id');
