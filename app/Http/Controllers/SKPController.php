@@ -214,4 +214,19 @@ class SKPController extends Controller
             return response()->json($indikators);
         }
     }
+    public function ajukanSKP($periode_id)
+    {
+        $activePeriode = SKPPeriode::where('is_active', 1)
+           ->where('id', $periode_id)
+           ->orderBy('updated_at', 'desc')
+           ->first();
+        if($activePeriode === null){
+            return redirect()->back()->with('error', 'Periode tidak active.');
+        }
+        $updateCount = SKP::where('periode_id', $periode_id)
+                   ->where('pegawai_id', $this->user->pegawai_id)
+                   ->where('status', 'draft')
+                   ->update(['status' => 'diajukan']);
+        return redirect()->back()->with('success', $updateCount.' SKP berhasil sudah diajukan.');
+    }
 }

@@ -158,8 +158,12 @@
                     <legend class="fs-6 fw-bold">Aktivitas (Wajib Diisi)</legend>
                     <div class="mb-3">
                         <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" id="tanggal" name="tanggal" value="2025-09-22" required>
+                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                     </div>
+                    <script>
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById('tanggal').value = today;
+                    </script>
                     <div class="mb-3">
                         <label for="namaAktivitas" class="form-label">Nama Aktivitas</label>
                         <input type="text" class="form-control" id="namaAktivitas" name="nama_aktivitas" required>

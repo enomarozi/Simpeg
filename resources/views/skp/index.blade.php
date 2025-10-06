@@ -77,9 +77,15 @@
 
     @if(!empty($periode))
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
+            <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#modalTambahSKP">
                 + Tambah SKP
             </button>
+            <form action="{{ route('ajukanSKP', ['periode_id' => $periode]) }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-primary">
+                    Ajukan SKP
+                </button>
+            </form>
         </div>
     @endif
     <div class="card mb-4">
@@ -96,16 +102,6 @@
                     SKP untuk periode ini belum tersedia.
                 </div>
             @else
-                @php
-                    $status = $skp->status ?? 'draft';
-                    $class = $status === 'disetujui' ? 'bg-success' : 'bg-warning';
-                @endphp
-                <div class="mb-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="fw-semibold">Status :</span>
-                        <span class="badge {{ $class }} px-3 py-2">{{ $statusSkp }}</span>
-                    </div>
-                </div>
                 <table class="table table-bordered">
                     <thead class="table-primary">
                         <tr>
@@ -133,6 +129,22 @@
                             </td>
                             <td>
                                 <div class="d-flex flex-column gap-2">
+                                    <div class="mb-3">
+                                        @php
+                                            $status = $skp->status ?? 'draft';
+                                            if ($status === 'disetujui') {
+                                                $class = 'bg-success';    
+                                            } elseif ($status === 'diajukan') {
+                                                $class = 'bg-primary'; 
+                                            } else {
+                                                $class = 'bg-warning';
+                                            }
+                                        @endphp
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="fw-semibold">Status :</span>
+                                            <span class="badge {{ $class }} px-3 py-2">{{ $skp->status }}</span>
+                                        </div>
+                                    </div>
                                     <ul class="mb-0">
                                         @forelse($skp->indikatorList as $indikator)
                                             <li>{{ $indikator->indikator }}</li>
@@ -165,16 +177,16 @@
                                         title="Edit SKP"> 
                                         <i class="bi bi-pencil-square"></i> 
                                     </button>
+                                    <button type="button" 
+                                        class="btn btn-sm btn-outline-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalHapusSkp" 
+                                        data-skp-id="{{ $skp->id }}" 
+                                        data-skp="{{ $skp->skp }}"
+                                        title="Hapus SKP">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 @endif
-                                <button type="button" 
-                                    class="btn btn-sm btn-outline-danger" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modalHapusSkp" 
-                                    data-skp-id="{{ $skp->id }}" 
-                                    data-skp="{{ $skp->skp }}"
-                                    title="Hapus SKP">
-                                    <i class="bi bi-trash"></i>
-                                </button>
                             </td>
                         </tr>
                         @endforeach
@@ -228,16 +240,16 @@
                                         title="Edit SKP"> 
                                         <i class="bi bi-pencil-square"></i> 
                                     </button>
+                                    <button type="button" 
+                                        class="btn btn-sm btn-outline-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalHapusSkp" 
+                                        data-skp-id="{{ $skp->id }}" 
+                                        data-skp="{{ $skp->skp }}"
+                                        title="Hapus SKP">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 @endif
-                                <button type="button" 
-                                    class="btn btn-sm btn-outline-danger" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modalHapusSkp" 
-                                    data-skp-id="{{ $skp->id }}" 
-                                    data-skp="{{ $skp->skp }}"
-                                    title="Hapus SKP">
-                                    <i class="bi bi-trash"></i>
-                                </button>
                             </td>
                         </tr>
                         @endforeach

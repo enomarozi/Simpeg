@@ -46,7 +46,7 @@
                         <th>#</th>
                         <th>Nama</th>
                         <th>Jabatan</th>
-                        <th>Status</th>
+                        <th>Status SKP</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -57,7 +57,7 @@
                             <td class="text-center align-top">{{ $index + 1 }}</td>
                             <td class="text-center align-top">{{ $staff->pegawai->nama }}</td>
                             <td class="text-center align-top">Pelaksana</td>
-                            <td class="text-center align-top">-</td>
+                            <td class="text-center align-top">{{ $countDiajukan[$staff->pegawai_id] ?? 0 }} diajukan</td>
                             <td class="text-center align-top">
                                 <div>
                                     <button 
@@ -66,8 +66,7 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#modelDetailLog" 
                                         data-id="{{ $staff->pegawai->id }}"
-                                        data-periode="{{ $staff->periode_id }}"
-                                        data-triwulan="{{ $staff->triwulan}}"> 
+                                        data-periode="{{ $staff->periode_id }}">
                                         <i class="bi bi-pencil-square me-1"></i> Detail 
                                     </button>
                                 </div>
@@ -82,4 +81,103 @@
     </div>
     @endif
 </div>
+@if(!empty($periode))
+{{-- Modal Detail --}}
+<div class="modal fade" id="modelDetailLog" tabindex="-1" aria-labelledby="modalDetailLogLabel" aria-hidden="true">
+    <div class="modal-dialog modal-custom-95">
+        <div class="modal-content modal-content-persetujuan border border-success rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDetailLogLabel">Detail SKP Staff</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <p>Loading...</p>
+            </div>
+            <form action="{{ route('actionDiajukan') }}" method="POST">
+                @csrf
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-danger" name="action" value="tolak">Ditolak</button>
+                    <button type="submit" class="btn btn-success" name="action" value="terima">Diterima</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded',function(){
+        var modelDetailLog = document.getElementById('modelDetailLog');
+        var modalContent = modelDetailLog.querySelector('#modalContent');
+        modelDetailLog.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            var pegawaiId = button.getAttribute('data-id');
+            var periodeId = button.getAttribute('data-periode');
+            modalContent.innerHTML = "<p>Loading..</p>";
+            fetch(`/staff/diajukan/${pegawaiId}/${periodeId}`)
+                .then(response=>response.json())
+                .then(data=>{
+                    const oldTextarea = modelDetailLog.querySelector('#indikator');
+                    if (oldTextarea) {
+                      oldTextarea.parentNode.remove();
+                    }
+                    if(!data.length){
+                        modalContent.innerHTML = "<p>Tidak ada SKP yg diajukan.</p>";
+                        return;
+                    }
+                    let html = `
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped align-middle">
+                            <thead class="table-primary text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Judul / Nama SKP</th>
+                                    <th>Status</th>
+                                    <th>Indikator</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    data.forEach((skp, index) => {
+                        let indikatorHTML = '<ul class="mb-0">';
+                        if (skp.indikator_list && skp.indikator_list.length > 0) {
+                            skp.indikator_list.forEach(indikator => {
+                                indikatorHTML += `<li>${indikator.indikator ?? '-'}</li>`;
+                            });
+                        } else {
+                            indikatorHTML += '<li><em class="text-muted">Belum ada indikator</em></li>';
+                        }
+                        indikatorHTML += '</ul>';
+                        html += `
+                          <tr>
+                            <td class="text-center">${index + 1}</td>
+                            <td>${skp.skp ?? '-'}</td>
+                            <td class="text-center">
+                              <span class="badge bg-primary">${skp.status}</span>
+                            </td>
+                            <td>${indikatorHTML}</td>
+                          </tr>
+                        `;
+                    });
+                    html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    `;
+                    modalContent.innerHTML = html;
+                    const textareaDiv = document.createElement('div');
+                    textareaDiv.classList.add('mb-3');
+                    textareaDiv.innerHTML = `
+                        <label for="indikator" class="form-label">Pesan ke Staff</label>
+                        <textarea name="pesan" id="pesan" class="form-control" rows="3"></textarea>
+                    `;
+                    const modalFooter = modelDetailLog.querySelector('.modal-footer');
+                    modalFooter.parentNode.insertBefore(textareaDiv, modalFooter);
+                })
+                .catch(()=>{
+                    modalContent.innerHTML = '<p>Gagal mengambil data SKP.</p>';
+                });
+        });
+    });
+</script>
+@endif
 @endsection

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('intervensi_skp');
             $table->unsignedTinyInteger('jenis_skp');
             $table->text('skp')->nullable();
-            $table->enum('status', ['draft', 'disetujui', 'ditolak'])->default('draft');
+            $table->enum('status', ['draft', 'diajukan', 'disetujui', 'ditolak'])->default('draft');
             $table->timestamps();
         });
     }

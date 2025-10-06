@@ -18,9 +18,9 @@
     <main class="bg-white bg-opacity-75 rounded-4 shadow p-4" style="max-width: 390px; width: 100%;">
         <div class="text-center mb-4">
             <img src="{{ asset('assets/images/unand.png') }}" alt="Logo Unand" class="mb-3" style="max-width: 120px;" />
-                <h5 class="fw-bold text-success lh-base">
-                SIMPEG - Sistem Informasi Pegawai
-                </h5> 
+            <h5 class="fw-bold text-success lh-base">
+            SIMPEG - Sistem Informasi Pegawai
+            </h5> 
         </div>
         <form action="{{ route('loginAction') }}" method="POST" autocomplete="off" novalidate>
         @csrf

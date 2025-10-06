@@ -14,9 +14,6 @@ class SKPIndikator extends Model
         'indikator',
     ];
 
-    /**
-     * Relasi ke model SKP (banyak indikator dimiliki oleh satu SKP).
-     */
     public function skp()
     {
         return $this->belongsTo(Skp::class, 'skp_id');

@@ -99,6 +99,17 @@
         max-width: 80vw !important;
         width: 80vw !important;
     }
+    .modal-content-persetujuan {
+        width: 95%;
+        margin: 5% 2.5% 0% 2.5%;
+        background-color: #fefefe;        
+        padding: 15px;
+        border: 1px solid #888;
+    }
+    .modal-custom-95 {
+        max-width: 95vw !important;
+        width: 95vw !important;
+    }
     .nav-link.active {
         color: #0d6efd !important;
         font-weight: 600;

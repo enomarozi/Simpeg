@@ -54,6 +54,7 @@ Route::group(['prefix'=> 'skp'], function(){
 	Route::POST('/skpIndikatorEdit', [SKPController::class, 'skpIndikatorEdit'])->name('skpIndikatorEdit');
 	Route::POST('/skpIndikatorDelete', [SKPController::class, 'skpIndikatorDelete'])->name('skpIndikatorDelete');
 	Route::GET('/skpIndikatorGet/{id}', [SKPController::class, 'skpIndikatorGet'])->name('skpIndikatorGet');
+	Route::POST('/ajukanSKP/{periode_id}', [SKPController::class, 'ajukanSKP'])->name('ajukanSKP');
 });
 
 Route::group(['prefix'=> 'intervensi'], function(){
@@ -85,6 +86,8 @@ Route::group(['prefix'=> 'log'], function(){
 Route::group(['prefix'=>'staff'], function(){
 	Route::GET('/persetujuan_skp',[PersetujuanSKPController::class, 'index'])->name('persetujuan_skp');
 	Route::GET('/periodePersetujuan_skp',[PersetujuanSKPController::class, 'periode'])->name('periodePersetujuan_skp');
+	Route::GET('/diajukan/{pegawai}/{periode}', [PersetujuanSKPController::class, 'getDiajukan'])->name('getDiajukan');
+	Route::POST('/actionDiajukan',[PersetujuanSKPController::class, 'actionDiajukan'])->name('actionDiajukan');
 	Route::GET('/triwulan',[TriwulanController::class, 'index'])->name('triwulan');
 	Route::GET('/periodeTriwulan',[TriwulanController::class,'periode'])->name('periodeTriwulan');
 	Route::GET('/getTriwulan/{id}/{periode}/{triwulan}',[TriwulanController::class,'getTriwulanData'])->name('getTriwulan');
