@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card mb-5 shadow-sm border-0">
         <div class="card-body">
-            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>Matrix Peran Hasil</h4>
+            <h4 class="fw-bold mb-0"><i class="bi bi-journal-check me-2"></i>{{ $title }}</h4>
         </div>
     </div>
     <div class="card mb-4 bg-opacity-10 border">
@@ -53,13 +53,12 @@
                     Data intervensi untuk periode ini belum tersedia.
                 </div>
             @else
-          		<table class="table table-bordered table-striped">
-				    <thead>
+          		<table class="table table-bordered align-middle table-hover mb-0">
+				    <thead class="table-primary text-center">
 				        <tr>
 				            <th>No</th>
 				            <th>Pegawai</th>
 				            <th>Isi SKP</th>
-				            <th>Status</th>
 				            <th>Action</th>
 				        </tr>
 				    </thead>
@@ -70,23 +69,9 @@
 					            <td>{{ $intervensi->bawahan->nama ?? '-' }}</td>
 					            <td>{{ $intervensi->skp->skp ?? '-' }}</td> {{-- isi SKP --}}
 					            <td>
-					                @php
-					                    $status = $intervensi->status;
-					                    $statusClass = match($status) {
-					                        'draft' => 'badge bg-warning',
-					                        'disetujui' => 'badge bg-success',
-					                        'ditolak' => 'badge bg-danger',
-					                    };
-					                @endphp
-					                <span class="{{ $statusClass }}">{{ ucfirst($status) }}</span>
-					            </td>
-					            <td>
 					            	<button 
 								    	type="button" 
 								    	class="btn btn-sm btn-primary btn-indikator" 
-								    	data-skp-id="{{ $intervensi->skp_id }}" 
-								    	data-intervensi-id="{{ $intervensi->id }}" 
-								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}" 
 								    	data-pegawai-id="{{ $intervensi->bawahan->id ?? '-' }}" 
 								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
 								    	Indikator
@@ -140,20 +125,20 @@
 	                        </select>
 	                    </div>
 	                    <div class="mb-3">
-	                        <label for="bawahan_id" class="form-label">Bawahan</label>
-	                        <select name="bawahan_id" id="bawahan_id" class="form-select" required>
-	                            <option value="" disabled selected>-- Pilih Bawahan --</option>
-	                                @foreach($daftarBawahan as $item)
-	                                    <option value="{{ $item->id }}">
-	                 						{{ $item->nama }}
+	                        <label for="staff_id" class="form-label">Staff</label>
+	                        <select name="staff_id" id="staff_id" class="form-select" required>
+	                            <option value="" disabled selected>-- Pilih Staff --</option>
+	                                @foreach($staffs as $item)
+	                                    <option value="{{ $item->pegawai->id }}">
+	                 						{{ $item->pegawai->nama }}
 	                                    </option>
 	                                @endforeach
 	                        </select>
 	                    </div>
 	                </div>
 	                <div class="modal-footer">
+	                	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
 	                    <button type="submit" class="btn btn-success">Simpan</button>
-	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
 	                </div>
 	            </div>
 	        </form>
@@ -163,25 +148,18 @@
 	<div class="modal fade" id="modalIndikatorIntervensi" tabindex="-1" aria-labelledby="modalIndikatorIntervensi" aria-hidden="true">
 	    <div class="modal-dialog modal-custom-width">
 	        <div class="modal-content">
-	            <form id="formIndikatorPoin" action="{{ route('intervensiSetuju') }}" method="POST">
-	                @csrf
-	                <input type="hidden" name="skp_setuju" id="skpIdIndikator">
-	                <input type="hidden" name="skpIndikator_setuju" id="intervensiIdIndikator">
-	                <input type="hidden" name="pegawai_id" id="pegawai_id">
-	                <div class="modal-header bg-primary text-white">
-	                    <h5 class="modal-title" id="modalIndikatorIntervensi">Indikator</h5>
-	                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-	                </div>
-	                <div class="modal-body">
-	                    <ul id="indikatorSetuju">
-	                    	<li></li>
-           				</ul>
-	                </div>
-	                <div class="modal-footer">
-	                    <button type="submit" class="btn btn-danger" name="status" value="tolak">Tolak</button>
-	                    <button type="submit" class="btn btn-primary" name="status" value="setuju">Setuju</button>
-	                </div>
-	            </form>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalIndikatorIntervensi">Indikator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <ul id="indikatorSetuju">
+                    	<li></li>
+       				</ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
 	        </div>
 	    </div>
 	</div>
@@ -189,8 +167,8 @@
 	<div class="modal fade" id="modalHapusIntervensi" tabindex="-1" aria-labelledby="modalHapusIntervensi" aria-hidden="true">
 	    <div class="modal-dialog modal-custom-width">
 	        <div class="modal-content">
-	            <form id="formHapusPoin" action="{{ route('intervensiDelete') }}" method="POST">
-	                @csrf
+	        	<form method="POST" action="{{ route('intervensiDelete') }}">
+	        		@csrf
 	                <input type="hidden" name="skp_id" id="hapusSkpId">
 	                <input type="hidden" name="intervensi_id" id="hapusIntervensiId">
 	                <div class="modal-header bg-danger text-white">
@@ -204,12 +182,11 @@
 	                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
 	                    <button type="submit" class="btn btn-danger">Hapus</button>
 	                </div>
-	            </form>
+                </form>
 	        </div>
 	    </div>
 	</div>
-@endif
-<script>
+	<script>
 	document.addEventListener('DOMContentLoaded', function () {
         const periodeSelect = document.getElementById('periode_id');
         const hiddenPeriodeInput = document.getElementById('periode_id_hidden');
@@ -240,23 +217,13 @@
         }
 
         const indikatorButtons = document.querySelectorAll('.btn-indikator');
-        const skpIdIndikator = document.getElementById('skpIdIndikator');
-        const intervensiIdIndikator = document.getElementById('intervensiIdIndikator');
-        const pegawaiIdIndikator = document.getElementById('pegawai_id')
         const indikatorSetuju = document.getElementById('indikatorSetuju');
-        const formIndikator = document.getElementById('formIndikatorPoin');
         const modalIndikatorEl = document.getElementById('modalIndikatorIntervensi');
 
-        if (indikatorButtons.length && skpIdIndikator && intervensiIdIndikator && indikatorSetuju && formIndikator && modalIndikatorEl) {
+        if (indikatorButtons.length && indikatorSetuju && modalIndikatorEl) {
             indikatorButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    const skpId = this.getAttribute('data-skp-id');
-                    skpIdIndikator.value = skpId;
-                    const intervensiId = this.getAttribute('data-intervensi-id');
-                    intervensiIdIndikator.value = intervensiId;
                     const pegawaiId = this.getAttribute('data-pegawai-id');
-                    pegawaiIdIndikator.value = pegawaiId;
-                    formIndikator.setAttribute('action', `/intervensi/intervensiSetuju`);
                     indikatorSetuju.innerHTML = '';
 
                     fetch(`/intervensi/indikatorGet/${pegawaiId}`)
@@ -282,4 +249,5 @@
         }
     });
 </script>
+@endif
 @endsection

@@ -14,7 +14,6 @@ class SKPIntervensi extends Model
         'pegawai_id',
         'periode_id',
         'skp_id',
-        'status',
     ];
 
     /**

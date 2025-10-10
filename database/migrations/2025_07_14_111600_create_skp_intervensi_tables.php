@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('cascade');
             $table->foreignId('periode_id')->constrained('skp_periode')->onDelete('cascade');
             $table->foreignId('skp_id')->constrained('skp')->onDelete('cascade');
-            $table->enum('status', ['draft', 'disetujui', 'ditolak'])->default('draft');
             $table->timestamps();
         });
     }

@@ -47,7 +47,10 @@ class IntervensiSKPController extends Controller
             $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
         }
         $title = "Intervensi";
-        $daftarBawahan = Pegawai::where('atasan_id', $this->user->pegawai_id)->get();
+        $staffs = SKPAtasanPegawai::with('pegawai')
+            ->where('atasan_id', $this->user->pegawai_id)
+            ->where('periode_id',$request->periode_id)
+            ->get();
         $daftarSkp = SKP::with(['periode', 'indikatorList'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->where('atasan_id', $this->user->pegawai->atasan_id)
@@ -64,17 +67,17 @@ class IntervensiSKPController extends Controller
             'user'=>$this->user,
             'SKPPeriode'=>$SKPPeriode,
             'daftarSkp'=>$daftarSkp,
-            'daftarBawahan'=>$daftarBawahan,
+            'staffs'=>$staffs,
             'daftarIntervensi'=>$daftarIntervensi,
         ]);
     }
     public function intervensiAdd(Request $request){
-        $bawahan_id = Pegawai::where('id', $request->bawahan_id)->value('atasan_id');
-        if(!$bawahan_id){
-            return redirect()->back()->with('error', 'Bawahan tidak ditemukan.');
+        $staff_id = Pegawai::where('id', $request->staff_id)->value('atasan_id');
+        if(!$staff_id){
+            return redirect()->back()->with('error', 'Staff tidak ditemukan.');
         }
         $request->validate([
-            'bawahan_id'=>'required|integer',
+            'staff_id'=>'required|integer',
             'periode_id'=>[
                 'required',
                 'integer',
@@ -86,7 +89,7 @@ class IntervensiSKPController extends Controller
         ]);
 
         $daftarIntervensi = SKPIntervensi::Where('skp_id',$request->skp_intervensi)
-                ->Where('pegawai_id',$request->bawahan_id)
+                ->Where('pegawai_id',$request->staff_id)
                 ->Where('atasan_id',$this->user->pegawai_id)
                 ->first();
         if($daftarIntervensi !== null){
@@ -94,38 +97,11 @@ class IntervensiSKPController extends Controller
         }
         $intervensi = SkpIntervensi::create([
             'atasan_id' => $this->user->pegawai_id,
-            'pegawai_id' => $request->bawahan_id,
+            'pegawai_id' => $request->staff_id,
             'periode_id' => $request->periode_id,
             'skp_id' => $request->skp_intervensi,
         ]);
         return redirect()->back()->with('success', 'Intervensi SKP berhasil ditambahkan.');
-    }
-    public function intervensiSetuju(Request $request){
-        $status = null;
-        if($request->status === "setuju"){
-            $status = "disetujui";
-        }elseif($request->status === "tolak"){
-            $status = "ditolak";
-        }
-        if (!$status) {
-            return back()->with('error', 'Status tidak valid.');
-        }
-        $indikator = SKPIntervensi::where('skp_id', $request->skp_setuju)
-                ->where('id', $request->skpIndikator_setuju)
-                ->where('atasan_id', $this->user->pegawai_id)
-                ->first();
-        $skp = SKP::where('atasan_id',$this->user->pegawai_id)
-                ->where('pegawai_id',$indikator->pegawai_id)
-                ->first();
-        if ($skp && $indikator) {
-            $skp->status = $status;
-            $skp->save();
-            $indikator->status = $status;
-            $indikator->save();
-            return back()->with('success', 'Status intervensi berhasil diupdate.');
-        } else {
-            return back()->with('error', 'Indikator tidak ditemukan atau tidak valid.');
-        }
     }
     public function intervensiDelete(Request $request){
         $intervensiDel = SKPIntervensi::where('id', $request->intervensi_id)

@@ -56,12 +56,8 @@ class SKPController extends Controller
             ->get();
         $daftarIntervensi = SKPIntervensi::with(['periode'])
             ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('periode_id', $request->periode_id)
             ->get();
-        $statusSkp = null;
-        if ($daftarSkp->isNotEmpty()) {
-            $statusSkp = $daftarSkp[0]->status;
-            $atasanId = Pegawai::find($daftarSkp[0]->atasan_id);
-        }
         return view('skp.index',[
             'title'=> $title,
             'periode'=> $request->periode_id ?? null,
@@ -69,7 +65,6 @@ class SKPController extends Controller
             'SKPPeriode' => $SKPPeriode,
             'daftarSkp' => $daftarSkp,
             'daftarIntervensi' => $daftarIntervensi,
-            'statusSkp' => $statusSkp,
         ]);
     }
     public function skpAdd(Request $request)
@@ -124,8 +119,8 @@ class SKPController extends Controller
     public function skpEdit(Request $request, $id){
         $skp = SKP::where('id', $id)
             ->where('pegawai_id', $this->user->pegawai_id)
+            ->where('pelaksanaan_skp',0)
             ->firstOrFail();
-
         $skp->update([
             'skp' => $request->skp,
             'jenis_skp' => $request->jenis_skp,
@@ -136,20 +131,14 @@ class SKPController extends Controller
     {
         $skp = SKP::where('id', $id)
             ->where('pegawai_id', $this->user->pegawai_id)
-            ->select('skp', 'intervensi_skp','pelaksanaan_skp')
+            ->where('pelaksanaan_skp',0)
             ->first();
         if($skp === null){
             return redirect()->back()->with('error', 'SKP tidak ditemukan.');
         }
-        if($skp->pelaksanaan_skp == 0){
-            $delete_skp = SKP::where('intervensi_skp',$skp->intervensi_skp)
-                ->where('skp',$skp->skp)
-                ->delete();
-        }else{
-            $delete_skp = SKP::where('id',$id)
-                ->Where('pelaksanaan_skp',$skp->pelaksanaan_skp)
-                ->delete();
-        }
+        $delete_skp = SKP::where('intervensi_skp',$skp->intervensi_skp)
+            ->where('skp',$skp->skp)
+            ->delete();
         return redirect()->back()->with('success', 'SKP berhasil dihapus.');
     }
     public function skpIndikatorAdd(Request $request)
@@ -158,8 +147,8 @@ class SKPController extends Controller
             ->where('pegawai_id', $this->user->pegawai_id)
             ->firstOrFail();
         $validated = $request->validate([
-            'skp_id' => ['required', 'integer', 'exists:skp,id'],
-            'indikator' => ['required', 'string', 'max:255'],
+            'skp_id' => 'required|integer|exists:skp,id',
+            'indikator' => 'required|string|max:255',
         ]);
         SKPIndikator::create([
             'skp_id'   => $validated['skp_id'],
@@ -168,17 +157,15 @@ class SKPController extends Controller
         return redirect()->back()->with('success', 'Poin indikator berhasil ditambahkan.');
     }
     public function skpIndikatorEdit(Request $request){
-        $skp_id = $request->skp_id;
-        $indikator_id = $request->input('indikator_id');
-        $skp = SKP::where('id', $skp_id)
+        $skp = SKP::where('id', $request->skp_id)
                   ->where('pegawai_id', $this->user->pegawai_id)
-                  ->firstOrFail();
+                  ->first();
         if (!$skp) {
             return redirect()->back()->with('error', 'SKP tidak ditemukan atau bukan milik Anda.');
         }
-        $indikator = SKPIndikator::where('id', $indikator_id)
-                        ->where('skp_id', $skp_id)
-                        ->firstOrFail();
+        $indikator = SKPIndikator::where('id', $request->indikator_id)
+                        ->where('skp_id', $request->skp_id)
+                        ->first();
         if (!$indikator) {
             return redirect()->back()->with('error', 'Indikator tidak ditemukan.');
         }
@@ -187,16 +174,14 @@ class SKPController extends Controller
         return redirect()->back()->with('success', 'Indikator berhasil diperbarui.');
     }
     public function skpIndikatorDelete(Request $request){
-        $skp_id = $request->input('skp_id');
-        $indikator_id = $request->input('indikator_id');
-        $skp = SKP::where('id', $skp_id)
+        $skp = SKP::where('id', $request->skp_id)
               ->where('pegawai_id', $this->user->pegawai_id)
-              ->firstOrFail();
+              ->first();
         if (!$skp) {
             return redirect()->back()->with('error', 'SKP tidak ditemukan atau bukan milik Anda.');
         }
-        $deleted = SKPIndikator::where('skp_id', $skp_id)
-                ->where('id', $indikator_id)
+        $deleted = SKPIndikator::where('skp_id', $request->skp_id)
+                ->where('id', $request->indikator_id)
                 ->delete();
         if ($deleted) {
             return redirect()->back()->with('success', 'Indikator berhasil dihapus.');
@@ -225,7 +210,7 @@ class SKPController extends Controller
         }
         $updateCount = SKP::where('periode_id', $periode_id)
                    ->where('pegawai_id', $this->user->pegawai_id)
-                   ->where('status', 'draft')
+                   ->whereIn('status', ['draft', 'ditolak'])
                    ->update(['status' => 'diajukan']);
         return redirect()->back()->with('success', $updateCount.' SKP berhasil sudah diajukan.');
     }

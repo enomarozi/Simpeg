@@ -167,7 +167,7 @@
                                 <a class="nav-link {{ Request::routeIs('rencana_skp') ? 'active' : '' }}" href="{{ route('rencana_skp') }}">Rencana SKP</a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a class="nav-link {{ Request::routeIs('intervensi_skp') ? 'active' : '' }}" href="{{ route('intervensi_skp') }}">Matriks Peran Hasil</a>
+                                <a class="nav-link {{ Request::routeIs('intervensi_skp') ? 'active' : '' }}" href="{{ route('intervensi_skp') }}">Intervensi SKP</a>
                             </li>
                             <li class="nav-item mb-2">
                                 <a class="nav-link {{ Request::routeIs('evaluasi_skp') ? 'active' : '' }}" href="{{ route('evaluasi_skp') }}">
