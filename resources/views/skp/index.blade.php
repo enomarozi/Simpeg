@@ -35,7 +35,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
+                <table class="table table-bordered align-middle mb-0">
                     <thead class="table-primary text-center">
                         <tr>
                             <th>Informasi</th>
@@ -102,8 +102,8 @@
                     SKP untuk periode ini belum tersedia.
                 </div>
             @else
-                <table class="table table-bordered">
-                    <thead class="table-primary">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead class="table-primary text-center">
                         <tr>
                             <th style="width: 40px;" class="text-center">No</th>
                             <th>Deskripsi SKP</th>
@@ -134,9 +134,11 @@
                                             $status = $skp->status ?? 'draft';
                                             if ($status === 'disetujui') {
                                                 $class = 'bg-success';    
+                                            } elseif ($status === 'ditolak') {
+                                                $class = 'bg-danger'; 
                                             } elseif ($status === 'diajukan') {
-                                                $class = 'bg-primary'; 
-                                            } else {
+                                                $class = 'bg-primary';
+                                            } else{
                                                 $class = 'bg-warning';
                                             }
                                         @endphp
@@ -208,6 +210,24 @@
                             </td>
                             <td>
                                 <div class="d-flex flex-column gap-2">
+                                    <div class="mb-3">
+                                        @php
+                                            $status = $skp->status ?? 'draft';
+                                            if ($status === 'disetujui') {
+                                                $class = 'bg-success';    
+                                            } elseif ($status === 'ditolak') {
+                                                $class = 'bg-danger'; 
+                                            } elseif ($status === 'diajukan') {
+                                                $class = 'bg-primary';
+                                            } else{
+                                                $class = 'bg-warning';
+                                            }
+                                        @endphp
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="fw-semibold">Status :</span>
+                                            <span class="badge {{ $class }} px-3 py-2">{{ $skp->status }}</span>
+                                        </div>
+                                    </div>
                                     <ul class="mb-0">
                                         @forelse($skp->indikatorList as $indikator)
                                             <li>{{ $indikator->indikator }}</li>

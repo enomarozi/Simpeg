@@ -89,6 +89,21 @@ class PersetujuanSKPController extends Controller
     }
     public function actionDiajukan(Request $request)
     {
-        dd(123);
+        $staffs = SKPAtasanPegawai::with('pegawai')
+            ->where('atasan_id', $this->user->pegawai_id)
+            ->where('periode_id',$request->periode_id)
+            ->where('pegawai_id',$request->pegawai_id)
+            ->first();
+        if (!in_array($request->action, ['ditolak', 'disetujui'])) {
+            return redirect()->back()->with('error', 'Gagal');
+        }
+        if(!$staffs){
+            return redirect()->back()->with('error', 'Gagal');
+        }
+        $skp = SKP::where('pegawai_id', $staffs->pegawai_id)
+            ->where('periode_id', $request->periode_id)
+            ->where('atasan_id', $this->user->pegawai_id)
+            ->update(['status' => $request->action]);
+        return redirect()->back()->with('success', 'Update Status SKP Pegawai berhasil.');
     }
 }

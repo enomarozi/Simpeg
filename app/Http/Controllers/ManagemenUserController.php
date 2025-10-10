@@ -41,7 +41,7 @@ class ManagemenUserController extends Controller
             'nama' => 'required|string|max:255',
             'nip_niku' => 'required|string|max:50|unique:users,username',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
             'konfirmasi' => 'required|same:password'
         ], 
         [
@@ -57,7 +57,7 @@ class ManagemenUserController extends Controller
             'email.unique' => 'Email sudah terdaftar.',
 
             'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 6 karakter.',
+            'password.min' => 'Password minimal 8 karakter.',
 
             'konfirmasi.required' => 'Konfirmasi password wajib diisi.',
             'konfirmasi.same' => 'Konfirmasi password tidak cocok dengan password.'
@@ -77,7 +77,7 @@ class ManagemenUserController extends Controller
             'nama' => 'required|string|max:255',
             'username' => 'required|string|max:50|unique:users,username,' . $id,
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:6',
+            'password' => 'nullable|string|min:8',
         ]);
 
         $user->name = $request->nama;
@@ -92,15 +92,15 @@ class ManagemenUserController extends Controller
     }
     public function set_id_pegawai(Request $request){
         $validated = $request->validate([
-            'username'   => ['required', 'string', 'exists:users,username'],
-            'pegawai_id' => ['nullable', 'exists:pegawai,id'],
+            'username'   => 'required|string|exists:users,username',
+            'pegawai_id' => 'nullable|exists:pegawai,id',
         ]);
         $user = User::where('username', $validated['username'])->first();
         if (!$user) {
             return back()->with('error', 'User tidak ditemukan.');
         }
         if ($user->username === 'administrator') {
-            return back()->withErrors(['error' => 'Aksi tidak diperbolehkan pada akun administrator.']);
+            return redirect()->back()->with('error', 'Gagal');
         }
         $user->update(['pegawai_id' => $validated['pegawai_id']]);
         return back()->with('success', 'Pegawai ID berhasil diperbarui.');
@@ -115,11 +115,8 @@ class ManagemenUserController extends Controller
         if (!$user) {
             return back()->withErrors(['error' => 'User tidak ditemukan.']);
         }
-        if ($user->username === 'administrator') {
-            return back()->withErrors(['error' => 'Aksi tidak diperbolehkan pada akun administrator.']);
-        }
-        if ($request->role === 'admin'){
-            return back()->withErrors(['error' => 'Role admin hanya boleh digunakan oleh akun dengan status administrator']);
+        if ($user->username === 'administrator' || $request->role === 'admin') {
+            return redirect()->back()->with('error', 'Gagal');
         }
         $user->syncRoles([$request->role]);
         return redirect()->back()->with('success', 'Role berhasil diperbarui.');
@@ -127,13 +124,11 @@ class ManagemenUserController extends Controller
     public function set_active_pegawai($id){
         $user = User::findOrFail($id);
         if ($user->username === 'administrator') {
-            return back()->withErrors(['error' => 'Aksi tidak diperbolehkan pada akun administrator.']);
+            return redirect()->back()->with('error', 'Gagal');
         }
         $user->is_active = $user->is_active ? 0 : 1;
         $user->save();
-
         $status = $user->is_active ? 'aktif' : 'nonaktif';
-
         return redirect()->back()->with('success', "User {$user->name} berhasil diubah menjadi {$status}.");
     }
 }

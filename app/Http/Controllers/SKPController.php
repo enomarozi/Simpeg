@@ -48,7 +48,7 @@ class SKPController extends Controller
             $SKPPeriode = SKPPeriode::where('is_active', 1)->get();
         }
         $title = "SKP";
-        $daftarSkp = SKP::with(['periode', 'indikatorList'])
+        $daftarSkp = SKP::with(['periode'])
             ->where('pegawai_id', $this->user->pegawai_id)
             ->where('atasan_id',$this->user->pegawai->atasan_id)
             ->where('periode_id', $request->periode_id)

@@ -12,20 +12,16 @@
         </button>
     </div>
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">{{ $title }}</h5>
-        </div>
         <div class="card-body p-2">
             <div class="table-responsive">
-                <table class="table table-bordered align-middle">
-                    <thead class="table-secondary text-center">
+                <table class="table table-bordered align-middle table-hover mb-0">
+                    <thead class="table-primary text-center">
                         <tr>
-                            <th scope="col">No</th>
+                            <th scope="col">#</th>
                             <th scope="col">Tahun</th>
                             <th scope="col">Mulai</th>
                             <th scope="col">Selesai</th>
                             <th scope="col">Status</th>
-                            <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,17 +37,6 @@
                                        title="Klik untuk {{ $periode->is_active ? 'nonaktifkan' : 'aktifkan' }}">
                                         <i class="bi {{ $periode->is_active ? 'bi-toggle-on' : 'bi-toggle-off' }} fs-5"></i>
                                     </a>
-                                </td>
-                                <td>
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-sm btn-danger" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#modalHapusPeriode" 
-                                        data-periode-id="{{ $periode->id }}"
-                                        data-periode-tahun="{{ $periode->tahun }}">
-                                        Hapus
-                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -79,8 +64,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="tahun" class="form-label">Tahun</label>
-                        <input type="number" class="form-control" name="tahun" id="tahun" required placeholder="2025" min="2020" max="2100">
+                        <input type="number" class="form-control" name="tahun" id="tahun" min="2020" max="2100" required>
                     </div>
+                    <script>
+                        const tahunSekarang = new Date().getFullYear();
+                        document.getElementById('tahun').placeholder = tahunSekarang;
+                    </script>
                     <div class="mb-3">
                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
                         <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai" required>
@@ -98,42 +87,4 @@
         </form>
     </div>
 </div>
-
-{{-- Modal Hapus Periode SKP --}}
-<div class="modal fade" id="modalHapusPeriode" tabindex="-1" aria-labelledby="modalHapusPeriode" aria-hidden="true">
-    <div class="modal-dialog modal-custom-width">
-        <div class="modal-content">
-            <form id="formHapusPoin" action="{{ route('skp_periode_del') }}" method="POST">
-                @csrf
-                <input type="hidden" name="periode_id" id="hapusPeriodeId">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="modalHapusPeriode">Hapus Periode</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="pesanKonfirmasi" class="text-center fw-semibold"></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const modal = document.getElementById('modalHapusPeriode');
-        modal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const periodeId = button.getAttribute('data-periode-id');
-            const periodeTahun = button.getAttribute('data-periode-tahun');
-
-            modal.querySelector('#hapusPeriodeId').value = periodeId;
-            const pesan = `Anda yakin ingin menghapus periode Tahun <strong>${periodeTahun}</strong>?<p class="text-danger"><i>( Akan menghapus seluruh SKP Pegawai 2026 )</i></p>`
-            modal.querySelector('#pesanKonfirmasi').innerHTML = pesan;
-        });
-    });
-</script>
 @endsection

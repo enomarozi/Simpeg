@@ -76,67 +76,67 @@
     <div class="card mb-4">
         <div class="card-body">
             <div class="table-responsive">
-            <table id="menus-table" class="table table-hover align-middle mb-0">
-                <thead class="table-primary text-center">
-                    <tr>
-                        <th>#</th>
-                        <th>Tanggal</th>
-                        <th>Aktivitas</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @if(!empty($logHarian))
-                @foreach($logHarian as $index => $log)
-                    <tr>
-                        <td class="text-center align-top">{{ $index + 1 }}</td>
-                        <td class="text-center align-top">{{ $log->tanggal }}</td>
-                        <td class="text-center align-top">{{ $log->nama_aktivitas }}</td>
-                        <td class="text-center align-top">
-                            <div>
-                                <button 
-                                    type="button" 
-                                    class="btn btn-sm btn-outline-success btn-detail-log" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modelDetailLog" 
-                                    data-id="{{ $log->id }}"
-                                    data-pegawai_id="{{ $log->pegawai->nama }} "
-                                    data-tanggal="{{ $log->tanggal }}"
-                                    data-nama_aktivitas="{{ $log->nama_aktivitas }}"
-                                    data-deskripsi="{{ $log->deskripsi }}"
-                                    data-skp="{{ $log->skpRelasi->skp }}"
-                                    data-link="{{ $log->link }}"> 
-                                    <i class="bi bi-pencil-square me-1"></i> Detail 
-                                </button>
-                                <button 
-                                    type="button" 
-                                    class="btn btn-sm btn-outline-primary btn-edit-log" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modelEditLog" 
-                                    data-edit_id="{{ $log->id }}"
-                                    data-edit_tanggal="{{ $log->tanggal }}"
-                                    data-edit_nama_aktivitas="{{ $log->nama_aktivitas }}"
-                                    data-edit_deskripsi="{{ $log->deskripsi }}"
-                                    data-edit_skp="{{ $log->skpRelasi->id }}"
-                                    data-edit_link="{{ $log->link }}"> 
-                                    <i class="bi bi-pencil-square me-1"></i> Edit > 
-                                </button>
-                                <button 
-                                    type="button"
-                                    class="btn btn-sm btn-outline-danger btn-hapus-log" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modelHapusLog" 
-                                    data-hapus_id="{{ $log->id }}"
-                                    data-hapus_tanggal="{{ $log->tanggal }}"> 
-                                    <i class="bi bi-trash3 me-1"></i> Hapus 
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-                @endif
-                </tbody>
-            </table>
+                <table id="menus-table" class="table table-bordered align-middle table-hover mb-0">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Tanggal</th>
+                            <th>Aktivitas</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @if(!empty($logHarian))
+                    @foreach($logHarian as $index => $log)
+                        <tr>
+                            <td class="text-center align-top">{{ $index + 1 }}</td>
+                            <td class="text-center align-top">{{ $log->tanggal }}</td>
+                            <td class="text-center align-top">{{ $log->nama_aktivitas }}</td>
+                            <td class="text-center align-top">
+                                <div>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-sm btn-outline-success btn-detail-log" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modelDetailLog" 
+                                        data-id="{{ $log->id }}"
+                                        data-pegawai_id="{{ $log->pegawai->nama }} "
+                                        data-tanggal="{{ $log->tanggal }}"
+                                        data-nama_aktivitas="{{ $log->nama_aktivitas }}"
+                                        data-deskripsi="{{ $log->deskripsi }}"
+                                        data-skp="{{ $log->skpRelasi->skp }}"
+                                        data-link="{{ $log->link }}"> 
+                                        <i class="bi bi-pencil-square me-1"></i> Detail 
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-sm btn-outline-primary btn-edit-log" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modelEditLog" 
+                                        data-edit_id="{{ $log->id }}"
+                                        data-edit_tanggal="{{ $log->tanggal }}"
+                                        data-edit_nama_aktivitas="{{ $log->nama_aktivitas }}"
+                                        data-edit_deskripsi="{{ $log->deskripsi }}"
+                                        data-edit_skp="{{ $log->skpRelasi->id }}"
+                                        data-edit_link="{{ $log->link }}"> 
+                                        <i class="bi bi-pencil-square me-1"></i> Edit > 
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        class="btn btn-sm btn-outline-danger btn-hapus-log" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modelHapusLog" 
+                                        data-hapus_id="{{ $log->id }}"
+                                        data-hapus_tanggal="{{ $log->tanggal }}"> 
+                                        <i class="bi bi-trash3 me-1"></i> Hapus 
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    @endif
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

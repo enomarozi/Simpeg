@@ -95,10 +95,12 @@
             </div>
             <form action="{{ route('actionDiajukan') }}" method="POST">
                 @csrf
+                <input type="hidden" id='pegawai_id' name='pegawai_id'>
+                <input type="hidden" id='periode_id_ajukan' name='periode_id'>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-danger" name="action" value="tolak">Ditolak</button>
-                    <button type="submit" class="btn btn-success" name="action" value="terima">Diterima</button>
+                    <button type="submit" class="btn btn-danger" name="action" value="ditolak">Ditolak</button>
+                    <button type="submit" class="btn btn-success" name="action" value="disetujui">Diterima</button>
                 </div>
             </form>
         </div>
@@ -112,6 +114,8 @@
             const button = event.relatedTarget;
             var pegawaiId = button.getAttribute('data-id');
             var periodeId = button.getAttribute('data-periode');
+            document.getElementById('pegawai_id').value = pegawaiId;
+            document.getElementById('periode_id_ajukan').value = periodeId;
             modalContent.innerHTML = "<p>Loading..</p>";
             fetch(`/staff/diajukan/${pegawaiId}/${periodeId}`)
                 .then(response=>response.json())

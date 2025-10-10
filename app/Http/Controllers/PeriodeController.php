@@ -51,14 +51,6 @@ class PeriodeController extends Controller
         $periode->save();
         return redirect()->back()->with('success', "Status periode berhasil diubah.");
     }
-    public function skp_periode_del(Request $request){
-        $periode = SKPPeriode::find($request->periode_id);
-        if (!$periode) {
-            return redirect()->back()->withErrors(['error' => 'Periode tidak ditemukan.']);
-        }
-        $periode->delete();
-        return redirect()->back()->with('success', 'Periode berhasil dihapus.');
-    }
 }
 
 

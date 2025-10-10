@@ -93,27 +93,22 @@ class AccountsController extends Controller
         $request->validate([
             'username' => 'required|string',
         ]);
-
         $user = User::where('email', $request->username)
                 ->orWhere('username', $request->username)
                 ->first();
-
         if (!$user) {
             return redirect()->back()->withErrors(['error' => 'User not found.']);
         }
-
         $token = Str::random(60);
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $user->email],
             ['token' => $token, 'created_at' => Carbon::now()]
         );
-
         Mail::send('emails.reset_password', ['token' => $token], function($message) use($user) {
             $message->to($user->email);
             $message->subject('Reset Password');
         });
         return back()->with('success', 'We have e-mailed your password reset link!');
-
     }
     public function showResetPasswordForm($token)
     {
