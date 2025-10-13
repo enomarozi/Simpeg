@@ -144,7 +144,7 @@
                                         @endphp
                                         <div class="d-flex align-items-center gap-3">
                                             <span class="fw-semibold">Status :</span>
-                                            <span class="badge {{ $class }} px-3 py-2">{{ $skp->status }}</span>
+                                            <span class="badge {{ $class }} px-3 py-2">{{ ucfirst($skp->status) }}</span>
                                         </div>
                                     </div>
                                     <ul class="mb-0">
@@ -225,7 +225,7 @@
                                         @endphp
                                         <div class="d-flex align-items-center gap-3">
                                             <span class="fw-semibold">Status :</span>
-                                            <span class="badge {{ $class }} px-3 py-2">{{ $skp->status }}</span>
+                                            <span class="badge {{ $class }} px-3 py-2">{{ ucfirst($skp->status) }}</span>
                                         </div>
                                     </div>
                                     <ul class="mb-0">

@@ -142,12 +142,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     return data;
                 })
                 .then(data => {
+                    const logs = Array.isArray(data) ? data : Object.values(data);
                     tbody.innerHTML = '';
                     if (data.length === 0) {
                         tbody.innerHTML = '<tr><td colspan="7" class="text-center">Tidak ada data log untuk triwulan ini.</td></tr>';
                         return;
                     }
-                    data.forEach((log, index) => {
+                    logs.forEach((log, index) => {
                         const row = `
                             <tr>
                                 <td class="text-center align-top">${index + 1}</td>

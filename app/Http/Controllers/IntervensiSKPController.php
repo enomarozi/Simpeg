@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIntervensi, SKPAtasanPegawai, SKPIndikator};
+use App\Models\{ SKPPeriode, Pegawai, SKP, SKPIntervensi, SKPAtasanPegawai};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -55,10 +55,12 @@ class IntervensiSKPController extends Controller
             ->where('pegawai_id', $this->user->pegawai_id)
             ->where('atasan_id', $this->user->pegawai->atasan_id)
             ->where('periode_id', $request->periode_id)
+            ->where('status','disetujui')
             ->orderBy('created_at', 'desc')
             ->get();
         $daftarIntervensi = SKPIntervensi::with(['periode'])
             ->where('atasan_id', $this->user->pegawai_id)
+            ->where('periode_id', $request->periode_id)
             ->orderBy('created_at', 'desc')
             ->get();
         return view('skp.intervensi',[
@@ -72,9 +74,14 @@ class IntervensiSKPController extends Controller
         ]);
     }
     public function intervensiAdd(Request $request){
-        $staff_id = Pegawai::where('id', $request->staff_id)->value('atasan_id');
-        if(!$staff_id){
-            return redirect()->back()->with('error', 'Staff tidak ditemukan.');
+        $checkSKP = SKP::where('pegawai_id', $this->user->pegawai_id)
+            ->where('atasan_id', $this->user->pegawai->atasan_id)
+            ->where('periode_id', $request->periode_id)
+            ->where('status','disetujui')
+            ->orderBy('created_at', 'desc')
+            ->first();
+        if(!$checkSKP){
+            return redirect()->back()->with('error', 'Gagal.');
         }
         $request->validate([
             'staff_id'=>'required|integer',
@@ -107,22 +114,12 @@ class IntervensiSKPController extends Controller
         $intervensiDel = SKPIntervensi::where('id', $request->intervensi_id)
             ->where('skp_id', $request->skp_id)
             ->where('atasan_id', $this->user->pegawai_id)
+            ->where('pegawai_id', $request->staff_id)
             ->delete();
         if ($intervensiDel) {
             return redirect()->back()->with('success', 'Intervensi berhasil dihapus.');
         } else {
             return redirect()->back()->with('error', 'Intervensi tidak ditemukan atau gagal dihapus.');
         }
-    }
-    public function indikatorGet($pegawai_id)
-    {   
-        $skp = SKP::where('atasan_id', $this->user->pegawai_id)
-              ->where('pegawai_id', $pegawai_id)
-              ->first();
-        if($skp){
-            $indikators = SKPIndikator::where('skp_id', $skp->id)->get(['id', 'indikator']);
-            return response()->json($indikators);
-        }
-        return response()->json([]);
     }
 }

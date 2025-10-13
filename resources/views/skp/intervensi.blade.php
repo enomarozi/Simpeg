@@ -69,13 +69,6 @@
 					            <td>{{ $intervensi->bawahan->nama ?? '-' }}</td>
 					            <td>{{ $intervensi->skp->skp ?? '-' }}</td> {{-- isi SKP --}}
 					            <td>
-					            	<button 
-								    	type="button" 
-								    	class="btn btn-sm btn-primary btn-indikator" 
-								    	data-pegawai-id="{{ $intervensi->bawahan->id ?? '-' }}" 
-								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
-								    	Indikator
-									</button>
 								    <button 
 								    	type="button" 
 								    	class="btn btn-sm btn-danger" 
@@ -83,9 +76,8 @@
 								    	data-bs-target="#modalHapusIntervensi" 
 								    	data-skp-id="{{ $intervensi->skp_id }}" 
 								    	data-intervensi-id="{{ $intervensi->id }}" 
-								    	data-nama="{{ $intervensi->bawahan->nama ?? '-' }}"
-								    	data-pegawai-id="{{ $intervensi->bawahan->id ?? '-' }}" 
-								    	data-intervensi="{{ $intervensi->skp->skp ?? '-' }}">
+								    	data-staff-id="{{ $intervensi->bawahan->id ?? '-' }}"
+								    	data-skp-nama="{{ $intervensi->skp->skp ?? '-' }}">
 								    	Hapus
 									</button>
 								</td>
@@ -98,7 +90,6 @@
         </div>
     </div>
 </div>
-
 
 @if(!empty($periode))
 	{{-- Modal Tambah Intervensi SKP --}}
@@ -144,25 +135,6 @@
 	        </form>
 	    </div>
 	</div>
-	{{-- Modal Indikator Intervensi SKP --}}
-	<div class="modal fade" id="modalIndikatorIntervensi" tabindex="-1" aria-labelledby="modalIndikatorIntervensi" aria-hidden="true">
-	    <div class="modal-dialog modal-custom-width">
-	        <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalIndikatorIntervensi">Indikator</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                </div>
-                <div class="modal-body">
-                    <ul id="indikatorSetuju">
-                    	<li></li>
-       				</ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-	        </div>
-	    </div>
-	</div>
 	{{-- Modal Hapus Intervensi SKP --}}
 	<div class="modal fade" id="modalHapusIntervensi" tabindex="-1" aria-labelledby="modalHapusIntervensi" aria-hidden="true">
 	    <div class="modal-dialog modal-custom-width">
@@ -170,6 +142,7 @@
 	        	<form method="POST" action="{{ route('intervensiDelete') }}">
 	        		@csrf
 	                <input type="hidden" name="skp_id" id="hapusSkpId">
+	                <input type="hidden" name="staff_id" id="hapusStaffIntervensi">
 	                <input type="hidden" name="intervensi_id" id="hapusIntervensiId">
 	                <div class="modal-header bg-danger text-white">
 	                    <h5 class="modal-title" id="modalHapusIntervensi">Hapus Intervensi</h5>
@@ -204,47 +177,17 @@
                 if (!button) return;
 
                 const skpId = button.getAttribute('data-skp-id');
+                const staffId = button.getAttribute('data-staff-id');
                 const intervensiId = button.getAttribute('data-intervensi-id');
-                const nama = button.getAttribute('data-nama');
+                const nama = button.getAttribute('data-skp-nama');
                 const intervensi = button.getAttribute('data-intervensi');
 
                 modalHapus.querySelector('#hapusSkpId').value = skpId;
+                modalHapus.querySelector('#hapusStaffIntervensi').value = staffId;
                 modalHapus.querySelector('#hapusIntervensiId').value = intervensiId;
 
-                const pesan = `Hapus intervensi <strong>${nama}</strong> (SKP: <em>${intervensi}</em>)?`;
+                const pesan = `Hapus intervensi SKP <strong>${nama}</strong>?`;
                 modalHapus.querySelector('#pesanKonfirmasi').innerHTML = pesan;
-            });
-        }
-
-        const indikatorButtons = document.querySelectorAll('.btn-indikator');
-        const indikatorSetuju = document.getElementById('indikatorSetuju');
-        const modalIndikatorEl = document.getElementById('modalIndikatorIntervensi');
-
-        if (indikatorButtons.length && indikatorSetuju && modalIndikatorEl) {
-            indikatorButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const pegawaiId = this.getAttribute('data-pegawai-id');
-                    indikatorSetuju.innerHTML = '';
-
-                    fetch(`/intervensi/indikatorGet/${pegawaiId}`)
-                        .then(response => {
-                            if (!response.ok) throw new Error('Gagal mengambil data indikator.');
-                            return response.json();
-                        })
-                        .then(data => {
-                            data.forEach(indikator => {
-                                const li = document.createElement('li');
-                                li.textContent = indikator.indikator;
-                                indikatorSetuju.appendChild(li);
-                            });
-
-                            const modal = new bootstrap.Modal(modalIndikatorEl);
-                            modal.show();
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                        });
-                });
             });
         }
     });

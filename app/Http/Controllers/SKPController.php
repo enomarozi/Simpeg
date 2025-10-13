@@ -212,6 +212,9 @@ class SKPController extends Controller
                    ->where('pegawai_id', $this->user->pegawai_id)
                    ->whereIn('status', ['draft', 'ditolak'])
                    ->update(['status' => 'diajukan']);
+        if($updateCount == 0){
+            return redirect()->back()->with('error', 'Tidak ada SKP yg diajukan.');
+        }
         return redirect()->back()->with('success', $updateCount.' SKP berhasil sudah diajukan.');
     }
 }

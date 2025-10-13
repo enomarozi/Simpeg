@@ -62,7 +62,6 @@ Route::group(['prefix'=> 'intervensi'], function(){
 	Route::POST('/intervensiAdd', [IntervensiSKPController::class, 'intervensiAdd'])->name('intervensiAdd');
 	Route::POST('/intervensiDelete', [IntervensiSKPController::class, 'intervensiDelete'])->name('intervensiDelete');
 	Route::POST('/intervensiSetuju',[IntervensiSKPController::class, 'intervensiSetuju'])->name('intervensiSetuju');
-	Route::GET('/indikatorGet/{pegawai_id}', [IntervensiSKPController::class, 'indikatorGet'])->name('indikatorGet');
 });
 
 Route::group(['prefix'=> 'evaluasi'], function(){
