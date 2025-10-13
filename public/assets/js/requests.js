@@ -10,7 +10,7 @@ function action(){
 		const tanggal_lahir = document.querySelector('input[name="tanggal_lahir"]').value;
 		const status_kepegawaian = document.querySelector('select[name="status_kepegawaian"]').value;
 		const fakultas_id = document.querySelector('select[name="fakultas_id"]').value;
-		const departemen_id = document.querySelector('select[name="departemen_id"]').value;		
+		// const departemen_id = document.querySelector('select[name="departemen_id"]').value;		
 		// Biodata Pribadi
 		const gender = document.querySelector('input[name="gender"]:checked').value;
 		const agama = document.querySelector('select[name="agama"]').value;
@@ -64,7 +64,7 @@ function action(){
 		const diputuskan_jabatan_s = document.querySelector('input[name="diputuskan_jabatan_s"]').value;
 		const no_surat_s = document.querySelector('input[name="no_surat_s"]').value;
 		const tgl_sk_s = document.querySelector('input[name="tgl_sk_s"]').value;
-		fetch('/api/update_pegawai',{
+		fetch(`/admin/pegawai/update/${pegawai_id}`,{
 			method: "POST",
 			headers: {
 				"Content-Type":"application/json",
@@ -81,7 +81,7 @@ function action(){
 				tanggal_lahir: tanggal_lahir,
 				status_kepegawaian: status_kepegawaian,
 				fakultas_id: fakultas_id,
-				departemen_id: departemen_id, 
+				// departemen_id: departemen_id, 
 				gender: gender,
 				agama: agama,
 				perkawinan: perkawinan,
@@ -125,78 +125,95 @@ function action(){
 
 			})
 		})
-		.then(response => {
+		.then(async (response) => {
+		    const contentType = response.headers.get("Content-Type");
+		    const text = await response.text();
+
 		    if (!response.ok) {
-		        return response.text().then(text => { throw new Error(text) });
+		        throw new Error(text);
 		    }
-		    return response.json();
+
+		    if (contentType && contentType.includes("application/json")) {
+		        return JSON.parse(text);
+		    } else {
+		        throw new Error("Server tidak mengembalikan data JSON.");
+		    }
 		})
 		.then(data => {
-		    console.log(data);
+		    Swal.fire({
+		        icon: 'success',
+		        title: 'Berhasil!',
+		        text: data.message || 'Data berhasil diupdate.',
+		        timer: 3000,
+		        showConfirmButton: false
+		    });
 		})
 		.catch(error => {
-			console.error("Terjadi error:", error.message);
-			document.body.innerHTML = error.message;
-		});		
+		    Swal.fire({
+		        icon: 'error',
+		        title: 'Gagal!',
+		        text: error.message || 'Terjadi kesalahan.',
+		    });
+		});
 	});
 }
 
 action();
 
-function reqFak(fakultasId, departemenId = null) {
-  fetch('/getFak')
-    .then(response => response.json())
-    .then(data => {
-      const select = document.getElementById('fakultasSelect');
-      select.innerHTML = '<option disabled selected>--- Pilih Fakultas ---</option>';
+// function reqFak(fakultasId, departemenId = null) {
+//   fetch('/getFak')
+//     .then(response => response.json())
+//     .then(data => {
+//       const select = document.getElementById('fakultasSelect');
+//       select.innerHTML = '<option disabled selected>--- Pilih Fakultas ---</option>';
 
-      data.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.id;
-        option.textContent = item.nama_fakultas;
+//       data.forEach(item => {
+//         const option = document.createElement('option');
+//         option.value = item.id;
+//         option.textContent = item.nama_fakultas;
 
-        if (item.nama_fakultas === namaFakultasPegawai) {
-          option.selected = true;
-          // Langsung panggil loadDepartemen jika cocok
-          loadDepartemen(item.id);
-        }
+//         if (item.nama_fakultas === namaFakultasPegawai) {
+//           option.selected = true;
+//           // Langsung panggil loadDepartemen jika cocok
+//           loadDepartemen(item.id);
+//         }
 
-        select.appendChild(option);
-      });
+//         select.appendChild(option);
+//       });
 
-      // Tambah event listener untuk trigger saat fakultas dipilih
-      select.addEventListener('change', function () {
-        const selectedFakultasId = this.value;
-        loadDepartemen(selectedFakultasId);
-      });
-    })
-    .catch(error => {
-      console.error('Error fetch fakultas:', error);
-    });
-}
+//       // Tambah event listener untuk trigger saat fakultas dipilih
+//       select.addEventListener('change', function () {
+//         const selectedFakultasId = this.value;
+//         loadDepartemen(selectedFakultasId);
+//       });
+//     })
+//     .catch(error => {
+//       console.error('Error fetch fakultas:', error);
+//     });
+// }
 
-function loadDepartemen(fakultasId, selectedDepartemenId = null) {
-  fetch(`/getDep/${fakultasId}`)
-    .then(res => res.json())
-    .then(data => {
-      const departemenSelect = document.getElementById('departemenSelect');
-      departemenSelect.innerHTML = '<option disabled selected>--- Pilih Departemen ---</option>';
+// // function loadDepartemen(fakultasId, selectedDepartemenId = null) {
+// //   fetch(`/getDep/${fakultasId}`)
+// //     .then(res => res.json())
+// //     .then(data => {
+// //       const departemenSelect = document.getElementById('departemenSelect');
+// //       departemenSelect.innerHTML = '<option disabled selected>--- Pilih Departemen ---</option>';
 
-      data.forEach(dep => {
-        const option = document.createElement('option');
-        option.value = dep.id;
-        option.textContent = dep.nama_departemen;
+// //       data.forEach(dep => {
+// //         const option = document.createElement('option');
+// //         option.value = dep.id;
+// //         option.textContent = dep.nama_departemen;
 
-        if (parseInt(dep.id) === parseInt(selectedDepartemenId)) {
-          option.selected = true;
-        }
+// //         if (parseInt(dep.id) === parseInt(selectedDepartemenId)) {
+// //           option.selected = true;
+// //         }
 
-        departemenSelect.appendChild(option);
-      });
-    });
-}
+// //         departemenSelect.appendChild(option);
+// //       });
+// //     });
+// // }
 
-const selectedFakultasId = document.getElementById('fakultas-id').value;
-const selectedDepartemenId = document.getElementById('departemen-id').value;
+// const selectedFakultasId = document.getElementById('fakultas-id').value;
+// // const selectedDepartemenId = document.getElementById('departemen-id').value;
 
-reqFak(selectedFakultasId, selectedDepartemenId);
+// // reqFak(selectedFakultasId, selectedDepartemenId);

@@ -119,7 +119,10 @@ class PegawaiController extends Controller
     public function update_pegawai(Request $request){
         $pegawai = Pegawai::find($request->pegawai_id);
         if (!$pegawai) {
-            return redirect()->back()->with('error', 'Pegawai tidak ditemukan.');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Pegawai tidak ditemukan.'
+            ], 404);
         }
         $pegawai->update([
             'nip' => $request->nip,
@@ -130,7 +133,7 @@ class PegawaiController extends Controller
             'tanggal_lahir' => $request->tanggal_lahir,
             'kategori_kepegawaian_id' => $request->status_kepegawaian,
             'fakultas_id' => $request->fakultas_id,
-            'departemen_id' => $request->departemen_id,
+            // 'departemen_id' => $request->departemen_id,
             'jenis_kelamin' => $request->gender,
             'agama_id' => $request->agama,
             'perkawinan_id' => $request->perkawinan,
@@ -155,7 +158,10 @@ class PegawaiController extends Controller
                 'alamat_lengkap' => $request->alamat_lengkap,
             ]
         );
-        return redirect()->back()->with('success', 'Data '.$pegawai->nama.' Berhasil diupdate.');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data ' . $pegawai->nama . ' berhasil diupdate.'
+        ]);
     }
     
     public function update_atasan(Request $request){

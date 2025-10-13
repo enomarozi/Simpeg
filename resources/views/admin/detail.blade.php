@@ -33,9 +33,9 @@
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Nama:</div>
                         <div class="col-md-8">
-                            <input type="text" name="gelar_depan" class="form-control d-inline w-auto" value="{{ $pegawai->gelar_depan ?? '' }}">
-                            <input type="text" name="nama" class="form-control d-inline w-auto" value="{{ $pegawai->nama ?? '' }}">
-                            <input type="text" name="gelar_belakang" class="form-control d-inline w-auto" value="{{ $pegawai->gelar_belakang ?? '' }}">
+                            <input type="text" name="gelar_depan" class="form-control d-inline w-auto" value="{{ $pegawai->gelar_depan ?? '' }}" placeholder="Gelar Depan">
+                            <input type="text" name="nama" class="form-control d-inline w-auto" value="{{ $pegawai->nama ?? '' }}" placeholder="Nama Lengkap">
+                            <input type="text" name="gelar_belakang" class="form-control d-inline w-auto" value="{{ $pegawai->gelar_belakang ?? '' }}" placeholder="Gelar Belakang">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -67,22 +67,17 @@
                     <div class="row mb-2">
                         @if($pegawai->jabatan_id === 1)
                           <div class="col-md-4 fw-bold">Fakultas:</div>
-                        @else
-                          <div class="col-md-4 fw-bold">Unit Kerja:</div>
-                        @endif
-                        <div class="col-md-8">
+                          <div class="col-md-8">
                             <select id="fakultasSelect" name="fakultas_id" class="form-control">
-                              {{ $pegawai->jabatan_id === 1 ? '--- Pilih Fakultas ---' : '--- Pilih Unit Kerja ---' }}
+                              <option value="" disabled selected>-- Pilih Fakultas --</option>
+                                @foreach($fakultas as $item)
+                                    <option value="{{ $item->id }}" {{ $item->id == $pegawai->fakultas_id ? 'selected' : ''}}>
+                                    {{ $item->nama_fakultas }}
+                                    </option>
+                                @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <input type="hidden" id="departemen-id" value="{{ $pegawai->nama_departemen }}">
-                    <div class="row mb-2">
-                        <div class="col-md-4 fw-bold">Departemen:</div>
-                        <div class="col-md-8">
-                            <select id="departemenSelect" name="departemen_id" class="form-control">
-                            </select>
-                        </div>
+                          </div>
+                        @endif
                     </div>
                 </div>
             </div>
