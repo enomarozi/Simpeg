@@ -92,6 +92,7 @@ Route::group(['prefix'=>'staff'], function(){
 	Route::GET('/getTriwulan/{id}/{periode}/{triwulan}',[TriwulanController::class,'getTriwulanData'])->name('getTriwulan');
 });
 
-
-Route::GET('/getFak',[RequestController::class,'getFak']);
+Route::group(['prefix'=>'api'], function(){
+	Route::GET('/getFak',[RequestController::class,'getFak'])->name('getFak');
+});
 Route::get('/getDep/{fakultas_id}', [RequestController::class, 'getDep']);

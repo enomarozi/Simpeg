@@ -9,8 +9,14 @@ function action(){
 		const tempat_lahir = document.querySelector('input[name="tempat_lahir"]').value;
 		const tanggal_lahir = document.querySelector('input[name="tanggal_lahir"]').value;
 		const status_kepegawaian = document.querySelector('select[name="status_kepegawaian"]').value;
-		const fakultas_id = document.querySelector('select[name="fakultas_id"]').value;
-		// const departemen_id = document.querySelector('select[name="departemen_id"]').value;		
+		const jabatan_id = document.querySelector('select[name="jabatan_id"]').value;
+		if(jabatan_id === 1){
+			var fakultas_id = document.querySelector('select[name="fakultas_id"]').value;
+			var departemen_id = document.querySelector('select[name="departemen_id"]').value;
+		}else{
+			var fakultas_id = 0;
+			var departemen_id = 0;
+		}
 		// Biodata Pribadi
 		const gender = document.querySelector('input[name="gender"]:checked').value;
 		const agama = document.querySelector('select[name="agama"]').value;
@@ -20,7 +26,7 @@ function action(){
 		if (kewarganegaraan_check) {
 		    kewarganegaraan = document.querySelector('select[name="kewarganegaraan"]').value;
 		}else{
-			kewarganegaraan = 106;
+				kewarganegaraan = 106;
 		}
 		const usia_pensiun = document.querySelector('input[name="usia_pensiun"]').value;
 		const alamat_lengkap = document.querySelector('textarea[name="alamat_lengkap"]').value;
@@ -80,8 +86,9 @@ function action(){
 				tempat_lahir: tempat_lahir,
 				tanggal_lahir: tanggal_lahir,
 				status_kepegawaian: status_kepegawaian,
+				jabatan_id: jabatan_id,
 				fakultas_id: fakultas_id,
-				// departemen_id: departemen_id, 
+				departemen_id: departemen_id, 
 				gender: gender,
 				agama: agama,
 				perkawinan: perkawinan,
@@ -160,8 +167,8 @@ function action(){
 
 action();
 
-// function reqFak(fakultasId, departemenId = null) {
-//   fetch('/getFak')
+// function reqFak(fakultasId) {
+//   fetch('/api/getFak')
 //     .then(response => response.json())
 //     .then(data => {
 //       const select = document.getElementById('fakultasSelect');
@@ -171,27 +178,14 @@ action();
 //         const option = document.createElement('option');
 //         option.value = item.id;
 //         option.textContent = item.nama_fakultas;
-
-//         if (item.nama_fakultas === namaFakultasPegawai) {
-//           option.selected = true;
-//           // Langsung panggil loadDepartemen jika cocok
-//           loadDepartemen(item.id);
-//         }
-
 //         select.appendChild(option);
-//       });
-
-//       // Tambah event listener untuk trigger saat fakultas dipilih
-//       select.addEventListener('change', function () {
-//         const selectedFakultasId = this.value;
-//         loadDepartemen(selectedFakultasId);
 //       });
 //     })
 //     .catch(error => {
 //       console.error('Error fetch fakultas:', error);
 //     });
 // }
-
+// reqFak();
 // // function loadDepartemen(fakultasId, selectedDepartemenId = null) {
 // //   fetch(`/getDep/${fakultasId}`)
 // //     .then(res => res.json())

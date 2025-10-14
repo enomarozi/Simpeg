@@ -22,7 +22,7 @@
         <div class="col-lg-9 col-md-8 col-sm-12">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h4 class="card-title text-center mb-4">Detail Pegawai</h4>
+                    <h4 class="card-title text-center mb-4">{{ $title }}</h4>
                     <input type="hidden" name="pegawai_id" value="{{ $pegawai->id }}">
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">NIP:</div>
@@ -63,12 +63,26 @@
                             </select>
                         </div>
                     </div>
+                    <input type="hidden" id="jabatan-id" value="{{ $pegawai->jenis_kepegawaian_id }}">
+                    <div class="row mb-2">
+                        <div class="col-md-4 fw-bold">Jabatan</div>
+                        <div class="col-md-8">
+                          <select name="jabatan_id" class="form-control">
+                            <option value="" disabled selected>-- Pilih Jabatan --</option>
+                              @foreach($jenisPegawai as $item)
+                                  <option value="{{ $item->id }}" {{ $item->id == $pegawai->jabatan_id ? 'selected' : ''}}>
+                                  {{ $item->nama_jenis_kepegawaian }}
+                                  </option>
+                              @endforeach
+                          </select>
+                        </div>
+                    </div>
                     <input type="hidden" id="fakultas-id" value="{{ $pegawai->fakultas_id }}">
                     <div class="row mb-2">
                         @if($pegawai->jabatan_id === 1)
-                          <div class="col-md-4 fw-bold">Fakultas:</div>
+                          <div class="col-md-4 fw-bold">Fakultas</div>
                           <div class="col-md-8">
-                            <select id="fakultasSelect" name="fakultas_id" class="form-control">
+                            <select name="fakultas_id" class="form-control">
                               <option value="" disabled selected>-- Pilih Fakultas --</option>
                                 @foreach($fakultas as $item)
                                     <option value="{{ $item->id }}" {{ $item->id == $pegawai->fakultas_id ? 'selected' : ''}}>

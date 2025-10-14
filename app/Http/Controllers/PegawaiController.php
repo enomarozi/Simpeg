@@ -45,12 +45,13 @@ class PegawaiController extends Controller
                 'pegawai.jenis_kelamin', 
                 'pegawai.tempat_lahir', 
                 'pegawai.tanggal_lahir', 
+                'pegawai.fakultas_id',
+                'pegawai.jenis_kepegawaian_id',
                 'agama_id', 
                 'pegawai.status', 
                 'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian',
                 'kategori_kepegawaian_id', 
                 'pegawai_departemen.nama_departemen',
-                'pegawai_departemen.fakultas_id',
                 'kepangkatan_id',
                 'tmt_pangkat',
                 'perkawinan_id',
@@ -124,6 +125,7 @@ class PegawaiController extends Controller
                 'message' => 'Pegawai tidak ditemukan.'
             ], 404);
         }
+
         $pegawai->update([
             'nip' => $request->nip,
             'gelar_depan'=> $request->gelar_depan,
@@ -131,9 +133,8 @@ class PegawaiController extends Controller
             'gelar_belakang' => $request->gelar_belakang,
             'tempat_lahir' => $request->tempat_lahir,
             'tanggal_lahir' => $request->tanggal_lahir,
-            'kategori_kepegawaian_id' => $request->status_kepegawaian,
-            'fakultas_id' => $request->fakultas_id,
-            // 'departemen_id' => $request->departemen_id,
+            'status_kepegawaian' => $request->status_kepegawaian,
+            'jabatan_id' => $request->jabatan_id,
             'jenis_kelamin' => $request->gender,
             'agama_id' => $request->agama,
             'perkawinan_id' => $request->perkawinan,
@@ -145,7 +146,6 @@ class PegawaiController extends Controller
             'email' => $request->email,
             'kepangkatan_id' => $request->pangkat,
             'tmt_pangkat' => $request->tmt_pangkat,
-            'jabatan_id' => $request->jabatan_f,
         ]);
 
 
