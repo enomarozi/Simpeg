@@ -33,6 +33,7 @@ Route::group(['prefix'=> 'admin'], function(){
 		Route::GET('/json_pegawai',[PegawaiController::class, 'json_pegawai'])->name('json_pegawai');
 		Route::POST('/update/{id}', [PegawaiController::class,'update_pegawai'])->name('update_pegawai');
 		Route::POST('/update_atasan',[PegawaiController::class, 'update_atasan'])->name('update_atasan');
+		Route::GET('/getDepartemen/{id}',[PegawaiController::class, 'getDepartemen'])->name('getDepartemen');
 	});
 	Route::group(['prefix'=>'user'], function(){
 		Route::GET('/data_user',[ManagemenUserController::class, 'data_user'])->name('data_user');

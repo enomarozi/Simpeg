@@ -53,7 +53,7 @@
                     <div class="row mb-2 align-items-center">
                         <div class="col-md-4 fw-bold">Status Kepegawaian:</div>
                         <div class="col-md-8">
-                            <select name="status_kepegawaian" class="form-select">
+                            <select name="status_kepegawaian" id='status_kepegawaian' class="form-select">
                               <option value="" disabled selected>-- Pilih Status Kepegawaian --</option>
                                 @foreach($kategoriPegawai as $item)
                                     <option value="{{ $item->id }}" {{ $item->id == $pegawai->kategori_kepegawaian_id ? 'selected' : ''}}>
@@ -67,7 +67,7 @@
                     <div class="row mb-2">
                         <div class="col-md-4 fw-bold">Jabatan</div>
                         <div class="col-md-8">
-                          <select name="jabatan_id" class="form-control">
+                          <select name="jabatan_id" id='jabatan_id' class="form-control">
                             <option value="" disabled selected>-- Pilih Jabatan --</option>
                               @foreach($jenisPegawai as $item)
                                   <option value="{{ $item->id }}" {{ $item->id == $pegawai->jabatan_id ? 'selected' : ''}}>
@@ -79,20 +79,56 @@
                     </div>
                     <input type="hidden" id="fakultas-id" value="{{ $pegawai->fakultas_id }}">
                     <div class="row mb-2">
-                        @if($pegawai->jabatan_id === 1)
+                        @if($pegawai->jabatan_id == 1)
                           <div class="col-md-4 fw-bold">Fakultas</div>
-                          <div class="col-md-8">
-                            <select name="fakultas_id" class="form-control">
+                        @else
+                          <div class="col-md-4 fw-bold">Unit Kerja</div>
+                        @endif
+                        <div class="col-md-8">
+                          <select name="fakultas_id" id="fakultas_id" class="form-control">
+                            @if($pegawai->jabatan_id == 1)
                               <option value="" disabled selected>-- Pilih Fakultas --</option>
-                                @foreach($fakultas as $item)
-                                    <option value="{{ $item->id }}" {{ $item->id == $pegawai->fakultas_id ? 'selected' : ''}}>
-                                    {{ $item->nama_fakultas }}
-                                    </option>
-                                @endforeach
+                            @else
+                              <option value="" disabled selected>-- Pilih Unit --</option>
+                            @endif
+                              @foreach($fakultas as $item)
+                                  <option value="{{ $item->id }}" {{ $item->id == $pegawai->fakultas_id ? 'selected' : ''}}>
+                                  {{ $item->nama_fakultas }}
+                                  </option>
+                              @endforeach
+                          </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                          <div class="col-md-4 fw-bold">Departemen</div>
+                          <div class="col-md-8">
+                            <select name="departemen_id" id="departemen-id" class="form-control">
+                              <option value="" disabled selected>-- Pilih Departemen --</option>
                             </select>
                           </div>
-                        @endif
                     </div>
+                    <script>
+                      const selectedDepartemenId = @json(old('departemen_id', $pegawai->departemen_id ?? ''));
+                      const selectedFakultasId = @json(old('fakultas_id', $pegawai->fakultas_id ?? ''));
+
+                      document.addEventListener('DOMContentLoaded', function () {
+                        const fakultasSelect = document.getElementById('fakultas_id');
+
+                        fakultasSelect.addEventListener('change', function () {
+                          const selectedFakultasId = this.value;
+                          if (selectedFakultasId) {
+                            reqDepartemen(selectedFakultasId);
+                          } else {
+                            document.getElementById('departemen-id').innerHTML = '<option value="">-- Pilih Departemen --</option>';
+                          }
+                        });
+
+                        if (selectedFakultasId) {
+                          reqDepartemen(selectedFakultasId, selectedDepartemenId);
+                        }
+                      });
+                      
+                    </script>
                 </div>
             </div>
         </div>

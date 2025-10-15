@@ -46,6 +46,7 @@ class PegawaiController extends Controller
                 'pegawai.tempat_lahir', 
                 'pegawai.tanggal_lahir', 
                 'pegawai.fakultas_id',
+                'pegawai.departemen_id',
                 'pegawai.jenis_kepegawaian_id',
                 'agama_id', 
                 'pegawai.status', 
@@ -93,7 +94,7 @@ class PegawaiController extends Controller
     public function json_pegawai(){
         $pegawai = DB::table('pegawai')
             ->leftJoin('pegawai_departemen', 'pegawai.departemen_id', '=', 'pegawai_departemen.id')
-            ->leftJoin('pegawai_fakultas', 'pegawai_departemen.fakultas_id', '=', 'pegawai_fakultas.id')
+            ->leftJoin('pegawai_fakultas', 'pegawai.fakultas_id', '=', 'pegawai_fakultas.id')
             ->leftJoin('pegawai_kepangkatan', 'pegawai_kepangkatan.id', '=', 'pegawai.kepangkatan_id')
             ->leftJoin('pegawai_kategori_kepegawaian', 'pegawai.kategori_kepegawaian_id','=','pegawai_kategori_kepegawaian.id')
             ->select(
@@ -103,9 +104,9 @@ class PegawaiController extends Controller
                 'pegawai.jenis_kelamin', 
                 'pegawai.tempat_lahir', 
                 'pegawai.status', 
-                'pegawai_fakultas.nama_fakultas', 
+                'pegawai_fakultas.nama_fakultas',
+                'pegawai_departemen.nama_departemen',
                 'pegawai_kategori_kepegawaian.nama_kategori_kepegawaian', 
-                'pegawai_departemen.nama_departemen', 
                 'pegawai_kepangkatan.golongan', 
                 'pegawai_kepangkatan.pangkat')
             ->get();
@@ -125,7 +126,20 @@ class PegawaiController extends Controller
                 'message' => 'Pegawai tidak ditemukan.'
             ], 404);
         }
-
+        if($request->jabatan_id == 1){
+            $check_dept = DB::table('pegawai_departemen')
+                ->where('fakultas_id', $request->fakultas_id)
+                ->where('id', $request->departemen_id)
+                ->where('id','!=', 75)
+                ->where('id','!=', 76)
+                ->first();
+            if(!$check_dept){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal.'
+                ], 404);
+            }
+        }
         $pegawai->update([
             'nip' => $request->nip,
             'gelar_depan'=> $request->gelar_depan,
@@ -133,8 +147,10 @@ class PegawaiController extends Controller
             'gelar_belakang' => $request->gelar_belakang,
             'tempat_lahir' => $request->tempat_lahir,
             'tanggal_lahir' => $request->tanggal_lahir,
-            'status_kepegawaian' => $request->status_kepegawaian,
+            'kategori_kepegawaian_id' => $request->status_kepegawaian,
             'jabatan_id' => $request->jabatan_id,
+            'fakultas_id' => $request->fakultas_id,
+            'departemen_id'=> $request->departemen_id,
             'jenis_kelamin' => $request->gender,
             'agama_id' => $request->agama,
             'perkawinan_id' => $request->perkawinan,
@@ -191,5 +207,13 @@ class PegawaiController extends Controller
             'atasan_id'=> $request->atasan_id,
         ]);
         return redirect()->back()->with('success', 'Atasan '.$pegawai->nama.' Berhasil diupdate.');
+    }
+
+    public function getDepartemen($id){
+        $departemen = DB::table('pegawai_departemen')
+            ->where('fakultas_id', $id)
+            ->select('id', 'nama_departemen')
+            ->get();
+        return response()->json($departemen);
     }
 }
