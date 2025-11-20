@@ -31,6 +31,7 @@ return new class extends Migration
             $table->date('tmt_pangkat')->nullable();
             $table->foreignId('jabatan_id')->nullable()->constrained('pegawai_jabatan_dosen')->onDelete('restrict');
             $table->foreignId('pendidikan_id')->nullable()->constrained('pegawai_pendidikan')->onDelete('restrict');
+            $table->integer('usia_pensiun')->nullable();
             $table->date('tmt_pensiun')->nullable();
             $table->string('tahun_pensiun',4)->nullable();
             $table->string('telepon',20)->unique()->nullable();

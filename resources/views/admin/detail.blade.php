@@ -292,7 +292,7 @@
                       </script>
                       <div class="mb-3">
                         <label class="form-label">Usia Pensiun</label>
-                        <input type="text" class="form-control" name="usia_pensiun">
+                        <input type="text" class="form-control" name="usia_pensiun" value="{{ $pegawai->usia_pensiun ?? '' }}">
                       </div>
                     </div>
                   </div>
@@ -305,97 +305,110 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Jalan</label>
-                        <textarea name="alamat_lengkap" class="form-control"></textarea>
+                        <textarea name="alamat_lengkap" class="form-control">{{ $pegawai->alamat_lengkap }}</textarea>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Provinsi</label>
-                        <select name="provinsi" class="form-select" id='provinsiSelect'>
+                        <select name="provinsi" id='provinsiSelect' class="form-select">
                           <option value="" disabled selected>-- Pilih Provinsi --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kota/Kabupaten</label>
-                        <select name="kabupaten-kota" class="form-select" id='kotaSelect'>
+                        <select name="kabupaten-kota" id='kotaSelect' class="form-select">
                           <option value="" disabled selected>-- Pilih Kota/Kab --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Kecamatan</label>
-                        <select name="kecamatan" class="form-select" id='kecamatanSelect'>
+                        <select name="kecamatan" id='kecamatanSelect' class="form-select">
                           <option value="" disabled selected>-- Pilih Kecamatan --</option>
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. Telepon</label>
-                        <input name="telepon" type="text" class="form-control" value="">
+                        <input type="text" name="telepon" class="form-control" value="{{ $pegawai->telepon }}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. HP</label>
-                        <input name="hp" type="text" class="form-control" value="">
+                        <input type="text" name="hp" class="form-control" value="{{ $pegawai->hp }}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input name="email" type="email" class="form-control" value="">
+                        <input type="email" name="email" class="form-control" value="{{ $pegawai->email }}">
                       </div>
                     </div>
                   </div>
                   <script>
+                    const selectedProvinceId = "{{ $pegawai->provinsi }}"
+                    const selectedKotaId = "{{ $pegawai->kabupaten_kota }}"
+                    const selectedKecamatan = "{{ $pegawai->kecamatan }}"
+
                     fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
-                      .then(response=>response.json())
-                      .then(provinces=>{
-                        const selectElement = document.getElementById('provinsiSelect');
-                        provinces.forEach(provinsi=>{
-                          const option = document.createElement('option');
-                          option.value = provinsi.id;
-                          option.textContent = provinsi.name;
-                          selectElement.appendChild(option);
-                        });
+                      .then(res => res.json())
+                      .then(provinces => {
+                          const provSelect = document.getElementById('provinsiSelect');
+                          provSelect.innerHTML = '<option disabled>-- Pilih Provinsi --</option>';
+
+                          provinces.forEach(p => {
+                              const opt = document.createElement('option');
+                              opt.value = p.id;
+                              opt.textContent = p.name;
+                              if(p.id == selectedProvinceId) opt.selected = true;
+                              provSelect.appendChild(opt);
+                          });
+
+                          // Jika ada provinsi tersimpan, otomatis load kotanya
+                          if(selectedProvinceId) loadKota(selectedProvinceId);
                       })
-                      .catch(error => console.error("Failed Provinces", error));
+                      .catch(console.error);
 
-                      document.getElementById('provinsiSelect').addEventListener('change', function(){
-                        const provinsiId = this.value;
+                    function loadKota(provinsiId){
                         const kotaSelect = document.getElementById('kotaSelect');
+                        kotaSelect.innerHTML = '<option disabled>-- Pilih Kota/Kab --</option>';
                         const kecamatanSelect = document.getElementById('kecamatanSelect');
-                        kotaSelect.innerHTML = '<option selected disabled>-- Pilih Kota/Kab --</option>';
-                        kecamatanSelect.innerHTML = '<option selected disabled>-- Pilih Kecamatan --</option>';
-                        if(provinsiId){
-                          fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinsiId}.json`)
-                            .then(response=>response.json())
-                            .then(regencies=>{
-                              const kotaSelect = document.getElementById('kotaSelect');
-                              regencies.forEach(regency=>{
-                                const option = document.createElement('option');
-                                option.value = regency.id;
-                                option.textContent = regency.name;
-                                kotaSelect.appendChild(option);
-                              });
-                            })
-                            .catch(error=>console.error('Failed Kota/Kab',error))
-                        }
-                      });
+                        kecamatanSelect.innerHTML = '<option disabled>-- Pilih Kecamatan --</option>';
 
-                      document.getElementById('kotaSelect').addEventListener('change', function(){
-                        const kotaId = this.value;
-
-                        const kecamatanSelect = document.getElementById('kecamatanSelect');
-                        kecamatanSelect.innerHTML = '<option selected disabled>-- Pilih Kecamatan --</option>';
-                        if(kotaId){
-                          fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaId}.json`)
-                          .then(response => response.json())
-                          .then(districts => {
-                            districts.forEach(district=>{
-                              const option = document.createElement('option');
-                              option.value = district.id;
-                              option.textContent = district.name;
-                              kecamatanSelect.appendChild(option);
+                        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinsiId}.json`)
+                        .then(res => res.json())
+                        .then(kotas => {
+                            kotas.forEach(k => {
+                                const opt = document.createElement('option');
+                                opt.value = k.id;
+                                opt.textContent = k.name;
+                                if(k.id == selectedKotaId) opt.selected = true;
+                                kotaSelect.appendChild(opt);
                             });
-                          })
-                          .catch(error=>console.error("Failed Kecamatan", error))
 
-                        }
+                            // Jika ada kota tersimpan, otomatis load kecamatannya
+                            if(selectedKotaId) loadKecamatan(selectedKotaId);
+                        })
+                        .catch(console.error);
+                    }
 
-                      });
+                    function loadKecamatan(kotaId){
+                        const kecamatanSelect = document.getElementById('kecamatanSelect');
+                        kecamatanSelect.innerHTML = '<option disabled>-- Pilih Kecamatan --</option>';
+
+                        fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${kotaId}.json`)
+                        .then(res => res.json())
+                        .then(districts => {
+                            districts.forEach(d => {
+                                const opt = document.createElement('option');
+                                opt.value = d.id;
+                                opt.textContent = d.name;
+                                if(d.id == selectedKecamatan) opt.selected = true;
+                                kecamatanSelect.appendChild(opt);
+                            });
+                        })
+                        .catch(console.error);
+                    }
+                    document.getElementById('provinsiSelect').addEventListener('change', function(){
+                        loadKota(this.value);
+                    });
+                    document.getElementById('kotaSelect').addEventListener('change', function(){
+                        loadKecamatan(this.value);
+                    });
                   </script>
                 </div>
                 
@@ -440,15 +453,15 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">No. KTP</label>
-                        <input type="text" class="form-control" name="no_ktp">
+                        <input type="text" class="form-control" name="no_ktp" value="{{ $pegawai->no_ktp }}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. NPWP</label>
-                        <input type="text" class="form-control" name="no_npwp">
+                        <input type="text" class="form-control" name="no_npwp" value="{{ $pegawai->no_npwp }}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">BPJS Tenaga Kerja</label>
-                        <input type="text" class="form-control" name="no_bpjs">
+                        <input type="text" class="form-control" name="no_bpjs_tenaga_kerja" value="{{ $pegawai->no_bpjs_tenaga_kerja }}">
                       </div>
                     </div>
                   </div>

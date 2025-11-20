@@ -34,6 +34,9 @@ class Pegawai extends Model
         'tmt_pensiun',
         'tahun_pensiun',
         'atasan_id',
+        'hp',
+        'telepon',
+        'email',
         'created_at',
         'updated_at',
     ];

@@ -37,7 +37,7 @@ function action(){
 		const cacat = document.querySelector('input[name="cacat"]').value;
 		const no_ktp = document.querySelector('input[name="no_ktp"]').value;
 		const no_npwp = document.querySelector('input[name="no_npwp"]').value;
-		const no_bpjs = document.querySelector('input[name="no_bpjs"]').value;
+		const no_bpjs_tenaga_kerja = document.querySelector('input[name="no_bpjs_tenaga_kerja"]').value;
 		const jenis_bank = document.querySelector('select[name="jenis_bank"]').value;
 		const rekening = document.querySelector('input[name="rekening"]').value;
 		const nama_penerima = document.querySelector('input[name="nama_penerima"]').value;
@@ -70,6 +70,7 @@ function action(){
 			method: "POST",
 			headers: {
 				"Content-Type":"application/json",
+				"Accept": "application/json",
 				"X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
 			},
 
@@ -104,7 +105,7 @@ function action(){
 				cacat: cacat,
 				no_ktp: no_ktp,
 				no_npwp: no_npwp,
-				no_bpjs: no_bpjs,
+				no_bpjs_tenaga_kerja: no_bpjs_tenaga_kerja,
 				jenis_bank: jenis_bank,
 				rekening: rekening,
 				nama_penerima: nama_penerima,
@@ -125,7 +126,6 @@ function action(){
 				diputuskan_jabatan_s: diputuskan_jabatan_s,
 				no_surat_s: no_surat_s,
 				tgl_sk_s: tgl_sk_s,
-
 			})
 		})
 		.then(async (response) => {

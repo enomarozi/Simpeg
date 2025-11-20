@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat};
+use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat, PegawaiInformasiId, PegawaiInformasiMedis};
 use App\Models\{SKPAtasanPegawai, SKPPeriode};
 use DB;
 
@@ -36,6 +36,8 @@ class PegawaiController extends Controller
             ->leftJoin('pegawai_departemen', 'pegawai.departemen_id', '=', 'pegawai_departemen.id')
             ->leftJoin('pegawai_jenis_kepegawaian', 'pegawai.jenis_kepegawaian_id','=','pegawai_jenis_kepegawaian.id')
             ->leftJoin('pegawai_informasi_alamat', 'pegawai_informasi_alamat.pegawai_id','=','pegawai.id')
+            ->leftJoin('pegawai_informasi_id', 'pegawai_informasi_id.pegawai_id','=','pegawai.id')
+            ->leftJoin('pegawai_informasi_medis','pegawai_informasi_medis.pegawai_id','=','pegawai.id')
             ->select(
                 'pegawai.id', 
                 'pegawai.nip', 
@@ -48,21 +50,33 @@ class PegawaiController extends Controller
                 'pegawai.fakultas_id',
                 'pegawai.departemen_id',
                 'pegawai.jenis_kepegawaian_id',
-                'agama_id', 
+                'pegawai.agama_id', 
                 'pegawai.status', 
-                'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian',
-                'kategori_kepegawaian_id', 
-                'pegawai_departemen.nama_departemen',
-                'kepangkatan_id',
-                'tmt_pangkat',
-                'perkawinan_id',
-                'jabatan_id',
-                'kewarganegaraan_id',
-                'negara_id',
+                'pegawai.kategori_kepegawaian_id',
+                'pegawai.kepangkatan_id',
+                'pegawai.tmt_pangkat',
+                'pegawai.perkawinan_id',
+                'pegawai.jabatan_id',
+                'pegawai.kewarganegaraan_id',
+                'pegawai.negara_id',
+                'pegawai.usia_pensiun',
                 'pegawai.atasan_id',
+                'pegawai.telepon',
+                'pegawai.hp',
+                'pegawai.email',
+                'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian',
+                'pegawai_departemen.nama_departemen',
                 'pegawai_informasi_alamat.provinsi',
                 'pegawai_informasi_alamat.kabupaten_kota',
-                'pegawai_informasi_alamat.kecamatan'
+                'pegawai_informasi_alamat.kecamatan',
+                'pegawai_informasi_alamat.alamat_lengkap',
+                'pegawai_informasi_id.no_ktp',
+                'pegawai_informasi_id.no_npwp',
+                'pegawai_informasi_id.no_bpjs_tenaga_kerja',
+                'pegawai_informasi_medis.golongan_darah_id',
+                'pegawai_informasi_medis.tinggi_badan',
+                'pegawai_informasi_medis.berat_badan',
+                'pegawai_informasi_medis.cacat'
             )
             ->where('pegawai.id', $id)
             ->first();
@@ -119,6 +133,10 @@ class PegawaiController extends Controller
     }
 
     public function update_pegawai(Request $request){
+        return response()->json([
+            'status' => 'error',
+            'message' => $request->tinggi_badan,
+        ], 200);
         $pegawai = Pegawai::find($request->pegawai_id);
         if (!$pegawai) {
             return response()->json([
@@ -172,6 +190,23 @@ class PegawaiController extends Controller
                 'kabupaten_kota' => $request->kabupaten_kota,
                 'kecamatan'      => $request->kecamatan,
                 'alamat_lengkap' => $request->alamat_lengkap,
+            ]
+        );
+        PegawaiInformasiId::updateOrCreate(
+            ['pegawai_id' => $request->pegawai_id],
+            [
+                'no_ktp'                    => $request->no_ktp,
+                'no_npwp'                   => $request->no_npwp,
+                'no_bpjs_tenaga_kerja'      => $request->no_bpjs_tenaga_kerja,
+            ]
+        );
+        PegawaiInformasiMedis::updateOrCreate(
+            ['pegawai_id' => $request->pegawai_id],
+            [
+                'golongan_darah_id'     => $request->golongan_darah_id,
+                'tinggi_badan'          => $request->tinggi_badan,
+                'berat_badan'           => $request->berat_badan,
+                'cacat'                 => $request->cacat,
             ]
         );
         return response()->json([
