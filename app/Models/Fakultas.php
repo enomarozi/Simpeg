@@ -19,4 +19,8 @@ class Fakultas extends Model
     {
         return $this->hasMany(PegawaiDepartemen::class, 'fakultas_id');
     }
+    public function pegawai()
+    {
+        return $this->hasMany(Pegawai::class, 'fakultas_id');
+    }
 }

@@ -33,17 +33,15 @@ return new class extends Migration
             $table->foreignId('pendidikan_id')->nullable()->constrained('pegawai_pendidikan')->onDelete('restrict');
             $table->integer('usia_pensiun')->nullable();
             $table->date('tmt_pensiun')->nullable();
-            $table->string('tahun_pensiun',4)->nullable();
+            $table->unsignedSmallInteger('tahun_pensiun')->nullable();
             $table->string('telepon',20)->unique()->nullable();
             $table->string('hp',20)->unique()->nullable();
             $table->string('email')->unique()->nullable();
             $table->foreignId('perkawinan_id')->nullable()->constrained('pegawai_status_perkawinan')->onDelete('restrict');
             $table->foreignId('kewarganegaraan_id')->nullable()->constrained('pegawai_kewarganegaraan')->onDelete('restrict');
             $table->foreignId('negara_id')->nullable()->constrained('pegawai_negara')->onDelete('restrict');
-            $table->integer('atasan_id')->nullable();
+            $table->unsignedSmallInteger('atasan_id')->nullable();
             $table->timestamps();
-            
-            
         });
 
     }

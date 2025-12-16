@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat, PegawaiInformasiId, PegawaiInformasiMedis, PegawaiInformasiBank, NamaBank};
+use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat, PegawaiInformasiId, PegawaiInformasiMedis, PegawaiInformasiBank, NamaBank,
+    UnitKerja};
 use App\Models\{SKPAtasanPegawai, SKPPeriode};
 use DB;
 
@@ -39,6 +40,8 @@ class PegawaiController extends Controller
             ->leftJoin('pegawai_informasi_id', 'pegawai_informasi_id.pegawai_id','=','pegawai.id')
             ->leftJoin('pegawai_informasi_medis','pegawai_informasi_medis.pegawai_id','=','pegawai.id')
             ->leftJoin('pegawai_informasi_bank','pegawai_informasi_bank.pegawai_id','=','pegawai.id')
+            ->leftJoin('pegawai_informasi_unit_kerja','pegawai_informasi_unit_kerja.pegawai_id','=','pegawai.id')
+            ->leftJoin('pegawai_fakultas', 'pegawai.fakultas_id', '=', 'pegawai_fakultas.id')
             ->select(
                 'pegawai.id', 
                 'pegawai.nip', 
@@ -55,6 +58,7 @@ class PegawaiController extends Controller
                 'pegawai.status', 
                 'pegawai.kategori_kepegawaian_id',
                 'pegawai.kepangkatan_id',
+                'pegawai.tmt_cpns',
                 'pegawai.tmt_pangkat',
                 'pegawai.perkawinan_id',
                 'pegawai.jabatan_id',
@@ -65,6 +69,7 @@ class PegawaiController extends Controller
                 'pegawai.telepon',
                 'pegawai.hp',
                 'pegawai.email',
+                'pegawai_fakultas.nama_fakultas',
                 'pegawai_jenis_kepegawaian.nama_jenis_kepegawaian',
                 'pegawai_departemen.nama_departemen',
                 'pegawai_informasi_alamat.provinsi',
@@ -81,6 +86,10 @@ class PegawaiController extends Controller
                 'pegawai_informasi_bank.bank_id',
                 'pegawai_informasi_bank.no_rekening',
                 'pegawai_informasi_bank.nama_penerima',
+                'pegawai_informasi_unit_kerja.tgl_masuk',
+                'pegawai_informasi_unit_kerja.putusan',
+                'pegawai_informasi_unit_kerja.no_surat_u',
+                'pegawai_informasi_unit_kerja.tgl_sk',
 
             )
             ->where('pegawai.id', $id)
@@ -102,6 +111,7 @@ class PegawaiController extends Controller
             'kepangkatan'       => Kepangkatan::all(),
             'jabatan'           => Jabatan::all(),
             'namaBank'          => NamaBank::all(),
+            'unitKerja'         => UnitKerja::all(),
             'pegawai_as_atasan' => Pegawai::select('id', 'nama')->get(),
         ];
         return view('admin.detail', array_merge([
@@ -141,7 +151,7 @@ class PegawaiController extends Controller
     public function update_pegawai(Request $request){
         // return response()->json([
         //     'status' => 'error',
-        //     'message' => $request->jenis_bank,
+        //     'message' => $request->tgl_sk,
         // ], 200);
         $pegawai = Pegawai::find($request->pegawai_id);
         if (!$pegawai) {
@@ -222,6 +232,15 @@ class PegawaiController extends Controller
                 'bank_id'               => $request->bank_id,
                 'no_rekening'           => $request->no_rekening,
                 'nama_penerima'         => $request->nama_penerima,
+            ]
+        );
+        UnitKerja::updateOrCreate(
+            ['pegawai_id' => $request->pegawai_id],
+            [
+                'tgl_masuk'             => $request->tgl_masuk,
+                'putusan'               => $request->putusan,
+                'no_surat_u'            => $request->no_surat_u,
+                'tgl_sk'                => $request->tgl_sk,
             ]
         );
         return response()->json([

@@ -49,4 +49,8 @@ class Pegawai extends Model
     {
         return $this->hasMany(Kalender::class);
     }
+    public function fakultas()
+    {
+        return $this->belongsTo(Fakultas::class, 'fakultas_id');
+    }
 }

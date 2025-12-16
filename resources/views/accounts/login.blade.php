@@ -30,7 +30,7 @@
                   name="username"
                   class="form-control form-control-lg"
                   placeholder="Username"
-                  value="220199710202306101"
+                  value="administrator"
                   required
                   autofocus
                   autocomplete="username"

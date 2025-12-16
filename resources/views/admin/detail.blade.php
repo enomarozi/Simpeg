@@ -506,28 +506,26 @@
             <div class="card-body">
               <div class="mb-3">
                 <label class="form-label">Unit Kerja</label>
-                <select class="form-select" name="unit_kerja">
-                  <option>Unit Kerja</option>
-                </select>
+                <input type="text" class="form-control" placeholder="{{ $pegawai->nama_fakultas }}" disabled>
               </div>
               <div class="mb-3">
                 <label class="form-label">Tanggal Masuk</label>
-                <input type="date" class="form-control" name="tgl_masuk">
+                <input type="date" class="form-control" name="tgl_masuk" value="{{ $pegawai->tgl_masuk }}">
               </div>
             </div>
             <div class="card-header fw-bold">Informasi Keputusan</div>
             <div class="card-body">
               <div class="mb-3">
                 <label class="form-label">Diputuskan Oleh</label>
-                <input type="text" class="form-control" name="diputuskan_oleh">
+                <input type="text" class="form-control" name="putusan" value="{{ $pegawai->putusan }}">
               </div>
               <div class="mb-3">
                 <label class="form-label">No Surat</label>
-                <input type="text" class="form-control" name="no_surat_u">
+                <input type="text" class="form-control" name="no_surat_u" value="{{ $pegawai->no_surat_u }}">
               </div>
               <div class="mb-3">
                 <label class="form-label">Tanggal SK</label>
-                <input type="date" class="form-control" name="tgl_sk">
+                <input type="date" class="form-control" name="tgl_sk" value="{{ $pegawai->tgl_sk }}">
               </div>
             </div>
           </div>

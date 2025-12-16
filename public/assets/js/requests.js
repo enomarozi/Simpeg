@@ -43,9 +43,8 @@ function action(){
 		const nama_penerima = document.querySelector('input[name="nama_penerima"]').value;
 
 		//Informasi Unit Kerja
-		const unit_kerja = document.querySelector('select[name="unit_kerja"]').value;
 		const tgl_masuk = document.querySelector('input[name="tgl_masuk"]').value;
-		const diputuskan_oleh = document.querySelector('input[name="diputuskan_oleh"]').value;
+		const putusan = document.querySelector('input[name="putusan"]').value;
 		const no_surat_u = document.querySelector('input[name="no_surat_u"]').value;
 		const tgl_sk = document.querySelector('input[name="tgl_sk"]').value;
 
@@ -108,9 +107,8 @@ function action(){
 				bank_id: bank_id,
 				no_rekening: no_rekening,
 				nama_penerima: nama_penerima,
-				unit_kerja: unit_kerja,
 				tgl_masuk: tgl_masuk,
-				diputuskan_oleh: diputuskan_oleh,
+				putusan: putusan,
 				no_surat_u: no_surat_u,
 				tgl_sk: tgl_sk,
 				pangkat: pangkat,
