@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat, PegawaiInformasiId, PegawaiInformasiMedis};
+use App\Models\{Pegawai, Agama, Jabatan, StatusPerkawinan, GolonganDarah, Kewarganegaraan, Negara, Kepangkatan, KategoriPegawai, JenisPegawai, Fakultas, PegawaiDepartemen, PegawaiAlamat, PegawaiInformasiId, PegawaiInformasiMedis, PegawaiInformasiBank, NamaBank};
 use App\Models\{SKPAtasanPegawai, SKPPeriode};
 use DB;
 
@@ -38,6 +38,7 @@ class PegawaiController extends Controller
             ->leftJoin('pegawai_informasi_alamat', 'pegawai_informasi_alamat.pegawai_id','=','pegawai.id')
             ->leftJoin('pegawai_informasi_id', 'pegawai_informasi_id.pegawai_id','=','pegawai.id')
             ->leftJoin('pegawai_informasi_medis','pegawai_informasi_medis.pegawai_id','=','pegawai.id')
+            ->leftJoin('pegawai_informasi_bank','pegawai_informasi_bank.pegawai_id','=','pegawai.id')
             ->select(
                 'pegawai.id', 
                 'pegawai.nip', 
@@ -76,7 +77,11 @@ class PegawaiController extends Controller
                 'pegawai_informasi_medis.golongan_darah_id',
                 'pegawai_informasi_medis.tinggi_badan',
                 'pegawai_informasi_medis.berat_badan',
-                'pegawai_informasi_medis.cacat'
+                'pegawai_informasi_medis.cacat',
+                'pegawai_informasi_bank.bank_id',
+                'pegawai_informasi_bank.no_rekening',
+                'pegawai_informasi_bank.nama_penerima',
+
             )
             ->where('pegawai.id', $id)
             ->first();
@@ -96,6 +101,7 @@ class PegawaiController extends Controller
             'negara'            => Negara::all(),
             'kepangkatan'       => Kepangkatan::all(),
             'jabatan'           => Jabatan::all(),
+            'namaBank'          => NamaBank::all(),
             'pegawai_as_atasan' => Pegawai::select('id', 'nama')->get(),
         ];
         return view('admin.detail', array_merge([
@@ -133,10 +139,10 @@ class PegawaiController extends Controller
     }
 
     public function update_pegawai(Request $request){
-        return response()->json([
-            'status' => 'error',
-            'message' => $request->tinggi_badan,
-        ], 200);
+        // return response()->json([
+        //     'status' => 'error',
+        //     'message' => $request->jenis_bank,
+        // ], 200);
         $pegawai = Pegawai::find($request->pegawai_id);
         if (!$pegawai) {
             return response()->json([
@@ -200,6 +206,7 @@ class PegawaiController extends Controller
                 'no_bpjs_tenaga_kerja'      => $request->no_bpjs_tenaga_kerja,
             ]
         );
+
         PegawaiInformasiMedis::updateOrCreate(
             ['pegawai_id' => $request->pegawai_id],
             [
@@ -207,6 +214,14 @@ class PegawaiController extends Controller
                 'tinggi_badan'          => $request->tinggi_badan,
                 'berat_badan'           => $request->berat_badan,
                 'cacat'                 => $request->cacat,
+            ]
+        );
+        PegawaiInformasiBank::updateOrCreate(
+            ['pegawai_id' => $request->pegawai_id],
+            [
+                'bank_id'               => $request->bank_id,
+                'no_rekening'           => $request->no_rekening,
+                'nama_penerima'         => $request->nama_penerima,
             ]
         );
         return response()->json([

@@ -423,24 +423,24 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Golongan Darah</label>
-                        <select name="golongan_darah" class="form-select">
+                        <select name="golongan_darah_id" class="form-select">
                           <option value="" disabled selected>-- Pilih Golongan Darah --</option>
                             @foreach($golonganDarah as $item)
-                                <option value="{{ $item->id }}">{{ $item->golongan_darah }}</option>
+                                <option value="{{ $item->id }}" {{ $item->id == $pegawai->golongan_darah_id ? 'selected' : ''}}>{{ $item->golongan_darah }}</option>
                             @endforeach
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Tinggi Badan (cm)</label>
-                        <input type="number" class="form-control" name="tb">
+                        <input type="number" class="form-control" name="tinggi_badan" value="{{ $pegawai->tinggi_badan }}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Berat Badan (kg)</label>
-                        <input type="number" class="form-control" name="bb">
+                        <input type="number" class="form-control" name="berat_badan" value="{{ $pegawai->berat_badan }}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Cacat</label>
-                        <input type="text" class="form-control" name="cacat">
+                        <input type="text" class="form-control" name="cacat" value="{{ $pegawai->cacat }}">
                       </div>
                     </div>
                   </div>
@@ -474,17 +474,20 @@
                     <div class="card-body">
                       <div class="mb-3">
                         <label class="form-label">Jenis Bank</label>
-                        <select class="form-select" name="jenis_bank">
-                          <option>Bank Nagari</option>
+                        <select name="bank_id" class="form-select">
+                          <option value="" disabled selected>-- Pilih Golongan Darah --</option>
+                            @foreach($namaBank as $item)
+                                <option value="{{ $item->id }}" {{ $item->id == $pegawai->bank_id ? 'selected' : ''}}>{{ $item->nama }}</option>
+                            @endforeach
                         </select>
                       </div>
                       <div class="mb-3">
                         <label class="form-label">No. Rekening Bank</label>
-                        <input type="text" class="form-control" name="rekening">
+                        <input type="text" class="form-control" name="no_rekening" value="{{ $pegawai->no_rekening}}">
                       </div>
                       <div class="mb-3">
                         <label class="form-label">Nama Penerima</label>
-                        <input type="text" class="form-control" name="nama_penerima">
+                        <input type="text" class="form-control" name="nama_penerima" value="{{ $pegawai->nama_penerima}}">
                       </div>
                     </div>
                   </div>

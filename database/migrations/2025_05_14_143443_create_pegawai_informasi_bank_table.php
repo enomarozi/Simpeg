@@ -13,17 +13,13 @@ return new class extends Migration
     {
         Schema::create('pegawai_informasi_bank', function(Blueprint $table){
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('restrict');
-            $table->string('jenis_bank')->nullable();
+            $table->foreignId('pegawai_id')->nullable()->constrained('pegawai')->onDelete('restrict');
+            $table->foreignId('bank_id')->nullable()->constrained('pegawai_nama_banks')->onDelete('restrict');
             $table->string('no_rekening')->nullable()->unique();
             $table->string('nama_penerima')->nullable();
-
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('pegawai_informasi_alamat');

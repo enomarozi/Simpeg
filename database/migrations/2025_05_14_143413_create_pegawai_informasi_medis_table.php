@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pegawai_informasi_medis', function(Blueprint $table){
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('restrict');
-            $table->foreignId('golongan_darah_id')->constrained('pegawai_golongan_darah')->onDelete('restrict');
+            $table->foreignId('pegawai_id')->nullable()->constrained('pegawai')->onDelete('restrict');
+            $table->foreignId('golongan_darah_id')->nullable()->constrained('pegawai_golongan_darah')->onDelete('restrict');
             $table->string('tinggi_badan')->nullable();
             $table->string('berat_badan')->nullable();
             $table->string('cacat')->nullable();   

@@ -31,15 +31,15 @@ function action(){
 		const telepon = document.querySelector('input[name="telepon"]').value;
 		const hp = document.querySelector('input[name="hp"]').value;
 		const email = document.querySelector('input[name="email"]').value;
-		const golongan_darah = document.querySelector('select[name="golongan_darah"]').value;
-		const tb = document.querySelector('input[name="tb"]').value;
-		const bb = document.querySelector('input[name="bb"]').value;
+		const golongan_darah_id = document.querySelector('select[name="golongan_darah_id"]').value;
+		const tinggi_badan = document.querySelector('input[name="tinggi_badan"]').value;
+		const berat_badan = document.querySelector('input[name="berat_badan"]').value;
 		const cacat = document.querySelector('input[name="cacat"]').value;
 		const no_ktp = document.querySelector('input[name="no_ktp"]').value;
 		const no_npwp = document.querySelector('input[name="no_npwp"]').value;
 		const no_bpjs_tenaga_kerja = document.querySelector('input[name="no_bpjs_tenaga_kerja"]').value;
-		const jenis_bank = document.querySelector('select[name="jenis_bank"]').value;
-		const rekening = document.querySelector('input[name="rekening"]').value;
+		const bank_id = document.querySelector('select[name="bank_id"]').value;
+		const no_rekening = document.querySelector('input[name="no_rekening"]').value;
 		const nama_penerima = document.querySelector('input[name="nama_penerima"]').value;
 
 		//Informasi Unit Kerja
@@ -65,7 +65,6 @@ function action(){
 		const diputuskan_jabatan_s = document.querySelector('input[name="diputuskan_jabatan_s"]').value;
 		const no_surat_s = document.querySelector('input[name="no_surat_s"]').value;
 		const tgl_sk_s = document.querySelector('input[name="tgl_sk_s"]').value;
-
 		fetch(`/admin/pegawai/update/${pegawai_id}`,{
 			method: "POST",
 			headers: {
@@ -99,15 +98,15 @@ function action(){
 				telepon: telepon,
 				hp: hp,
 				email: email,
-				golongan_darah: golongan_darah,
-				tb: tb,
-				bb: bb,
+				golongan_darah_id: golongan_darah_id,
+				tinggi_badan: tinggi_badan,
+				berat_badan: berat_badan,
 				cacat: cacat,
 				no_ktp: no_ktp,
 				no_npwp: no_npwp,
 				no_bpjs_tenaga_kerja: no_bpjs_tenaga_kerja,
-				jenis_bank: jenis_bank,
-				rekening: rekening,
+				bank_id: bank_id,
+				no_rekening: no_rekening,
 				nama_penerima: nama_penerima,
 				unit_kerja: unit_kerja,
 				tgl_masuk: tgl_masuk,

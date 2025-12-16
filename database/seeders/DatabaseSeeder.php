@@ -10,7 +10,7 @@ use Database\Seeders\{
                     PendidikanSeeder, PegawaiDosenAll, PegawaiTendikAll, StatusPerkawinanSeeder,
                     GolonganDarahSeeder, NegaraSeeder, KewargaNegaraanSeeder,
                     JabatanDosenSeeder, PegawaiJabatan, JabatanTendikSeeder,
-                    };
+                    NamaBankSeeder};
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
@@ -32,5 +32,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NegaraSeeder::class);
         $this->call(KewargaNegaraanSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(NamaBankSeeder::class);
     }
 }

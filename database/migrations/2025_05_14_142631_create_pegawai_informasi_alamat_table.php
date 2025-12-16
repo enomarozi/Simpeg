@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pegawai_informasi_alamat', function(Blueprint $table){
             $table->id();
-            $table->foreignId('pegawai_id')->constrained('pegawai')->onDelete('restrict');
+            $table->foreignId('pegawai_id')->nullable()->constrained('pegawai')->onDelete('restrict');
             $table->string('provinsi')->nullable();
             $table->string('kabupaten_kota')->nullable();
             $table->string('kecamatan')->nullable();
